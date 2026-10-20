@@ -23,7 +23,7 @@ Each day takes about an hour:
 
 1. **Concepts (~15 min).** Read the day on the course page. Each concept puts Ember and React side by side and is flagged 🟢 direct translation · 🟡 same goal, different mechanics · 🔴 new mental model. A pixel bar at the top of the page fills up as you read, and a coin pops in when you reach the end.
 2. **Hands-on (~35 min).** Open the day's files in `exercises/dayNN/` and follow the TODO comments. Every time you save, the tests run and the course page shows which ones still fail.
-3. **Check yourself (~10 min).** Press start for a short multiple-choice quiz. Each answer comes with the reasoning, and you earn coins, combos and a rank along the way.
+3. **Check yourself (~10 min).** Press start for a short multiple-choice quiz. Each answer comes with the reasoning, and you earn coins, combos and a rank along the way. A few questions from earlier days are mixed in, spaced out Leitner-style so the ones you miss come back sooner, and Day 15 ends with a 15-question boss rush across the whole course.
 
 Days unlock one at a time: when all of a day's tests pass, the day is marked complete, the page celebrates and the next day opens. Finish all 15 and you get a certificate with your name on it, which you can print or save as a PDF.
 

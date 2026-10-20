@@ -277,6 +277,7 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 .quiz__qs { list-style: none; margin: 0; padding: 0; }
 .quiz__start[hidden], .quiz__game[hidden], .quiz__q[hidden], .quiz__why[hidden] { display: none; }
 .quiz__count { margin: 0 0 0.25rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.quiz__from { display: inline-block; margin-left: 0.6rem; padding: 0.2rem 0.4rem; box-shadow: 0 -2px 0 currentColor, 0 2px 0 currentColor, -2px 0 0 currentColor, 2px 0 0 currentColor; font-family: 'Press Start 2P', ui-monospace, monospace; font-size: 0.5rem; letter-spacing: 0; color: var(--accent); vertical-align: 1px; }
 .quiz__legend { margin: 0 0 0.9rem; font-size: 1.1rem; }
 .quiz__legend:focus, .quiz__result:focus { outline: none; }
 .quiz__opts { display: grid; gap: 0.5rem; }
@@ -706,36 +707,36 @@ export const formatDate = (iso: string) =&gt; fmt.format(new Date(iso));
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d1-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 5</p>
   <h3 class="quiz__legend" id="d1-q1" tabindex="-1">What triggers a re-render?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d1-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Any <code>@tracked</code>-style property it reads being mutated</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Only its props changing, compared deeply</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>Its own state changing, its parent re-rendering, or a context it reads changing</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Only an explicit call to <code>forceUpdate()</code></span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Three things: the component's <strong>own state changes</strong> (a <code>useState</code>/<code>useReducer</code> setter called with a new value), <strong>its parent re-renders</strong>, or <strong>a context it consumes changes</strong>. "Props changed" isn't a separate trigger, because props only change when the parent renders, and a child re-renders with its parent whether or not its props changed, unless it's wrapped in <code>memo</code>.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d1-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 5</p>
   <h3 class="quiz__legend" id="d1-q2" tabindex="-1">What is the difference between render and commit?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d1-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Render happens on the server; commit happens in the browser</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Render writes to the DOM; commit saves state to React’s store</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>They’re two names for the same phase</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Render calls components and diffs, purely; commit applies the diff to the DOM and runs effects</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p><strong>Render</strong> is React calling your components to get a new element tree and diffing it against the previous one. It's pure, has no DOM access and, in concurrent mode, can be interrupted, restarted or thrown away. <strong>Commit</strong> applies the diff to the DOM, runs layout effects and then, usually after paint, passive effects. Because a render may never be committed, side effects belong in event handlers or effects, never in render.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d1-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 5</p>
   <h3 class="quiz__legend" id="d1-q3" tabindex="-1">Why <code>className</code> and not <code>class</code>?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d1-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>It’s required by CSS Modules</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>JSX attribute names follow DOM properties, like <code>element.className</code></span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span><code>class</code> only works on custom elements</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>React strips <code>class</code> attributes for security</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>JSX attribute <strong>names</strong> follow DOM properties, not HTML attributes: <code>className</code> because the property is <code>element.className</code> (<code>class</code> was a reserved word in early JS), and <code>htmlFor</code> because of <code>label.htmlFor</code>. React still writes most of them to the DOM as attributes. For custom elements, React 19 sets a prop as a property when the element defines one, and as an attribute otherwise.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d1-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 5</p>
   <h3 class="quiz__legend" id="d1-q4" tabindex="-1">How do JSX and Glimmer templates differ in what the compiler knows?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d1-q4"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>Glimmer knows statically which parts are dynamic; JSX is plain JS, so React diffs at runtime</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>JSX is compiled to opcodes that update only the dynamic bits</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Glimmer diffs a virtual DOM; JSX autotracks reads</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Both are compiled to the same virtual DOM, so nothing differs</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Glimmer templates are a restricted language, so at build time the compiler knows which parts are static and emits opcodes that update only the dynamic bits, driven by autotracking. JSX, by contrast, is arbitrary JavaScript. To the compiler <code>jsx('div', props)</code> is an opaque function call, which is why React has to re-run the component and diff at runtime. The React Compiler closes that gap: assuming your components follow the rules of React, it analyses them and auto-memoizes values and JSX.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d1-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 5</p>
   <h3 class="quiz__legend" id="d1-q5" tabindex="-1">What does <code>{0 &amp;&amp; &lt;X/&gt;}</code> render?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d1-q5"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Nothing</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span><code>&lt;X/&gt;</code></span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>The text "0"</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>It throws, because <code>0</code> isn’t a valid child</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -917,7 +918,7 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">4 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">4 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -930,29 +931,29 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d2-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 4</p>
   <h3 class="quiz__legend" id="d2-q1" tabindex="-1">Why not use the array index as a key?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d2-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>React throws on numeric keys</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Keys must be globally unique across the whole app</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>On insert, remove or reorder, state and DOM stay with the position, not the item</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Index keys are slower to hash than strings</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>A key is how React decides which <strong>component instance</strong>, with its state and DOM, lines up with which item between renders. With index keys, inserting, removing or reordering items shifts the data under the existing instances, so state, focus, uncontrolled input values and animations stay at the old <em>positions</em>. Index keys are only safe for static lists that never reorder and whose items have no state.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d2-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 4</p>
   <h3 class="quiz__legend" id="d2-q2" tabindex="-1">How do you reset a component's state?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d2-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Pass <code>reset={true}</code> as a prop</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Change its <code>key</code>, so React mounts a fresh instance</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Call <code>this.reset()</code> on the component instance</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Set every field back in a <code>useEffect</code> when the prop changes</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Change its <code>key</code>. A different key means a different identity, so React unmounts the old instance and mounts a fresh one with initial state. That makes <code>&lt;ProfileForm key={userId} /&gt;</code> the idiomatic way to reset a form when the entity changes, and far better than an effect that resets each field.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d2-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 4</p>
   <h3 class="quiz__legend" id="d2-q3" tabindex="-1">Render props vs children vs hooks: when would you use each?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d2-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Always hooks: render props and children are deprecated</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Children for slots, render props when the child owns the data, hooks for logic without markup</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Children for logic, hooks for markup, render props for styling</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>They’re interchangeable; pick whichever is shortest</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Use <strong>children</strong> or ReactNode props when the parent just decides <em>what</em> goes in a slot. Use a <strong>render prop</strong> when the child owns data that the caller should turn into markup, such as list items, virtualised rows or a headless select's options. Use a <strong>hook</strong> when you want to reuse <em>stateful logic</em> with no opinion about markup. Hooks replaced most render props and HOCs for sharing logic, which leaves render props for per-item rendering.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d2-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 4</p>
   <h3 class="quiz__legend" id="d2-q4" tabindex="-1">What is prop drilling, and what fixes it?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d2-q4"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Reading props in effects; fix with refs</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Re-rendering every child on a prop change; fix with <code>memo</code></span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Mutating props deep in the tree; fix with <code>Object.freeze</code></span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Passing props through layers that don’t use them; fix with composition, then context</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -1141,7 +1142,7 @@ const [draft, setDraft] = useState(() =&gt; JSON.parse(localStorage.draft ?? &#x
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">6 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">6 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -1154,43 +1155,43 @@ const [draft, setDraft] = useState(() =&gt; JSON.parse(localStorage.draft ?? &#x
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d3-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 6</p>
   <h3 class="quiz__legend" id="d3-q1" tabindex="-1">Why must React state be treated as immutable?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d3-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Mutation throws an error in production builds</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>React detects changes by reference, so a mutated object looks unchanged</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Only so that DevTools can display it</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>State objects are frozen by <code>useState</code></span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Because React detects changes by <strong>reference</strong> (<code>Object.is</code>), and a mutated object keeps its reference, so React bails out and the UI doesn't update. Immutability also keeps each render a consistent snapshot, which concurrent rendering needs because a render can be paused or discarded. It makes <code>memo</code> and <code>useMemo</code> comparisons cheap and correct, too, and lets features like transitions and undo keep older versions around.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d3-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 6</p>
   <h3 class="quiz__legend" id="d3-q2" tabindex="-1">What does <code>console.log(count)</code> print right after <code>setCount(count + 1)</code>?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d3-q2"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>The old value</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>A Promise of the new value</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span><code>undefined</code></span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>The new value</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>The <strong>old</strong> value. <code>count</code> is a constant captured by this render's closure, and the setter only schedules a new render, so the new value appears when your component function runs again. If you need it straight away, compute it into a local first: <code>const next = count + 1; setCount(next); use(next)</code>.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d3-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 6</p>
   <h3 class="quiz__legend" id="d3-q3" tabindex="-1">What is batching?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d3-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Merging several components into one bundle</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Queuing effects until the user is idle</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Rendering lists in chunks of 50 items</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Grouping all state updates in one tick into a single render</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>React groups all the state updates triggered in the same tick into a single re-render and commit, so several setters still produce one render. Since React 18 this covers timeouts, promises and native handlers as well as React events. You can opt out with <code>flushSync</code>, though that's rarely needed, for example before measuring the DOM.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d3-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 6</p>
   <h3 class="quiz__legend" id="d3-q4" tabindex="-1">When should you use an updater function?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d3-q4"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Only inside class components</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Only for state that holds objects</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>When the next state depends on the previous one</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Whenever you want the update to be synchronous</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Whenever the next state is computed from the previous one: counters, toggles and appending to arrays. It matters most when several updates might be queued in one tick, or when the setter runs inside a stale closure such as a timer or subscription, because <code>set(prev =&gt; …)</code> always operates on the latest queued value.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d3-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 6</p>
   <h3 class="quiz__legend" id="d3-q5" tabindex="-1">Derived state vs <code>useEffect</code> + <code>setState</code>?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d3-q5"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Use the effect: render must not compute anything</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Derive it in render; an effect adds a render with stale data</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Either is fine; they render the same number of times</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Use the effect, because it runs before paint</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Derive it. An effect that sets state from props or other state causes a second render, so the first one shows stale data, and it can drift out of sync and is harder to follow. Compute the value in render, adding <code>useMemo</code> only if it's expensive, and keep effects for syncing with <em>external</em> systems rather than with other React state.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 6 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d3-q6" hidden>
+  <p class="quiz__count" data-quiz-count>Question 6 of 6</p>
   <h3 class="quiz__legend" id="d3-q6" tabindex="-1">How is this different from <code>@tracked</code>?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d3-q6"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>React replaces values and re-renders the whole component; <code>@tracked</code> mutates and updates precisely</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>React tracks which JSX reads each field and updates only those bits</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span><code>@tracked</code> values are immutable snapshots; React state is mutable</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>They’re identical, apart from the syntax</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -1346,7 +1347,7 @@ inputRef.current?.focus();</code></pre></figure>
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">4 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">4 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -1359,29 +1360,29 @@ inputRef.current?.focus();</code></pre></figure>
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d4-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 4</p>
   <h3 class="quiz__legend" id="d4-q1" tabindex="-1">Controlled vs uncontrolled inputs: trade-offs, and when to use each?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d4-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Controlled inputs render less often</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Controlled when other UI reacts as you type; otherwise uncontrolled is simpler</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Always controlled: uncontrolled inputs are deprecated</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Uncontrolled inputs can’t be submitted with a form</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>With <strong>controlled</strong> inputs (<code>value</code> + <code>onChange</code>), React state always mirrors the input, which allows instant validation, derived UI, programmatic resets and input masking, at the cost of a render per keystroke and more code. With <strong>uncontrolled</strong> inputs (<code>defaultValue</code>, read via <code>FormData</code> or a ref), the DOM owns the value, so they're simpler, render less, and work with progressive enhancement and React 19 form Actions. Use controlled when other UI depends on the value as it changes; otherwise uncontrolled is fine, and often preferable.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d4-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 4</p>
   <h3 class="quiz__legend" id="d4-q2" tabindex="-1">What is a synthetic event?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d4-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>An event fired only in tests</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>A native event React attaches to every element individually</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>React’s cross-browser wrapper, delegated from the root and dispatched through the React tree</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>An event created with <code>new CustomEvent()</code></span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>It's React's cross-browser wrapper around a native event, with a consistent interface (<code>target</code>, <code>currentTarget</code>, <code>preventDefault</code>, <code>stopPropagation</code>). React delegates, attaching one native listener per event type to the root container and dispatching through the <strong>React component tree</strong>, which is why events from portals bubble to their React parents. <code>e.nativeEvent</code> gives you the original.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d4-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 4</p>
   <h3 class="quiz__legend" id="d4-q3" tabindex="-1"><code>useRef</code> vs <code>useState</code>?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d4-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>State is synchronous; refs are batched</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Refs reset on every render; state persists</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Refs are only for DOM nodes</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Both persist; changing a ref doesn’t re-render, changing state does</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Both persist across renders, but they behave differently when they change. Changing <strong>state</strong> schedules a re-render, and the value is a per-render snapshot, whereas changing a <strong>ref</strong> (<code>ref.current = x</code>) is a silent mutation: no render, and visible immediately. So use state for anything that affects output, and refs for DOM nodes, timer ids, previous values and other instance-like data that render doesn't read.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d4-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 4</p>
   <h3 class="quiz__legend" id="d4-q4" tabindex="-1">Why avoid reading the DOM (or refs) during render?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d4-q4"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>Render must be pure and may never commit, so the DOM is missing or a commit behind</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Reading the DOM throws inside render</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>It triggers an infinite render loop</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Refs are only readable in class components</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -1564,7 +1565,7 @@ useEffect(() =&gt; {
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">7 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">7 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -1577,50 +1578,50 @@ useEffect(() =&gt; {
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d5-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 7</p>
   <h3 class="quiz__legend" id="d5-q1" tabindex="-1">When do effects run?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d5-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>During render, before the JSX is returned</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Only once, on mount</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Before the DOM is updated</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>After commit, usually after paint, and again when deps change</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>After the render is <strong>committed</strong>, and usually after the browser has painted, although effects triggered by a discrete input such as a click are flushed before paint. (<code>useLayoutEffect</code> always runs before paint.) On mount the setup runs. On a later render where a dependency changed, compared with <code>Object.is</code>, the previous cleanup runs and then the new setup, and on unmount the cleanup runs one last time. Effects never run during server rendering.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d5-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 7</p>
   <h3 class="quiz__legend" id="d5-q2" tabindex="-1">What is the dependency array really for?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d5-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Controlling exactly when the effect fires, like a lifecycle hook</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Listing the reactive values the sync depends on, so React can skip re-syncing</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Memoizing the effect’s return value</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Declaring which state the effect is allowed to set</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>It tells React which reactive values the effect's <em>synchronisation</em> depends on, so React can skip re-syncing when none of them changed. That's why it must include every prop, state or derived value the effect reads, and why the lint rule enforces it: the array describes the effect rather than scheduling it. If you're tempted to leave something out, restructure instead: move it inside the effect, memoize it, or read it through <code>useEffectEvent</code>.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d5-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 7</p>
   <h3 class="quiz__legend" id="d5-q3" tabindex="-1">Why does Strict Mode run effects twice in development?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d5-q3"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>To surface missing or incorrect cleanup</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>To measure how long effects take</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>It’s a known bug that’s fixed in production</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>To warm up the cache for the second render</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>To surface missing or incorrect cleanup. Because it mounts, unmounts and remounts each component, every effect goes setup → cleanup → setup. A correct effect behaves exactly as if it ran once, whereas a leaky one, with a double subscription, an uncleared timer or an unguarded duplicate request, shows up immediately. None of this happens in production.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d5-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 7</p>
   <h3 class="quiz__legend" id="d5-q4" tabindex="-1">How do you handle race conditions when fetching in an effect?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d5-q4"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Use <code>async</code> directly as the effect function</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>An ignore flag or <code>AbortController</code> in cleanup, or a data library</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Wrap the fetch in <code>useMemo</code></span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Add the response to the dependency array</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Give each effect run a way to know it has gone stale. Either declare <code>let ignore = false</code>, set it to <code>true</code> in cleanup and check it before <code>setState</code>, or create an <code>AbortController</code> and abort it in cleanup, which also cancels the network request. Better still, use a library such as TanStack Query or router loaders, which keys requests and handles ordering, caching and dedupe for you.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d5-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 7</p>
   <h3 class="quiz__legend" id="d5-q5" tabindex="-1">Name three cases where you don't need an effect.</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d5-q5"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Subscriptions, timers and DOM measurement</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Fetching, analytics and focus management</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Any time a prop changes</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Derived values, responding to user events, and resetting state on a prop change</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>First, <strong>derived values</strong>: compute them during render, with <code>useMemo</code> if they're expensive. Second, <strong>responding to user events</strong>: do the work in the event handler. Third, <strong>resetting state when a prop changes</strong>: use a <code>key</code>. Notifying a parent, chaining state updates and initialising app-wide singletons don't need one either: call the callback in the same handler, combine the updates, or use module scope.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 6 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d5-q6" hidden>
+  <p class="quiz__count" data-quiz-count>Question 6 of 7</p>
   <h3 class="quiz__legend" id="d5-q6" tabindex="-1">What does <code>useEffectEvent</code> solve?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d5-q6"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Running an effect only on user events</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Reading the latest props or state in an effect without making them deps</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Replacing <code>addEventListener</code> in effects</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Making effects run synchronously</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>It lets an effect read the <strong>latest</strong> props or state without making them dependencies, which separates what you synchronise with (the deps) from what you read when something happens (the event). Typical uses are logging with the current user, checking the current <code>muted</code> flag before notifying, or calling the latest <code>onX</code> prop from a subscription. The rules: call it only from effects, never during render, and never pass it to other components.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 7 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d5-q7" hidden>
+  <p class="quiz__count" data-quiz-count>Question 7 of 7</p>
   <h3 class="quiz__legend" id="d5-q7" tabindex="-1">How do effects compare to Ember modifiers?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d5-q7"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>They’re unrelated: modifiers are for styling</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Same set-up and tear-down lifecycle; effects belong to the component and are driven by deps</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Effects are bound to a single element, like modifiers</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Modifiers re-run on every render; effects never re-run</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -1814,7 +1815,7 @@ export default defineConfig({
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">5 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">5 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -1827,36 +1828,36 @@ export default defineConfig({
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d6-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 5</p>
   <h3 class="quiz__legend" id="d6-q1" tabindex="-1">Does a re-render mean a DOM update?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d6-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Yes: every re-render rewrites the component’s DOM</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Yes, unless the component uses <code>memo</code></span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>No: React only touches the DOM where the output differs</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Only in development mode</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>No. A re-render means React called your component and diffed its output, and it only touches the DOM where the new output differs. So a component can re-render a hundred times with zero DOM mutations. What an unnecessary re-render costs is the JavaScript work, your function plus the diff, and that's what memoization saves.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d6-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 5</p>
   <h3 class="quiz__legend" id="d6-q2" tabindex="-1">When does <code>memo</code> fail to prevent a re-render?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d6-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>When the parent is a class component</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>When a prop is a new reference each render, or a context it reads changes</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Never: <code>memo</code> always prevents re-renders</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>When the component has more than ten props</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>When any prop is a <strong>new reference</strong> each render. The usual culprits are inline arrow functions, object or array literals (<code>style={{…}}</code>, <code>options={[…]}</code>), <code>children</code> JSX, which is always a new element, and values derived without <code>useMemo</code>. It also fails when the component's own state or a context it reads changes, because <code>memo</code> only guards props. The fixes are stable references (<code>useCallback</code>/<code>useMemo</code>), primitive props, or restructuring.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d6-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 5</p>
   <h3 class="quiz__legend" id="d6-q3" tabindex="-1"><code>useMemo</code> vs <code>useCallback</code>?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d6-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>They differ only in name</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span><code>useMemo</code> is for components, <code>useCallback</code> is for hooks</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span><code>useCallback</code> runs the function on every render</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span><code>useCallback(fn)</code> memoizes the function; <code>useMemo</code> memoizes a result</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p><code>useMemo</code> memoizes the <em>result</em> of calling a function, whereas <code>useCallback</code> memoizes the function itself: <code>useCallback(fn, deps)</code> is just <code>useMemo(() =&gt; fn, deps)</code>. So reach for <code>useMemo</code> for expensive computations or stable object and array identities, and for <code>useCallback</code> when passing functions to memoized children or into effect dependencies. Neither is a semantic guarantee, because React may discard its caches.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d6-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 5</p>
   <h3 class="quiz__legend" id="d6-q4" tabindex="-1">What does the React Compiler do, and which rules does it rely on?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d6-q4"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>Auto-memoizes at build time, relying on the Rules of React: purity and immutability</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Compiles JSX to Glimmer opcodes</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Removes the need for keys on lists</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Turns state into signals at runtime</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>It rewrites components and hooks at build time to memoize values, callbacks and JSX at a fine grain, keyed on their actual inputs, which removes most manual <code>memo</code>/<code>useMemo</code>/<code>useCallback</code>. In return it relies on the <strong>Rules of React</strong>. First, components and hooks are pure and idempotent. Second, props, state and values passed to JSX are never mutated. Third, hooks are called at the top level in the same order, and refs aren't read during render. Code that breaks these is skipped or may misbehave, which is why the ESLint plugin flags it.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d6-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 5</p>
   <h3 class="quiz__legend" id="d6-q5" tabindex="-1">How would you find a slow render?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d6-q5"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Wrap every component in <code>memo</code> and see what changes</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Read the bundle analyser report</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>Record it with the React DevTools Profiler and inspect the flamegraph</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Count <code>console.log</code> calls in each render</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -2026,7 +2027,7 @@ const status = useStore(filterStore, (s) =&gt; s.status);
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">5 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">5 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -2039,36 +2040,36 @@ const status = useStore(filterStore, (s) =&gt; s.status);
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d7-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 5</p>
   <h3 class="quiz__legend" id="d7-q1" tabindex="-1">How does Context compare to an Ember service?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d7-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Services are tree-scoped; context is global</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Context is a lazily created global singleton, just like a service</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>A service is a global singleton; context is scoped to the tree and comes from the nearest provider</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Context is fine-grained: consumers re-render only for the fields they read</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Both inject shared things without prop drilling, but they're built differently. A service is a <strong>container-managed singleton</strong>: lazily created, addressable by name, and fine-grained reactive through <code>@tracked</code>. Context is <strong>tree-scoped</strong>, so the value comes from the nearest of possibly many providers above. It has no lifecycle of its own and no fine-grained reactivity, which means any value change re-renders all consumers. So context is only the injection mechanism, and the state lives in whatever you put in it: <code>useReducer</code>, a store or a client.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d7-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 5</p>
   <h3 class="quiz__legend" id="d7-q2" tabindex="-1">Why can context cause performance problems?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d7-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Context lookups walk the DOM tree</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Every consumer re-renders when the value’s reference changes, and <code>memo</code> can’t stop it</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Each provider adds a network request</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Context values are deep-cloned on every render</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Because every consumer re-renders whenever the provider's <code>value</code> changes by reference, whichever part it uses, and <code>memo</code> doesn't help. The usual causes are an un-memoized object literal as the value, or one giant context holding fast-changing state. So memoize the value, split contexts by concern and update frequency with <code>dispatch</code> kept separate, or put a store in context and subscribe with selectors through <code>useSyncExternalStore</code>.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d7-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 5</p>
   <h3 class="quiz__legend" id="d7-q3" tabindex="-1"><code>useReducer</code> vs <code>useState</code>?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d7-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span><code>useReducer</code> is global state; <code>useState</code> is local</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span><code>useReducer</code> requires Redux</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span><code>useState</code> can’t hold objects</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Same mechanism; reach for a reducer when transitions are related or complex</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>They're the same mechanism, since <code>useState</code> is just a reducer that replaces the state, so the choice is about shape. <code>useState</code> suits simple, independent values. <code>useReducer</code> pays off when there are several related fields or transitions, when the next state depends on the previous one in non-trivial ways, when you want the logic as a pure, testable function, or when one stable <code>dispatch</code> beats passing down many callbacks.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d7-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 5</p>
   <h3 class="quiz__legend" id="d7-q4" tabindex="-1">What problem does <code>useSyncExternalStore</code> solve?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d7-q4"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Syncing state to localStorage automatically</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Sharing state between browser tabs</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>Subscribing to an outside store without tearing in concurrent renders</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Making state updates synchronous</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>It lets components subscribe safely to state that lives outside React. Without it, a concurrent render could read the store at different moments for different components and show inconsistent UI, which is called <strong>tearing</strong>. It also handles subscribing, unsubscribing and server snapshots. Add a selector and you get fine-grained re-renders, because only components whose selected value changed update.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d7-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 5</p>
   <h3 class="quiz__legend" id="d7-q5" tabindex="-1">When would you reach for Zustand or Redux?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d7-q5"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>Shared, frequently updated client state read by many distant components</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Only for apps that use class components</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>For all server data, instead of TanStack Query</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Whenever you have more than one <code>useState</code></span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -2217,7 +2218,7 @@ expect(result.current).toBe(&#x27;ab&#x27;);</code></pre></figure>
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">4 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">4 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -2230,29 +2231,29 @@ expect(result.current).toBe(&#x27;ab&#x27;);</code></pre></figure>
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d8-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 4</p>
   <h3 class="quiz__legend" id="d8-q1" tabindex="-1">Why can't hooks be called conditionally?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d8-q1"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>React matches hook state by call order, so skipping one shifts every later slot</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Conditionals inside components are a syntax error</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Hooks are registered by name at import time</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Only for performance: conditionals disable memoization</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Because React identifies each hook's state by its <strong>position in the call order</strong>, not by name. If a hook is skipped or added conditionally, every later hook shifts a slot and reads another hook's state, which gives you corrupted state and the "rendered fewer/more hooks than expected" error. The lint rule <code>react-hooks/rules-of-hooks</code> enforces this, and <code>use()</code> is the deliberate exception.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d8-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 4</p>
   <h3 class="quiz__legend" id="d8-q2" tabindex="-1">Do two components using the same hook share state?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d8-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Yes: a hook is a singleton, like a service</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Yes, if they share a parent</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Only when the hook uses <code>useRef</code></span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>No: each call gets its own state, because hooks share logic, not data</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>No. Each call creates independent state in its own component, because a hook shares <strong>logic</strong>, not data. To share data, the hook has to read from something shared: a context, an external store through <code>useSyncExternalStore</code>, module-level state, or a server cache. That's why two <code>useQuery</code> calls with the same key do see the same data.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d8-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 4</p>
   <h3 class="quiz__legend" id="d8-q3" tabindex="-1">Hooks vs HOCs vs render props?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d8-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Render props are deprecated in React 19</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Hooks are the default; render props for markup control; HOCs are mostly legacy</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>All three are equally recommended</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>HOCs are the modern replacement for hooks</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>All three reuse behaviour, but hooks are the default today. <strong>HOCs</strong> (<code>withX(Component)</code>) wrap components, which makes them hard to type, nests wrappers deeply and invites prop-name collisions, so they're mostly legacy. <strong>Render props</strong> invert control over markup, and that's still useful when a child owns per-item data. <strong>Hooks</strong> reuse stateful logic without extra components, so they compose naturally and type cleanly.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 4</p>
+<li class="quiz__q" data-quiz-q data-qid="d8-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 4</p>
   <h3 class="quiz__legend" id="d8-q4" tabindex="-1">How do you test a custom hook?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d8-q4"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>Through a component that uses it, or with <code>renderHook</code> for library hooks</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Call the hook directly in the test body</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Hooks can’t be tested in isolation</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Mock <code>useState</code> and assert on its calls</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -2428,7 +2429,7 @@ function IssueDetail({ id }: { id: string }) {
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">7 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">7 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -2441,50 +2442,50 @@ function IssueDetail({ id }: { id: string }) {
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d9-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 7</p>
   <h3 class="quiz__legend" id="d9-q1" tabindex="-1">Server state vs client state?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d9-q1"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>Client state is owned by the UI; server state is async, shared and goes stale</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Server state is anything rendered on the server</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Client state lives in localStorage; server state in memory</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>There’s no difference: both belong in <code>useState</code></span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>The difference is ownership. <strong>Client state</strong> belongs to the UI, so it's synchronous, private and always correct: open menus, drafts, selection. <strong>Server state</strong> belongs to the server, so it's async, shared and stale once fetched, which is why it needs caching, background refresh, dedupe, invalidation and retries. Copying server data into <code>useState</code> is the root of most data bugs. Keep it in a server cache and derive from it.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d9-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 7</p>
   <h3 class="quiz__legend" id="d9-q2" tabindex="-1">What is stale-while-revalidate?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d9-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Delete cached data once it goes stale</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Retry failed requests with backoff</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Block rendering until fresh data arrives</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Show cached data immediately and refetch in the background</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>It means serving cached data immediately, even if stale, while refetching in the background, then swapping in the fresh result. In TanStack Query data goes stale after <code>staleTime</code>, which defaults to 0. When a stale query is used again, on mount, focus, reconnect or invalidation, it shows the cached data with <code>isFetching: true</code> and refetches. So users get instant UI and eventual freshness.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d9-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 7</p>
   <h3 class="quiz__legend" id="d9-q3" tabindex="-1">How do query keys work?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d9-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>A model name and id, like an identity map</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>A serialisable array identifying a cache entry, matched by prefix for invalidation</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>An auto-generated id, from the order queries mount</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>A string URL that must be unique per component</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>A key is a serialisable array that identifies one cache entry. It's hashed deterministically, so object key order doesn't matter, and matched by prefix for invalidation. Every input to the <code>queryFn</code> belongs in the key, so different inputs get different entries. A key factory keeps them consistent and makes hierarchical invalidation easy: <code>['issues']</code> hits every list and detail.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d9-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 7</p>
   <h3 class="quiz__legend" id="d9-q4" tabindex="-1">Optimistic update vs invalidation?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d9-q4"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>Invalidation refetches after the server confirms; optimistic updates first and rolls back on error</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Optimistic updates skip the server entirely</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>They’re the same thing</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Invalidation updates the cache before the request</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>It's a trade between correctness and speed. <strong>Invalidation</strong> waits for the server to confirm, then marks related keys stale and refetches, so it's always correct but the UI updates after a round trip. An <strong>optimistic</strong> update writes the cache, or shows <code>useOptimistic</code> state, <em>before</em> the server answers, rolls back on error, and usually invalidates on settle to reconcile. It feels instant, but it needs rollback logic and can briefly show something false. So save it for high-confidence, low-stakes interactions like toggles, likes and reordering.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d9-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 7</p>
   <h3 class="quiz__legend" id="d9-q5" tabindex="-1">How does Suspense work?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d9-q5"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>A component suspends on missing data and the nearest boundary shows its fallback until it resolves</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>It runs data fetching in a web worker</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>It delays rendering by a fixed timeout</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>It catches errors thrown during render</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>A component that needs unavailable data <strong>suspends</strong> during render, by throwing a promise (libraries do this for you) or calling <code>use(promise)</code>. React stops rendering that subtree, shows the nearest <code>&lt;Suspense&gt;</code> fallback, and retries once the promise resolves. Inside a transition, though, already-visible content isn't swapped for a fallback. On the server, Suspense boundaries are also streaming points.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 6 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d9-q6" hidden>
+  <p class="quiz__count" data-quiz-count>Question 6 of 7</p>
   <h3 class="quiz__legend" id="d9-q6" tabindex="-1">Why aren't error boundaries hooks?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d9-q6"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Hooks can’t throw errors</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Error boundaries are browser APIs, not React</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>There is a hook for it: <code>useErrorBoundary</code> in React 19</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Catching a child’s render error needs class lifecycles with no hook equivalent</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Because catching an error thrown while rendering <em>children</em> needs a component that can render a different tree in the same commit, after a child failed. That relies on class lifecycle methods, <code>getDerivedStateFromError</code> and <code>componentDidCatch</code>, which have no hook equivalent yet. In practice you write one class, or use <code>react-error-boundary</code>, and compose it like any other component.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 7 of 7</p>
+<li class="quiz__q" data-quiz-q data-qid="d9-q7" hidden>
+  <p class="quiz__count" data-quiz-count>Question 7 of 7</p>
   <h3 class="quiz__legend" id="d9-q7" tabindex="-1">How does this compare with ember-data?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d9-q7"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>ember-data is a normalised identity map; TanStack Query is a request cache, kept consistent by invalidation</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>TanStack Query only works with GraphQL</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Both are ORMs that generate API calls from models</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>TanStack Query normalises records by type and id, exactly like ember-data</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -2672,7 +2673,7 @@ navigate(&#x27;/issues&#x27;);</code></pre></figure>
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">5 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">5 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -2685,36 +2686,36 @@ navigate(&#x27;/issues&#x27;);</code></pre></figure>
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d10-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 5</p>
   <h3 class="quiz__legend" id="d10-q1" tabindex="-1">Loaders vs fetching in components?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d10-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Loaders only run on the server</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Loaders run after the component mounts</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Fetching in components is always faster</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Loaders start at navigation, in parallel, so there are no render-then-fetch waterfalls</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>The difference is when fetching starts. <strong>Loaders</strong> start as soon as navigation begins, before anything renders, and all matched loaders run in parallel, so there are no render-then-fetch waterfalls. They also bring route-level errors, redirects and revalidation after actions. <strong>Fetching in components</strong>, with effects or even Query, starts only after render, so nested components fetch in series. The common combination is both: loaders <em>prefetch</em> into the Query cache with <code>queryClient.ensureQueryData</code>, and components read with <code>useQuery</code> for caching and background updates.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d10-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 5</p>
   <h3 class="quiz__legend" id="d10-q2" tabindex="-1">How do nested routes and outlets work?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d10-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Child routes must be defined in separate apps</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Each route replaces the whole page</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>A URL matches a branch; each parent renders <code>&lt;Outlet/&gt;</code> where its child goes</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Outlets are only for modals</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Routes form a tree that mirrors the UI, and a URL matches one <em>branch</em> of it, from root to leaf. Each matched route renders its element, with a parent rendering <code>&lt;Outlet/&gt;</code> where its matched child goes. Parents stay mounted, state and all, while children change. And because each level can have its own loader, <code>errorElement</code> and <code>handle</code>, loading and failure are scoped to the part of the screen they affect.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d10-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 5</p>
   <h3 class="quiz__legend" id="d10-q3" tabindex="-1">Where should filter state live, and why the URL?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d10-q3"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>In search params: shareable, survives reloads, works with Back, and loaders can read it</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>In a global store, so every component can read it</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>In <code>useState</code>, because it’s UI state</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>In localStorage, so it persists</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>In the URL search params. That makes it shareable as a link, persistent across reloads, undoable with Back and server-renderable, and loaders can read it before render. <code>useState</code> loses it on reload, whereas a global store hides it. Just validate it on read, because the URL is user input.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d10-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 5</p>
   <h3 class="quiz__legend" id="d10-q4" tabindex="-1">How do you handle 404s and other errors per route?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d10-q4"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Return <code>null</code> from the component</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Redirect to <code>/404</code> in an effect</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>Throw from the loader and render the nearest route <code>errorElement</code></span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Wrap the whole app in one try/catch</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Throw from the loader, either <code>data('Not found', { status: 404 })</code> or a <code>redirect()</code>, and give the relevant route an <code>errorElement</code>. The router renders the nearest one in place of the failing route, so parents and siblings keep working. Inside it, <code>useRouteError()</code> and <code>isRouteErrorResponse()</code> tell HTTP-style errors apart from crashes. Unknown URLs go to a catch-all <code>path: '*'</code>.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d10-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 5</p>
   <h3 class="quiz__legend" id="d10-q5" tabindex="-1">How does this compare with the Ember router?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d10-q5"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>React Router has no nested routes</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Identical: React Router is a port of the Ember router</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Ember loads routes in parallel; React Router loads parent-first</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Conceptually close, but loaders run in parallel and routes are config with string paths</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -2905,7 +2906,7 @@ startTransition(() =&gt; setId(nextId)); // animates</code></pre></figure>
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">5 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">5 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -2918,36 +2919,36 @@ startTransition(() =&gt; setId(nextId)); // animates</code></pre></figure>
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d11-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 5</p>
   <h3 class="quiz__legend" id="d11-q1" tabindex="-1">What is a transition?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d11-q1"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>A non-urgent update that urgent ones can interrupt, keeping the UI responsive</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>A CSS animation between routes</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>An update that runs synchronously before paint</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>A debounced state setter</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>It's an update marked as non-urgent with <code>startTransition</code> or <code>useTransition</code>, which React renders concurrently. That means urgent updates such as typing can interrupt it, the current UI stays interactive, already-visible content isn't replaced by Suspense fallbacks, and you get <code>isPending</code>. Since React 19 transitions can also be async, and then they're called Actions.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d11-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 5</p>
   <h3 class="quiz__legend" id="d11-q2" tabindex="-1">What problem do Actions solve?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d11-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Dispatching Redux events</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Routing between pages</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Fetching data before render</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Pending state, sequencing, errors and resets around async mutations</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>They remove the boilerplate and the bugs around async mutations: pending state, submission order, errors, form resets and optimistic UI. An Action is an async function run in a transition, so React can own all of that. It tracks the pending state for <code>useActionState</code> and <code>useFormStatus</code>, queues repeated submissions, integrates with <code>useOptimistic</code> and resets uncontrolled forms on success. The same model also works for Server Functions, with progressive enhancement.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d11-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 5</p>
   <h3 class="quiz__legend" id="d11-q3" tabindex="-1"><code>useActionState</code> vs <code>useState</code> + <code>onSubmit</code>?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d11-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>They’re identical, but <code>useActionState</code> is slower</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span><code>useActionState</code> handles the pending flag, ordering and result for you</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span><code>useState</code> + <code>onSubmit</code> is the newer recommended pattern</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span><code>useActionState</code> only works with Server Functions</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p><code>useActionState</code> does by itself what <code>useState</code> + <code>onSubmit</code> makes you do by hand. With the manual version you manage <code>isSubmitting</code>, <code>error</code> and <code>result</code>, remember <code>preventDefault</code>, guard against double submits and order async results yourself. <code>useActionState</code> instead returns the last result as state plus <code>isPending</code>, runs the action in a transition, queues calls so results arrive in order and receives <code>FormData</code> directly. Given a server function, it even works before hydration via a permalink. So it's less code with fewer race conditions.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d11-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 5</p>
   <h3 class="quiz__legend" id="d11-q4" tabindex="-1">How does <code>useOptimistic</code> roll back?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d11-q4"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>It restores a snapshot it took before the update</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>It refetches from the server</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>The optimistic layer only exists while the transition is pending, then real state shows again</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>You must call <code>rollback()</code> in a catch block</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>It doesn't need a snapshot, because the optimistic value is a temporary layer that only exists <strong>while the surrounding transition is pending</strong>. When the transition ends, React renders from the real state again. If the server call succeeded, you updated the real state, so the UI stays put. If it failed, you didn't, so the optimistic value simply disappears and all you do is surface the error.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d11-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 5</p>
   <h3 class="quiz__legend" id="d11-q5" tabindex="-1"><code>useDeferredValue</code> vs debouncing?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d11-q5"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span><code>useDeferredValue</code> waits a fixed 300ms</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Deferred updates at once at low priority; debounce delays by a fixed time and suits network calls</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>They’re the same thing, implemented differently</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Debouncing is built into React 19</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -3124,7 +3125,7 @@ app/issues/actions.ts     &#x27;use server&#x27;</code></pre></figure>
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">5 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">5 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -3137,36 +3138,36 @@ app/issues/actions.ts     &#x27;use server&#x27;</code></pre></figure>
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d12-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 5</p>
   <h3 class="quiz__legend" id="d12-q1" tabindex="-1">RSC vs SSR?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d12-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>RSC is SSR with caching</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>SSR runs in the browser; RSC on the server</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>They’re two names for server-side rendering</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>SSR renders client components to HTML and hydrates; RSC components run only on the server and never ship</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>They solve different problems, so frameworks use both. <strong>SSR</strong> renders client components to HTML on the server for a fast first paint, then ships all of that code to the browser to hydrate. <strong>RSC</strong> introduces components that run <em>only</em> on the server, so their code never ships, they can reach server resources directly, and their output is a serialised React tree rather than HTML. RSC builds the tree and SSR turns it into initial HTML. So RSC cuts bundle size and client waterfalls, whereas SSR improves first paint.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d12-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 5</p>
   <h3 class="quiz__legend" id="d12-q2" tabindex="-1">What does <code>'use client'</code> actually mean?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d12-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>It disables Server Components for the whole app</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>The component renders only in the browser and is never SSR’d</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>It marks the boundary where server code hands over to modules bundled for the browser</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>It marks a file as safe to cache</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>It marks a module as a <strong>client entry point</strong>, the boundary where the server module graph hands over to modules bundled for the browser. That file and everything it imports become client code, which is still SSR'd and then hydrated. So it doesn't mean "skip SSR", and it only belongs at the boundary, not on every interactive component. Props passed into it from the server must be serialisable.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d12-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 5</p>
   <h3 class="quiz__legend" id="d12-q3" tabindex="-1">Why can't you pass a function from a server component to a client component?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d12-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Client components can’t receive any props</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>It works fine; there’s no restriction</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>Props are serialised across the network, and closures can’t be serialised</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Functions are too large to send</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Because server and client are separate environments with a network between them. Props crossing the boundary are serialised into the RSC payload, and a closure can't be serialised, since it captures server scope and code that never ships. The exception is a <strong>Server Function</strong> (<code>'use server'</code>), which crosses as a reference ID the client can invoke over the network. So pass data, JSX as <code>children</code>, or server functions, but never plain callbacks.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d12-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 5</p>
   <h3 class="quiz__legend" id="d12-q4" tabindex="-1">How do Server Functions work?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d12-q4"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>They run in a service worker</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>They’re REST endpoints you write by hand</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>The bundler swaps them for references; calls POST the arguments and the server runs the function</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>The function’s code is shipped to the browser and run there</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>In client code, the bundler replaces each exported function in a <code>'use server'</code> module with a reference, an ID plus the endpoint. When the client calls it, or a form submits to it, React serialises the arguments and POSTs them, and the framework runs the real function on the server and serialises the result back. In Next.js that response can also carry an updated RSC payload after <code>revalidatePath</code>. Forms with a Server Function action work before hydration. And because they're public endpoints, you authenticate and validate every call.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d12-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 5</p>
   <h3 class="quiz__legend" id="d12-q5" tabindex="-1">When would you <em>not</em> use RSC?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d12-q5"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>When you use TypeScript</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>For any app with more than 50 components</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Never: RSC is always better</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Highly interactive, client-state-heavy apps, or when you can’t run a server</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -3320,7 +3321,7 @@ expect(screen.getByRole(&#x27;tab&#x27;, { name: &#x27;Closed&#x27; })).toHaveFo
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">6 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">6 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -3333,43 +3334,43 @@ expect(screen.getByRole(&#x27;tab&#x27;, { name: &#x27;Closed&#x27; })).toHaveFo
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d13-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 6</p>
   <h3 class="quiz__legend" id="d13-q1" tabindex="-1">Why prefer <code>getByRole</code>?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d13-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>It’s the only query that works with TypeScript</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>It finds elements by CSS class</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>It queries the accessibility tree, so tests survive refactors and catch a11y breaks</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>It’s the fastest query</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Because it queries the accessibility tree, by role and accessible name, which is what assistive technology uses. So tests survive markup and styling changes, document intent ("the Save button"), and fail when accessibility breaks, say a missing label or the wrong role. An element you can't find by role is often a real a11y bug.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d13-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 6</p>
   <h3 class="quiz__legend" id="d13-q2" tabindex="-1">What's wrong with testing implementation details?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d13-q2"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>Tests break on harmless refactors and pass when behaviour breaks</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>It’s impossible with Testing Library</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Nothing: it gives the best coverage</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Only that those tests run slowly</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>They fail both ways. They break on refactors that don't change behaviour, which erodes trust, and they pass when behaviour is broken. Asserting on component state, calling instance methods, checking which hook was used, shallow rendering and snapshotting markup all do this. Instead, test what the user or caller can observe: rendered text and roles, focus, callbacks invoked and network effects.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d13-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 6</p>
   <h3 class="quiz__legend" id="d13-q3" tabindex="-1"><code>waitFor</code> vs <code>findBy</code>?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d13-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span><code>waitFor</code> is deprecated</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span><code>findBy</code> returns synchronously</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span><code>findBy</code> is <code>waitFor</code> + <code>getBy</code>: use it for appearance, <code>waitFor</code> for other assertions</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>They’re unrelated: <code>findBy</code> is for snapshots</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p><code>findBy*</code> is just <code>waitFor</code> + <code>getBy*</code>: it retries a query until the element appears or the timeout passes, so use it to wait for something to <em>appear</em>. <code>waitFor(cb)</code> retries any callback until it stops throwing, which suits everything else, such as disappearance, call counts or db state. Keep <code>waitFor</code> callbacks free of side effects, with one assertion each and never a <code>userEvent</code> call.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d13-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 6</p>
   <h3 class="quiz__legend" id="d13-q4" tabindex="-1">How do you test a component that fetches?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d13-q4"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Mock the <code>useQuery</code> hook to return data</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Call the API for real in the test</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Use snapshot tests only</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Use the real data layer, mock the network, and await the result</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Render it with its real data layer and mock the <strong>network</strong>, not the hook. That means a fresh <code>QueryClient</code> per test with <code>retry: false</code>, or a memory router for loaders, in front of MSW or a fake API. Assert the loading state, <code>await findBy…</code> for the data, and cover the error path with a handler that returns 500, then "Retry". Fresh caches and reset handlers keep tests isolated.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d13-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 6</p>
   <h3 class="quiz__legend" id="d13-q5" tabindex="-1">How do you test a custom hook?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d13-q5"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Call it outside a component</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Through a component, or <code>renderHook</code> with <code>rerender</code> and <code>act</code></span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Use shallow rendering</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Mock React and inspect the hook’s internal state</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Ideally through a component that uses it. For reusable hooks, use <code>renderHook(() =&gt; useX(props), { initialProps, wrapper })</code>: read <code>result.current</code>, change inputs with <code>rerender</code>, trigger updates in <code>act()</code>, and use fake timers for anything time-based. Assert on observable results, such as returned values and storage, not on internal state.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 6 of 6</p>
+<li class="quiz__q" data-quiz-q data-qid="d13-q6" hidden>
+  <p class="quiz__count" data-quiz-count>Question 6 of 6</p>
   <h3 class="quiz__legend" id="d13-q6" tabindex="-1">What makes a test flaky?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d13-q6"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Using <code>getByRole</code> instead of test ids</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span>Hidden dependence on timing or shared state</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Using TypeScript</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Running tests in parallel, always</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -3567,7 +3568,7 @@ useEffect(() =&gt; {
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">5 questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">5 questions on today's ideas, plus a few from earlier days to keep them fresh. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -3580,36 +3581,36 @@ useEffect(() =&gt; {
       <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li></ol>
     </div>
     <ol class="quiz__qs">
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 1 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d14-q1" hidden>
+  <p class="quiz__count" data-quiz-count>Question 1 of 5</p>
   <h3 class="quiz__legend" id="d14-q1" tabindex="-1">What are compound components, and how do you build them?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d14-q1"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>A component that renders other components conditionally</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Components merged into one at build time</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Higher-order components chained together</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Components that share implicit state under a parent, built with a context the parent provides</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>They're a set of components that work together under a parent and share implicit state, such as <code>&lt;Tabs&gt;&lt;Tabs.List&gt;&lt;Tabs.Tab/&gt;…</code>, so the caller composes the markup freely while the parent owns the behaviour. The parent creates a context holding state and actions, each part consumes it through a hook that throws outside the parent, and the parts hang off the parent as static properties. They're the React equivalent of yielding contextual components via <code>hash</code>.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 2 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d14-q2" hidden>
+  <p class="quiz__count" data-quiz-count>Question 2 of 5</p>
   <h3 class="quiz__legend" id="d14-q2" tabindex="-1">Why portals, and how do events bubble through them?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d14-q2"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>They improve performance; events don’t bubble out of them</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>They’re for iframes; events bubble through the DOM tree only</span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">3</span><span>They escape clipping and stacking; events bubble through the React tree, not the DOM</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>They render on the server; events don’t work</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Portals render into a different DOM node, usually <code>body</code>, so modals, tooltips and toasts escape clipping, <code>overflow</code> and <code>z-index</code> stacking. Events, though, bubble through the <strong>React tree</strong>, not the DOM tree. So a click inside a portal reaches the <code>onClick</code> of the component that rendered it, even though the DOM node lives elsewhere, and context flows through the same way. Native listeners on the DOM ancestors won't see those events.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 3 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d14-q3" hidden>
+  <p class="quiz__count" data-quiz-count>Question 3 of 5</p>
   <h3 class="quiz__legend" id="d14-q3" tabindex="-1">What changed with refs in React 19?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d14-q3"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Refs were removed in favour of <code>useElement</code></span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">2</span><span><code>ref</code> is a regular prop, so <code>forwardRef</code> isn’t needed, and ref callbacks can return cleanup</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span><code>useRef</code> is now asynchronous</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Refs now trigger re-renders when they change</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p><code>ref</code> became a regular prop for function components, so <code>forwardRef</code> is no longer needed. Ref callbacks can now return a cleanup function that runs on detach, instead of being called with <code>null</code>, and <code>useRef</code> requires an argument. The same release replaced <code>&lt;Context.Provider&gt;</code> with <code>&lt;Context&gt;</code>. Then 19.3 added <code>&lt;Fragment ref&gt;</code>, which exposes a <code>FragmentInstance</code> spanning the fragment's children.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 4 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d14-q4" hidden>
+  <p class="quiz__count" data-quiz-count>Question 4 of 5</p>
   <h3 class="quiz__legend" id="d14-q4" tabindex="-1"><code>&lt;Activity&gt;</code> vs conditional rendering?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d14-q4"><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">1</span><span>Activity hides while keeping state and DOM; conditional rendering unmounts</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Activity is for animations only</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>They behave identically</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">4</span><span>Activity unmounts but caches the props</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
   <div class="quiz__why prose" data-quiz-why hidden><p>Conditional rendering unmounts the hidden branch, destroying its state and DOM and running effect cleanups, so showing it again mounts fresh. <code>&lt;Activity mode="hidden"&gt;</code> instead keeps it mounted behind <code>display: none</code> with its state and DOM intact. Its effects are torn down while hidden and re-run when visible, and its updates render at low priority. So use Activity when returning to a view should be instant and stateful, and conditional rendering when hidden UI should really go away.</p></div>
 </li>
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question 5 of 5</p>
+<li class="quiz__q" data-quiz-q data-qid="d14-q5" hidden>
+  <p class="quiz__count" data-quiz-count>Question 5 of 5</p>
   <h3 class="quiz__legend" id="d14-q5" tabindex="-1">How do you type a generic component?</h3>
   <div class="quiz__opts" role="group" aria-labelledby="d14-q5"><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">1</span><span>Generic components aren’t possible in TSX</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">2</span><span>Use <code>any</code> for the props</span></button><button type="button" class="quiz__opt" data-quiz-opt><span class="quiz__key" aria-hidden="true">3</span><span>Wrap it in <code>React.Generic&lt;T&gt;</code></span></button><button type="button" class="quiz__opt" data-quiz-opt data-correct><span class="quiz__key" aria-hidden="true">4</span><span>Declare the type parameter on the function and let TypeScript infer it from props</span></button></div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -3669,6 +3670,37 @@ useEffect(() =&gt; {
 </section>
   
   
+<section class="panel quiz" data-quiz="15" data-quiz-boss aria-labelledby="d15-drill">
+  <h2 id="d15-drill">Boss rush</h2>
+  <div class="quiz__start" data-quiz-start-screen>
+    <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg></button>
+    <p class="quiz__title pixel">Insert coin</p>
+    <p class="quiz__sub">15 questions from across the course, leaning on the ones you've missed. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <div class="quiz__start-actions">
+      <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
+      <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
+    </div>
+  </div>
+  <div class="quiz__game" data-quiz-game hidden>
+    <div class="quiz__hud pixel" aria-hidden="true">
+      <span class="quiz__coins"><svg class="pixel-coin" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M2 0h4v1h-4zM1 1h1v1h-1zM6 1h1v1h-1zM0 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM6 6h1v1h-1zM2 7h4v1h-4z"/><path fill="#f8b800" d="M2 1h4v1h-4zM1 2h2v1h-2zM4 2h2v1h-2zM1 3h1v1h-1zM3 3h3v1h-3zM1 4h5v1h-5zM1 5h4v1h-4z"/><path fill="#fff6c0" d="M3 2h1v1h-1zM2 3h1v1h-1z"/><path fill="#c87800" d="M6 2h1v1h-1zM6 3h1v1h-1zM6 4h1v1h-1zM5 5h2v1h-2zM2 6h4v1h-4z"/></svg>×<span data-quiz-score>0</span></span>
+      <span class="quiz__combo" data-quiz-combo></span>
+      <ol class="quiz__pips"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+    </div>
+    <ol class="quiz__qs"></ol>
+    <div class="quiz__nav"><button type="button" class="button button--primary" data-quiz-next hidden>Next ▶</button></div>
+    <div class="quiz__end" data-quiz-end hidden>
+      <svg class="quiz__trophy" viewBox="0 0 9 10" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><path fill="#7a4a00" d="M1 0h7v1h-7zM0 1h1v1h-1zM8 1h1v1h-1zM0 2h1v1h-1zM8 2h1v1h-1zM1 3h1v1h-1zM7 3h1v1h-1zM2 4h1v1h-1zM6 4h1v1h-1zM3 5h1v1h-1zM5 5h1v1h-1zM3 6h1v1h-1zM5 6h1v1h-1zM2 7h5v1h-5zM2 8h1v1h-1zM6 8h1v1h-1zM2 9h5v1h-5z"/><path fill="#f8b800" d="M1 1h1v1h-1zM3 1h4v1h-4zM1 2h1v1h-1zM3 2h4v1h-4zM2 3h4v1h-4zM3 4h2v1h-2zM4 5h1v1h-1zM3 8h2v1h-2z"/><path fill="#fff6c0" d="M2 1h1v1h-1zM2 2h1v1h-1z"/><path fill="#c87800" d="M7 1h1v1h-1zM7 2h1v1h-1zM6 3h1v1h-1zM5 4h1v1h-1zM4 6h1v1h-1zM5 8h1v1h-1z"/></svg>
+      <p class="quiz__rank pixel" data-quiz-rank></p>
+      <h3 class="quiz__result" data-quiz-result tabindex="-1"></h3>
+      <p class="quiz__msg" data-quiz-msg></p>
+      <div class="quiz__end-actions">
+        <button type="button" class="button button--primary" data-quiz-retake>↻ Play again</button>
+        <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="panel" aria-labelledby="review">
   <h2 id="review">Final review: 30 questions</h2>
   <p class="muted">Set a timer: about 40 seconds per answer, out loud, before you reveal. Two per concern, plus a few that cut across the whole course.</p>
@@ -3834,7 +3866,7 @@ useEffect(() =&gt; {
     <li><span class="intro__n">2</span><div><h3>Build <small>35 min</small></h3>
       <p class="live-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Each time you save, the tests run and this page shows what's left.</p>
       <p class="file-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Run <code>pnpm start</code> in the repo and this page shows your tests passing as you go.</p></div></li>
-    <li><span class="intro__n">3</span><div><h3>Check yourself <small>10 min</small></h3><p>Press start for a quick multiple-choice quiz. Every answer comes with the reasoning.</p></div></li>
+    <li><span class="intro__n">3</span><div><h3>Check yourself <small>10 min</small></h3><p>Press start for a quick multiple-choice quiz. Every answer comes with the reasoning. A few questions from earlier days come back too, more often the ones you missed, so they stick.</p></div></li>
     <li><span class="intro__n">4</span><div><h3>Done</h3>
       <p class="live-only">When all of today's tests pass, the day ticks off by itself and the next one unlocks.</p>
       <p class="file-only">When today's tests pass, press "Mark day complete" to unlock the next day.</p></div></li>
@@ -4162,6 +4194,74 @@ useEffect(() =&gt; {
   function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
   function each(root, sel, fn) { Array.prototype.forEach.call(root.querySelectorAll(sel), fn); }
   function questions(root) { return Array.prototype.slice.call(root.querySelectorAll('[data-quiz-q]')); }
+  function own(root) { return questions(root).filter(function (li) { return !li.hasAttribute('data-review'); }); }
+
+  // Spaced review, Leitner style. Every question sits in a box: a right answer moves it up a box and a
+  // wrong one sends it back to the first, and each box waits longer before the question comes back.
+  // Time is counted in course days, so doing three days in one sitting still spaces them out
+  var REVIEW = 'react-for-ember:review';
+  var INTERVALS = [1, 2, 4, 8];
+  var REVIEW_COUNT = 3;
+  var BOSS_COUNT = 15;
+  var reviewLog = {};
+  try { reviewLog = JSON.parse(store.get(REVIEW) || '{}') || {}; } catch (e) { reviewLog = {}; }
+  function isBoss(root) { return root.hasAttribute('data-quiz-boss'); }
+  function totalFor(root) { return isBoss(root) ? BOSS_COUNT : own(root).length; }
+
+  function remember(qid, now, right) {
+    var r = reviewLog[qid];
+    // Replaying a quiz the same day can't race a question up the boxes
+    if (right && r && r.last === now) return;
+    reviewLog[qid] = { box: right ? Math.min(INTERVALS.length - 1, r ? r.box + 1 : 1) : 0, last: now };
+    store.set(REVIEW, JSON.stringify(reviewLog));
+  }
+
+  // Questions from days before now: due ones first, then ones you've missed, then the weakest.
+  // The boss rush ignores due dates
+  function pickReviews(now, count, boss) {
+    var pool = [];
+    each(document, '[data-quiz]:not([data-quiz-boss])', function (quiz) {
+      var day = Number(quiz.dataset.quiz);
+      if (day >= now || !isUnlocked(day)) return;
+      own(quiz).forEach(function (li) {
+        var r = reviewLog[li.dataset.qid];
+        var box = r ? r.box : 0;
+        var late = now - (r ? r.last : day) - INTERVALS[box];
+        pool.push({ li: li, due: boss || late >= 0 ? 1 : 0, missed: r && r.box === 0 ? 1 : 0, box: box, late: boss ? 0 : late, rand: Math.random() });
+      });
+    });
+    pool.sort(function (a, b) { return (b.due - a.due) || (b.missed - a.missed) || (a.box - b.box) || (b.late - a.late) || (a.rand - b.rand); });
+    return pool.slice(0, count).map(function (p) { return p.li; });
+  }
+
+  // Copy the picked questions in, each slotted somewhere after today's first one
+  function dealReviews(root) {
+    var now = Number(root.dataset.quiz);
+    each(root, '[data-review]', function (li) { li.remove(); });
+    var order = own(root);
+    pickReviews(now, isBoss(root) ? BOSS_COUNT : REVIEW_COUNT, isBoss(root)).forEach(function (src) {
+      var li = src.cloneNode(true);
+      li.setAttribute('data-review', src.closest('[data-quiz]').dataset.quiz);
+      var legend = li.querySelector('.quiz__legend');
+      legend.id += '-r' + now;
+      li.querySelector('.quiz__opts').setAttribute('aria-labelledby', legend.id);
+      order.splice(1 + Math.floor(Math.random() * order.length), 0, li);
+    });
+    var list = root.querySelector('.quiz__qs');
+    order.forEach(function (li, k) {
+      list.appendChild(li);
+      var count = li.querySelector('[data-quiz-count]');
+      count.textContent = 'Question ' + (k + 1) + ' of ' + order.length;
+      if (li.dataset.review) {
+        var from = document.createElement('span');
+        from.className = 'quiz__from';
+        from.textContent = 'Day ' + li.dataset.review;
+        count.appendChild(from);
+      }
+    });
+    root.querySelector('.quiz__pips').innerHTML = new Array(order.length + 1).join('<li></li>');
+    return order.length - own(root).length;
+  }
 
   // Browsers only let a page start audio from a click or key press, and a context made any other way
   // (say, the reading coin popping in while scrolling) stays paused. So wake it again on every one
@@ -4212,7 +4312,7 @@ useEffect(() =&gt; {
 
   function renderBest(root) {
     var score = best[root.dataset.quiz];
-    var total = questions(root).length;
+    var total = totalFor(root);
     root.querySelector('[data-quiz-best]').textContent = score == null ? '' : 'Hi-score: ' + score + ' / ' + total + (score === total ? ' ★' : '');
   }
 
@@ -4234,8 +4334,10 @@ useEffect(() =&gt; {
 
   function startQuiz(root) {
     var replay = !!root._quiz;
-    root._quiz = { i: 0, score: 0, combo: 0 };
-    questions(root).forEach(function (li) { resetQuestion(li, replay); });
+    var reviews = dealReviews(root);
+    root._quiz = { i: 0, score: 0, recall: 0, reviews: reviews, coins: 0, combo: 0 };
+    // Copied questions always reshuffle, so their answer isn't where it was on their own day
+    questions(root).forEach(function (li) { resetQuestion(li, replay || li.hasAttribute('data-review')); });
     each(root, '.quiz__pips li', function (p) { p.className = ''; });
     root.querySelector('[data-quiz-start-screen]').hidden = true;
     root.querySelector('[data-quiz-game]').hidden = false;
@@ -4285,10 +4387,12 @@ useEffect(() =&gt; {
     });
     if (!right) btn.classList.add('is-wrong');
     root.querySelectorAll('.quiz__pips li')[st.i].classList.add(right ? 'is-right' : 'is-wrong');
+    remember(li.dataset.qid, Number(root.dataset.quiz), right);
     if (right) {
-      st.score++;
+      if (li.hasAttribute('data-review')) st.recall++; else st.score++;
+      st.coins++;
       st.combo++;
-      root.querySelector('[data-quiz-score]').textContent = String(st.score);
+      root.querySelector('[data-quiz-score]').textContent = String(st.coins);
       popCoin(btn);
       blip(st.combo >= 3 ? SFX.combo : SFX.coin);
     } else {
@@ -4310,10 +4414,14 @@ useEffect(() =&gt; {
   function finish(root) {
     var st = root._quiz;
     var n = root.dataset.quiz;
-    var total = questions(root).length;
+    var boss = isBoss(root);
+    // The hi-score only counts the day's own questions, so the earlier ones can't make a replay harder.
+    // In the boss rush every question is an earlier one
+    var score = boss ? st.recall : st.score;
+    var total = boss ? st.reviews : own(root).length;
     questions(root).forEach(function (li) { li.hidden = true; });
     root.querySelector('[data-quiz-next]').hidden = true;
-    var ratio = st.score / total;
+    var ratio = score / total;
     var rank = ratio === 1 ? 'S' : ratio >= 0.8 ? 'A' : ratio >= 0.6 ? 'B' : ratio >= 0.4 ? 'C' : 'D';
     var msg = {
       S: 'Flawless. Not a single miss.',
@@ -4322,23 +4430,26 @@ useEffect(() =&gt; {
       C: 'Continue? Re-read today’s concepts and insert another coin.',
       D: 'Game over… or is it? Re-read today’s concepts and try again.',
     }[rank];
+    if (boss) msg = msg.replace('today’s concepts', 'the days you missed');
+    else if (rank === 'S') msg = 'Not a single miss on today’s ideas.';
     var prev = best[n];
-    var record = prev == null || st.score > prev;
-    if (record) { best[n] = st.score; store.set(QUIZ_BEST, JSON.stringify(best)); }
+    var record = prev == null || score > prev;
+    if (record) { best[n] = score; store.set(QUIZ_BEST, JSON.stringify(best)); }
     var end = root.querySelector('[data-quiz-end]');
     end.hidden = false;
     end.classList.toggle('is-flawless', rank === 'S');
     var rankEl = root.querySelector('[data-quiz-rank]');
     rankEl.textContent = 'Rank ' + rank;
     rankEl.dataset.rank = rank;
-    root.querySelector('[data-quiz-result]').textContent = 'You got ' + st.score + ' of ' + total + (record && prev != null ? '. New hi-score!' : '');
-    root.querySelector('[data-quiz-msg]').textContent = msg;
+    root.querySelector('[data-quiz-result]').textContent = 'You got ' + score + ' of ' + total + (record && prev != null ? '. New hi-score!' : '');
+    var recall = !boss && st.reviews ? ' From earlier days: ' + st.recall + ' of ' + st.reviews + ' remembered.' : '';
+    root.querySelector('[data-quiz-msg]').textContent = msg + recall;
     root.querySelector('[data-quiz-result]').focus({ preventScroll: true });
     renderBest(root);
     if (rank === 'S') {
       blip(SFX.win);
       confetti(false, 'pixel');
-      var all = Array.prototype.every.call(document.querySelectorAll('[data-quiz]'), function (r) { return best[r.dataset.quiz] === questions(r).length; });
+      var all = Array.prototype.every.call(document.querySelectorAll('[data-quiz]'), function (r) { return best[r.dataset.quiz] === totalFor(r); });
       if (all) toast('★ Every quiz flawless. You are the final boss now.');
     } else blip(rank === 'A' ? SFX.coin : SFX.wrong);
   }

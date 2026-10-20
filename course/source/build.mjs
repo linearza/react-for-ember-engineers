@@ -146,8 +146,8 @@ function quizQuestion(day, i, [q, a], { choices }) {
     .map((c, k) => `<button type="button" class="quiz__opt" data-quiz-opt${c.correct ? ' data-correct' : ''}><span class="quiz__key" aria-hidden="true">${k + 1}</span><span>${inline(c.text)}</span></button>`)
     .join('');
   return `
-<li class="quiz__q" data-quiz-q hidden>
-  <p class="quiz__count">Question ${i + 1} of ${day.drill.length}</p>
+<li class="quiz__q" data-quiz-q data-qid="${id}" hidden>
+  <p class="quiz__count" data-quiz-count>Question ${i + 1} of ${day.drill.length}</p>
   <h3 class="quiz__legend" id="${id}" tabindex="-1">${inline(q)}</h3>
   <div class="quiz__opts" role="group" aria-labelledby="${id}">${options}</div>
   <p class="quiz__verdict" data-quiz-verdict role="status"></p>
@@ -158,13 +158,19 @@ function quizQuestion(day, i, [q, a], { choices }) {
 function drill(day) {
   const n = day.drill.length;
   const items = day.drill.map((d, i) => quizQuestion(day, i, d, QUIZ[day.n][i])).join('');
+  const sub = `${n} questions on today's ideas${day.n > 1 ? ', plus a few from earlier days to keep them fresh' : ''}. Pick an answer and see why it's right.`;
+  return quizShell({ n: day.n, title: 'Check yourself', sub, items, count: n });
+}
+
+// The quiz screen. A boss quiz has no questions of its own: it fills up with earlier days' questions when it starts
+function quizShell({ n, title, sub, items, count, boss = false }) {
   return `
-<section class="panel quiz" data-quiz="${day.n}" aria-labelledby="d${day.n}-drill">
-  <h2 id="d${day.n}-drill">Check yourself</h2>
+<section class="panel quiz" data-quiz="${n}"${boss ? ' data-quiz-boss' : ''} aria-labelledby="d${n}-drill">
+  <h2 id="d${n}-drill">${title}</h2>
   <div class="quiz__start" data-quiz-start-screen>
     <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin">${coinSvg()}</button>
     <p class="quiz__title pixel">Insert coin</p>
-    <p class="quiz__sub">${n} questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <p class="quiz__sub">${sub} <span class="quiz__best" data-quiz-best></span></p>
     <div class="quiz__start-actions">
       <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
       <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
@@ -174,7 +180,7 @@ function drill(day) {
     <div class="quiz__hud pixel" aria-hidden="true">
       <span class="quiz__coins">${coinSvg()}×<span data-quiz-score>0</span></span>
       <span class="quiz__combo" data-quiz-combo></span>
-      <ol class="quiz__pips">${'<li></li>'.repeat(n)}</ol>
+      <ol class="quiz__pips">${'<li></li>'.repeat(count)}</ol>
     </div>
     <ol class="quiz__qs">${items}</ol>
     <div class="quiz__nav"><button type="button" class="button button--primary" data-quiz-next hidden>Next ▶</button></div>
@@ -197,7 +203,9 @@ function day15Extra() {
   const rows = CHEATSHEET
     .map(([ember, react, flag]) => `<tr><td>${inline(ember)}</td><td>${inline(react)}</td><td class="nowrap">${[...flag].map((c) => FLAGS[c][0]).join(' / ')}</td></tr>`)
     .join('');
-  return `
+  const boss = quizShell({ n: 15, title: 'Boss rush', items: '', count: 15, boss: true,
+    sub: "15 questions from across the course, leaning on the ones you've missed. Pick an answer and see why it's right." });
+  return `${boss}
 <section class="panel" aria-labelledby="review">
   <h2 id="review">Final review: 30 questions</h2>
   <p class="muted">Set a timer: about 40 seconds per answer, out loud, before you reveal. Two per concern, plus a few that cut across the whole course.</p>
@@ -516,6 +524,7 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 .quiz__qs { list-style: none; margin: 0; padding: 0; }
 .quiz__start[hidden], .quiz__game[hidden], .quiz__q[hidden], .quiz__why[hidden] { display: none; }
 .quiz__count { margin: 0 0 0.25rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.quiz__from { display: inline-block; margin-left: 0.6rem; padding: 0.2rem 0.4rem; box-shadow: 0 -2px 0 currentColor, 0 2px 0 currentColor, -2px 0 0 currentColor, 2px 0 0 currentColor; font-family: 'Press Start 2P', ui-monospace, monospace; font-size: 0.5rem; letter-spacing: 0; color: var(--accent); vertical-align: 1px; }
 .quiz__legend { margin: 0 0 0.9rem; font-size: 1.1rem; }
 .quiz__legend:focus, .quiz__result:focus { outline: none; }
 .quiz__opts { display: grid; gap: 0.5rem; }
@@ -978,6 +987,74 @@ const JS = String.raw`
   function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
   function each(root, sel, fn) { Array.prototype.forEach.call(root.querySelectorAll(sel), fn); }
   function questions(root) { return Array.prototype.slice.call(root.querySelectorAll('[data-quiz-q]')); }
+  function own(root) { return questions(root).filter(function (li) { return !li.hasAttribute('data-review'); }); }
+
+  // Spaced review, Leitner style. Every question sits in a box: a right answer moves it up a box and a
+  // wrong one sends it back to the first, and each box waits longer before the question comes back.
+  // Time is counted in course days, so doing three days in one sitting still spaces them out
+  var REVIEW = 'react-for-ember:review';
+  var INTERVALS = [1, 2, 4, 8];
+  var REVIEW_COUNT = 3;
+  var BOSS_COUNT = 15;
+  var reviewLog = {};
+  try { reviewLog = JSON.parse(store.get(REVIEW) || '{}') || {}; } catch (e) { reviewLog = {}; }
+  function isBoss(root) { return root.hasAttribute('data-quiz-boss'); }
+  function totalFor(root) { return isBoss(root) ? BOSS_COUNT : own(root).length; }
+
+  function remember(qid, now, right) {
+    var r = reviewLog[qid];
+    // Replaying a quiz the same day can't race a question up the boxes
+    if (right && r && r.last === now) return;
+    reviewLog[qid] = { box: right ? Math.min(INTERVALS.length - 1, r ? r.box + 1 : 1) : 0, last: now };
+    store.set(REVIEW, JSON.stringify(reviewLog));
+  }
+
+  // Questions from days before now: due ones first, then ones you've missed, then the weakest.
+  // The boss rush ignores due dates
+  function pickReviews(now, count, boss) {
+    var pool = [];
+    each(document, '[data-quiz]:not([data-quiz-boss])', function (quiz) {
+      var day = Number(quiz.dataset.quiz);
+      if (day >= now || !isUnlocked(day)) return;
+      own(quiz).forEach(function (li) {
+        var r = reviewLog[li.dataset.qid];
+        var box = r ? r.box : 0;
+        var late = now - (r ? r.last : day) - INTERVALS[box];
+        pool.push({ li: li, due: boss || late >= 0 ? 1 : 0, missed: r && r.box === 0 ? 1 : 0, box: box, late: boss ? 0 : late, rand: Math.random() });
+      });
+    });
+    pool.sort(function (a, b) { return (b.due - a.due) || (b.missed - a.missed) || (a.box - b.box) || (b.late - a.late) || (a.rand - b.rand); });
+    return pool.slice(0, count).map(function (p) { return p.li; });
+  }
+
+  // Copy the picked questions in, each slotted somewhere after today's first one
+  function dealReviews(root) {
+    var now = Number(root.dataset.quiz);
+    each(root, '[data-review]', function (li) { li.remove(); });
+    var order = own(root);
+    pickReviews(now, isBoss(root) ? BOSS_COUNT : REVIEW_COUNT, isBoss(root)).forEach(function (src) {
+      var li = src.cloneNode(true);
+      li.setAttribute('data-review', src.closest('[data-quiz]').dataset.quiz);
+      var legend = li.querySelector('.quiz__legend');
+      legend.id += '-r' + now;
+      li.querySelector('.quiz__opts').setAttribute('aria-labelledby', legend.id);
+      order.splice(1 + Math.floor(Math.random() * order.length), 0, li);
+    });
+    var list = root.querySelector('.quiz__qs');
+    order.forEach(function (li, k) {
+      list.appendChild(li);
+      var count = li.querySelector('[data-quiz-count]');
+      count.textContent = 'Question ' + (k + 1) + ' of ' + order.length;
+      if (li.dataset.review) {
+        var from = document.createElement('span');
+        from.className = 'quiz__from';
+        from.textContent = 'Day ' + li.dataset.review;
+        count.appendChild(from);
+      }
+    });
+    root.querySelector('.quiz__pips').innerHTML = new Array(order.length + 1).join('<li></li>');
+    return order.length - own(root).length;
+  }
 
   // Browsers only let a page start audio from a click or key press, and a context made any other way
   // (say, the reading coin popping in while scrolling) stays paused. So wake it again on every one
@@ -1028,7 +1105,7 @@ const JS = String.raw`
 
   function renderBest(root) {
     var score = best[root.dataset.quiz];
-    var total = questions(root).length;
+    var total = totalFor(root);
     root.querySelector('[data-quiz-best]').textContent = score == null ? '' : 'Hi-score: ' + score + ' / ' + total + (score === total ? ' ★' : '');
   }
 
@@ -1050,8 +1127,10 @@ const JS = String.raw`
 
   function startQuiz(root) {
     var replay = !!root._quiz;
-    root._quiz = { i: 0, score: 0, combo: 0 };
-    questions(root).forEach(function (li) { resetQuestion(li, replay); });
+    var reviews = dealReviews(root);
+    root._quiz = { i: 0, score: 0, recall: 0, reviews: reviews, coins: 0, combo: 0 };
+    // Copied questions always reshuffle, so their answer isn't where it was on their own day
+    questions(root).forEach(function (li) { resetQuestion(li, replay || li.hasAttribute('data-review')); });
     each(root, '.quiz__pips li', function (p) { p.className = ''; });
     root.querySelector('[data-quiz-start-screen]').hidden = true;
     root.querySelector('[data-quiz-game]').hidden = false;
@@ -1101,10 +1180,12 @@ const JS = String.raw`
     });
     if (!right) btn.classList.add('is-wrong');
     root.querySelectorAll('.quiz__pips li')[st.i].classList.add(right ? 'is-right' : 'is-wrong');
+    remember(li.dataset.qid, Number(root.dataset.quiz), right);
     if (right) {
-      st.score++;
+      if (li.hasAttribute('data-review')) st.recall++; else st.score++;
+      st.coins++;
       st.combo++;
-      root.querySelector('[data-quiz-score]').textContent = String(st.score);
+      root.querySelector('[data-quiz-score]').textContent = String(st.coins);
       popCoin(btn);
       blip(st.combo >= 3 ? SFX.combo : SFX.coin);
     } else {
@@ -1126,10 +1207,14 @@ const JS = String.raw`
   function finish(root) {
     var st = root._quiz;
     var n = root.dataset.quiz;
-    var total = questions(root).length;
+    var boss = isBoss(root);
+    // The hi-score only counts the day's own questions, so the earlier ones can't make a replay harder.
+    // In the boss rush every question is an earlier one
+    var score = boss ? st.recall : st.score;
+    var total = boss ? st.reviews : own(root).length;
     questions(root).forEach(function (li) { li.hidden = true; });
     root.querySelector('[data-quiz-next]').hidden = true;
-    var ratio = st.score / total;
+    var ratio = score / total;
     var rank = ratio === 1 ? 'S' : ratio >= 0.8 ? 'A' : ratio >= 0.6 ? 'B' : ratio >= 0.4 ? 'C' : 'D';
     var msg = {
       S: 'Flawless. Not a single miss.',
@@ -1138,23 +1223,26 @@ const JS = String.raw`
       C: 'Continue? Re-read today’s concepts and insert another coin.',
       D: 'Game over… or is it? Re-read today’s concepts and try again.',
     }[rank];
+    if (boss) msg = msg.replace('today’s concepts', 'the days you missed');
+    else if (rank === 'S') msg = 'Not a single miss on today’s ideas.';
     var prev = best[n];
-    var record = prev == null || st.score > prev;
-    if (record) { best[n] = st.score; store.set(QUIZ_BEST, JSON.stringify(best)); }
+    var record = prev == null || score > prev;
+    if (record) { best[n] = score; store.set(QUIZ_BEST, JSON.stringify(best)); }
     var end = root.querySelector('[data-quiz-end]');
     end.hidden = false;
     end.classList.toggle('is-flawless', rank === 'S');
     var rankEl = root.querySelector('[data-quiz-rank]');
     rankEl.textContent = 'Rank ' + rank;
     rankEl.dataset.rank = rank;
-    root.querySelector('[data-quiz-result]').textContent = 'You got ' + st.score + ' of ' + total + (record && prev != null ? '. New hi-score!' : '');
-    root.querySelector('[data-quiz-msg]').textContent = msg;
+    root.querySelector('[data-quiz-result]').textContent = 'You got ' + score + ' of ' + total + (record && prev != null ? '. New hi-score!' : '');
+    var recall = !boss && st.reviews ? ' From earlier days: ' + st.recall + ' of ' + st.reviews + ' remembered.' : '';
+    root.querySelector('[data-quiz-msg]').textContent = msg + recall;
     root.querySelector('[data-quiz-result]').focus({ preventScroll: true });
     renderBest(root);
     if (rank === 'S') {
       blip(SFX.win);
       confetti(false, 'pixel');
-      var all = Array.prototype.every.call(document.querySelectorAll('[data-quiz]'), function (r) { return best[r.dataset.quiz] === questions(r).length; });
+      var all = Array.prototype.every.call(document.querySelectorAll('[data-quiz]'), function (r) { return best[r.dataset.quiz] === totalFor(r); });
       if (all) toast('★ Every quiz flawless. You are the final boss now.');
     } else blip(rank === 'A' ? SFX.coin : SFX.wrong);
   }
@@ -1536,7 +1624,7 @@ ${prism}
     <li><span class="intro__n">2</span><div><h3>Build <small>35 min</small></h3>
       <p class="live-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Each time you save, the tests run and this page shows what's left.</p>
       <p class="file-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Run <code>pnpm start</code> in the repo and this page shows your tests passing as you go.</p></div></li>
-    <li><span class="intro__n">3</span><div><h3>Check yourself <small>10 min</small></h3><p>Press start for a quick multiple-choice quiz. Every answer comes with the reasoning.</p></div></li>
+    <li><span class="intro__n">3</span><div><h3>Check yourself <small>10 min</small></h3><p>Press start for a quick multiple-choice quiz. Every answer comes with the reasoning. A few questions from earlier days come back too, more often the ones you missed, so they stick.</p></div></li>
     <li><span class="intro__n">4</span><div><h3>Done</h3>
       <p class="live-only">When all of today's tests pass, the day ticks off by itself and the next one unlocks.</p>
       <p class="file-only">When today's tests pass, press "Mark day complete" to unlock the next day.</p></div></li>
