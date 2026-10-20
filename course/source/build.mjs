@@ -391,6 +391,25 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 @keyframes pip { 0% { transform: scale(0.4); } 60% { transform: scale(1.35); } }
 .confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; pointer-events: none; z-index: 1000; overflow: visible; }
 
+/* How it works */
+.icon-button { display: inline-grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--muted); cursor: pointer; flex: none; }
+.icon-button:hover { color: var(--text); border-color: var(--accent); }
+.sidebar__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+.intro { width: min(520px, calc(100vw - 32px)); max-height: calc(100vh - 32px); border: 1px solid var(--border); border-radius: 18px; background: var(--surface); padding: 1.75rem 1.5rem 1.5rem; }
+.intro[open] { animation: pop 380ms cubic-bezier(0.2, 1.4, 0.4, 1); }
+.intro__head { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.4rem; }
+.intro__head svg { width: 48px; height: 48px; flex: none; }
+.intro h2 { font-size: 1.35rem; letter-spacing: -0.02em; }
+.intro__lead { color: var(--muted); margin: 0 0 1.1rem; }
+.intro__steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.85rem; }
+.intro__steps li { display: grid; grid-template-columns: 2rem 1fr; gap: 0.75rem; align-items: start; }
+.intro__n { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 0.9rem; }
+.intro__steps h3 { font-size: 1rem; margin: 0.15rem 0 0.1rem; }
+.intro__steps h3 small { font-weight: 400; color: var(--muted); font-size: 0.85rem; margin-left: 0.35rem; }
+.intro__steps p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.intro__foot { margin: 1.25rem 0 0; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.88rem; color: var(--muted); }
+.intro__actions { display: flex; justify-content: flex-end; margin-top: 1.25rem; }
+
 /* Certificate: always on paper, whatever the theme */
 .cert-dialog { width: min(900px, calc(100vw - 32px)); max-height: calc(100vh - 32px); border: 0; border-radius: 16px; padding: 1rem; background: var(--surface); }
 .cert-dialog__controls { display: flex; flex-wrap: wrap; align-items: end; gap: 0.6rem; margin-top: 1rem; }
@@ -783,9 +802,34 @@ const JS = String.raw`
     renderProgress();
     renderLive();
     renderCertificateButton();
-    var fresh = sorted(completed).filter(function (n) { return !celebrated.has(n); });
-    if (fresh.length) celebrate(fresh);
+    celebrateFresh();
   }
+
+  function celebrateFresh() {
+    var fresh = sorted(completed).filter(function (n) { return !celebrated.has(n); });
+    if (fresh.length && !introDialog.open) celebrate(fresh);
+  }
+
+  // How it works: shown on the first visit, then from the ? buttons
+  var INTRO_SEEN = 'react-for-ember:intro-seen';
+  var introDialog = document.querySelector('[data-intro]');
+  function openIntro() {
+    var nav = document.querySelector('[data-nav-toggle][aria-expanded="true"]');
+    if (nav) nav.click();
+    if (introDialog.open) return;
+    introDialog.showModal();
+    introDialog.scrollTop = 0;
+  }
+  introDialog.addEventListener('close', function () {
+    store.set(INTRO_SEEN, '1');
+    celebrateFresh();
+  });
+  introDialog.addEventListener('click', function (event) {
+    if (event.target.closest('[data-intro-close]') || event.target === introDialog) introDialog.close();
+  });
+  document.addEventListener('click', function (event) {
+    if (event.target.closest('[data-open-intro]')) openIntro();
+  });
 
   if (/^https?:$/.test(window.location.protocol) && typeof window.EventSource === 'function') {
     var events = new window.EventSource('/__course/events');
@@ -802,6 +846,7 @@ const JS = String.raw`
 
   renderCertificateButton();
   renderProgress();
+  if (!store.get(INTRO_SEEN)) openIntro();
   var initial = fromHash() || Number(store.get(LAST)) || 1;
   show(initial, false);
   window.addEventListener('load', function () {
@@ -842,13 +887,14 @@ ${prism}
 <header class="topbar">
   <a class="brand" href="#day-1">React <span>for</span> Ember Engineers</a>
   <div class="topbar__right">
+    <button type="button" class="icon-button" data-open-intro aria-label="How this course works" title="How this course works"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5"/><path d="M12 17.5h.01"/></svg></button>
     <span data-progress-short aria-label="Days complete">0/15</span>
     <button type="button" class="button" data-nav-toggle aria-expanded="false" aria-controls="sidebar">Days</button>
   </div>
 </header>
 <div class="shell">
   <aside class="sidebar" id="sidebar">
-    <a class="brand" href="#day-1">React <span>for</span> Ember Engineers</a>
+    <div class="sidebar__head"><a class="brand" href="#day-1">React <span>for</span> Ember Engineers</a><button type="button" class="icon-button" data-open-intro aria-label="How this course works" title="How this course works"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5"/><path d="M12 17.5h.01"/></svg></button></div>
     <p class="sub">15 days · 60 minutes each · React 19.3</p>
     <div class="theme" role="group" aria-label="Colour theme"><button type="button" data-theme-choice="system">System</button><button type="button" data-theme-choice="light">Light</button><button type="button" data-theme-choice="dark">Dark</button></div>
     ${progress}
@@ -866,6 +912,22 @@ ${prism}
     ${daysHtml}
   </main>
 </div>
+<dialog class="intro" data-intro aria-labelledby="intro-title">
+  <div class="intro__head">${LOGO}<h2 id="intro-title">How this course works</h2></div>
+  <p class="intro__lead">15 days, about an hour each. Every day follows the same four steps.</p>
+  <ol class="intro__steps">
+    <li><span class="intro__n">1</span><div><h3>Read <small>15 min</small></h3><p>Today's ideas, with the Ember way and the React way side by side.</p></div></li>
+    <li><span class="intro__n">2</span><div><h3>Build <small>35 min</small></h3>
+      <p class="live-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Each time you save, the tests run and this page shows what's left.</p>
+      <p class="file-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Run <code>pnpm start</code> in the repo and this page shows your tests passing as you go.</p></div></li>
+    <li><span class="intro__n">3</span><div><h3>Check yourself <small>10 min</small></h3><p>Answer each question out loud, then reveal the answer to compare.</p></div></li>
+    <li><span class="intro__n">4</span><div><h3>Done</h3>
+      <p class="live-only">When all of today's tests pass, the day ticks off by itself and the next one is ready.</p>
+      <p class="file-only">When today's tests pass, press "Mark day complete" and move on to the next day.</p></div></li>
+  </ol>
+  <p class="intro__foot">Finish all 15 days to get your certificate. Stuck for more than 10 minutes? Peek at <code>solutions/</code> for that day. You can reopen this from the <strong>?</strong> button.</p>
+  <div class="intro__actions"><button type="button" class="button button--primary" data-intro-close>Let's go</button></div>
+</dialog>
 <dialog class="celebrate" data-celebrate aria-labelledby="celebrate-title">
   <p class="celebrate__emoji" data-celebrate-emoji aria-hidden="true">🎉</p>
   <h2 id="celebrate-title" data-celebrate-title></h2>

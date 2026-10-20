@@ -27,7 +27,7 @@ Each day takes about an hour:
 2. **Hands-on (~35 min).** Open the day's files in `exercises/dayNN/` and follow the TODO comments. Every time you save, the tests run and the course page shows which ones still fail.
 3. **Check yourself (~10 min).** Answer each question **out loud** before you reveal the model answer.
 
-When all of a day's tests pass, the day is marked complete and the page celebrates. When you finish all 15 days, you get a certificate with your name on it. You can print it or save it as a PDF.
+When all of a day's tests pass, the day is marked complete and the page celebrates. When you finish all 15 days, you get a certificate with your name on it. You can print it or save it as a PDF. The first time you open the page, a short "How this course works" guide pops up. Reopen it any time from the **?** button.
 
 On Day 15 your assembled app runs at **http://localhost:1515/app/**.
 
