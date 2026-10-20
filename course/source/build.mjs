@@ -35,7 +35,7 @@ function codeBlock(code, lang, label) {
 function planStrip(day) {
   const minutes = day.n === 15 ? [35, 20, 5] : [15, 35, 10];
   const items = day.plan
-    .map((label, i) => `<li><span class="plan__min">${minutes[i]} min</span><span class="plan__label">${e(label)}</span></li>`)
+    .map((label, i) => `<li><span class="plan__n" aria-hidden="true">${i + 1}</span><span class="plan__text"><span class="plan__label">${e(label)}</span><span class="plan__min">${minutes[i]} min</span></span></li>`)
     .join('');
   return `<ol class="plan" aria-label="60-minute plan">${items}</ol>`;
 }
@@ -253,13 +253,13 @@ main { padding: 2.5rem clamp(16px, 4vw, 3.5rem) 4rem; max-width: 1080px; width: 
 .day__head h1 { font-size: clamp(1.6rem, 3.2vw, 2.25rem); letter-spacing: -0.02em; }
 .day__head h1:focus { outline: none; }
 .tagline { font-size: 1.1rem; color: var(--muted); max-width: 62ch; margin: 0.6rem 0 1.25rem; }
-.plan { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; list-style: none; padding: 0; margin: 0 0 2.5rem; }
-.plan li { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.8rem; display: flex; flex-direction: column; }
-.plan li:nth-child(1) { border-top: 3px solid var(--accent); }
-.plan li:nth-child(2) { border-top: 3px solid var(--focus); }
-.plan li:nth-child(3) { border-top: 3px solid var(--green); }
-.plan__min { font-weight: 700; font-variant-numeric: tabular-nums; }
-.plan__label { font-size: 0.85rem; color: var(--muted); }
+.plan { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.75rem; list-style: none; padding: 0; margin: 0 0 2.5rem; }
+.plan li { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 0.85rem; display: flex; align-items: center; gap: 0.75rem; }
+.plan li:not(:last-child)::after { content: ""; position: absolute; top: 50%; right: -1.2rem; width: 0.6rem; height: 0.6rem; border-top: 2px solid var(--muted); border-right: 2px solid var(--muted); transform: translate(0, -50%) rotate(45deg); }
+.plan__n { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 0.9rem; }
+.plan__text { display: flex; flex-direction: column; min-width: 0; }
+.plan__label { font-weight: 700; }
+.plan__min { font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .day h2 { font-size: 1.3rem; margin: 0 0 1rem; letter-spacing: -0.01em; }
 .concept { padding: 1.5rem 0; border-top: 1px solid var(--border); }
 .concept__head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-bottom: 0.5rem; }
@@ -339,8 +339,8 @@ noscript p { background: var(--yellow-bg); padding: 0.75rem 1rem; border-radius:
   .sidebar .brand, .sidebar .sub { display: none; }
   main { padding: 1.5rem 16px 3rem; }
   .compare, .exercise__grid { grid-template-columns: minmax(0, 1fr); }
-  .plan { grid-template-columns: minmax(0, 1fr); }
-  .plan li { flex-direction: row; gap: 0.6rem; align-items: baseline; }
+  .plan { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+  .plan li:not(:last-child)::after { top: auto; right: auto; bottom: -0.95rem; left: 1.6rem; transform: rotate(135deg); }
   .panel { padding: 1.1rem; }
   .qa__a { padding-left: 0.9rem; }
 }

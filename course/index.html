@@ -94,13 +94,13 @@ main { padding: 2.5rem clamp(16px, 4vw, 3.5rem) 4rem; max-width: 1080px; width: 
 .day__head h1 { font-size: clamp(1.6rem, 3.2vw, 2.25rem); letter-spacing: -0.02em; }
 .day__head h1:focus { outline: none; }
 .tagline { font-size: 1.1rem; color: var(--muted); max-width: 62ch; margin: 0.6rem 0 1.25rem; }
-.plan { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; list-style: none; padding: 0; margin: 0 0 2.5rem; }
-.plan li { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.8rem; display: flex; flex-direction: column; }
-.plan li:nth-child(1) { border-top: 3px solid var(--accent); }
-.plan li:nth-child(2) { border-top: 3px solid var(--focus); }
-.plan li:nth-child(3) { border-top: 3px solid var(--green); }
-.plan__min { font-weight: 700; font-variant-numeric: tabular-nums; }
-.plan__label { font-size: 0.85rem; color: var(--muted); }
+.plan { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.75rem; list-style: none; padding: 0; margin: 0 0 2.5rem; }
+.plan li { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 0.85rem; display: flex; align-items: center; gap: 0.75rem; }
+.plan li:not(:last-child)::after { content: ""; position: absolute; top: 50%; right: -1.2rem; width: 0.6rem; height: 0.6rem; border-top: 2px solid var(--muted); border-right: 2px solid var(--muted); transform: translate(0, -50%) rotate(45deg); }
+.plan__n { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 0.9rem; }
+.plan__text { display: flex; flex-direction: column; min-width: 0; }
+.plan__label { font-weight: 700; }
+.plan__min { font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .day h2 { font-size: 1.3rem; margin: 0 0 1rem; letter-spacing: -0.01em; }
 .concept { padding: 1.5rem 0; border-top: 1px solid var(--border); }
 .concept__head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-bottom: 0.5rem; }
@@ -180,8 +180,8 @@ noscript p { background: var(--yellow-bg); padding: 0.75rem 1rem; border-radius:
   .sidebar .brand, .sidebar .sub { display: none; }
   main { padding: 1.5rem 16px 3rem; }
   .compare, .exercise__grid { grid-template-columns: minmax(0, 1fr); }
-  .plan { grid-template-columns: minmax(0, 1fr); }
-  .plan li { flex-direction: row; gap: 0.6rem; align-items: baseline; }
+  .plan { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+  .plan li:not(:last-child)::after { top: auto; right: auto; bottom: -0.95rem; left: 1.6rem; transform: rotate(135deg); }
   .panel { padding: 1.1rem; }
   .qa__a { padding-left: 0.9rem; }
 }
@@ -328,7 +328,7 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
     <p class="eyebrow">Week 1 · Core mental model · Day 1</p>
     <h1 id="day-1-title" tabindex="-1">JSX, components, rendering</h1>
     <p class="tagline">There is no autotracking. A component is a function that React calls again whenever anything upstream might have changed.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d1-concepts"><h2 id="d1-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d1-c0">
@@ -521,7 +521,7 @@ export const formatDate = (iso: string) =&gt; fmt.format(new Date(iso));
     <p class="eyebrow">Week 1 · Core mental model · Day 2</p>
     <h1 id="day-2-title" tabindex="-1">Props, children, composition, lists &amp; keys</h1>
     <p class="tagline">Args become props and blocks become children. Keys are where Ember instincts quietly fail.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d2-concepts"><h2 id="d2-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d2-c0">
@@ -700,7 +700,7 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
     <p class="eyebrow">Week 1 · Core mental model · Day 3</p>
     <h1 id="day-3-title" tabindex="-1">State: useState, immutability, derived state</h1>
     <p class="tagline">Mutation is invisible to React. State is a snapshot, setters schedule a new render, and derived values belong in render.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d3-concepts"><h2 id="d3-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d3-c0">
@@ -894,7 +894,7 @@ const [draft, setDraft] = useState(() =&gt; JSON.parse(localStorage.draft ?? &#x
     <p class="eyebrow">Week 1 · Core mental model · Day 4</p>
     <h1 id="day-4-title" tabindex="-1">Events &amp; forms: controlled vs uncontrolled, refs</h1>
     <p class="tagline">Two ways to own an input's value: React owns it, or the DOM does. Choose deliberately.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d4-concepts"><h2 id="d4-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d4-c0">
@@ -1047,7 +1047,7 @@ inputRef.current?.focus();</code></pre></figure>
     <p class="eyebrow">Week 1 · Core mental model · Day 5</p>
     <h1 id="day-5-title" tabindex="-1">Effects: synchronising with external systems</h1>
     <p class="tagline"><code>useEffect</code> is not <code>didInsert</code>. It keeps something outside React in sync with your props and state, and most code that reaches for it shouldn't.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d5-concepts"><h2 id="d5-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d5-c0">
@@ -1239,7 +1239,7 @@ useEffect(() =&gt; {
     <p class="eyebrow">Week 2 · Architecture · Day 6</p>
     <h1 id="day-6-title" tabindex="-1">Rendering performance: reconciliation, memoization, React Compiler</h1>
     <p class="tagline">Glimmer updates what changed. React re-runs what <em>might</em> have changed, and lets you (or the Compiler) prove it didn't.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d6-concepts"><h2 id="d6-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d6-c0">
@@ -1430,7 +1430,7 @@ export default defineConfig({
     <p class="eyebrow">Week 2 · Architecture · Day 7</p>
     <h1 id="day-7-title" tabindex="-1">State architecture: Context, reducers, external stores</h1>
     <p class="tagline">There is no container. "Services" are values placed in the tree, and a context is a transport, not a store.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d7-concepts"><h2 id="d7-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d7-c0">
@@ -1600,7 +1600,7 @@ const status = useStore(filterStore, (s) =&gt; s.status);
     <p class="eyebrow">Week 2 · Architecture · Day 8</p>
     <h1 id="day-8-title" tabindex="-1">Custom hooks</h1>
     <p class="tagline">A hook is just a function that calls hooks. That makes it the unit of reuse for stateful logic.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d8-concepts"><h2 id="d8-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d8-c0">
@@ -1746,7 +1746,7 @@ expect(result.current).toBe(&#x27;ab&#x27;);</code></pre></figure>
     <p class="eyebrow">Week 2 · Architecture · Day 9</p>
     <h1 id="day-9-title" tabindex="-1">Data fetching: TanStack Query, Suspense, error boundaries</h1>
     <p class="tagline">Server state is a cache you don't own. Stop putting it in useState.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d9-concepts"><h2 id="d9-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d9-c0">
@@ -1928,7 +1928,7 @@ function IssueDetail({ id }: { id: string }) {
     <p class="eyebrow">Week 2 · Architecture · Day 10</p>
     <h1 id="day-10-title" tabindex="-1">Routing with React Router 8 (data mode)</h1>
     <p class="tagline">Closest to home. Route objects, loaders and outlets map almost 1:1 to the Ember router.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d10-concepts"><h2 id="d10-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d10-c0">
@@ -2116,7 +2116,7 @@ navigate(&#x27;/issues&#x27;);</code></pre></figure>
     <p class="eyebrow">Week 3 · Modern &amp; advanced · Day 11</p>
     <h1 id="day-11-title" tabindex="-1">React 19 Actions &amp; concurrent features</h1>
     <p class="tagline">Transitions mark updates as interruptible, and Actions are async transitions with pending, error and optimistic state built in. This is the closest React gets to ember-concurrency.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d11-concepts"><h2 id="d11-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d11-c0">
@@ -2306,7 +2306,7 @@ startTransition(() =&gt; setId(nextId)); // animates</code></pre></figure>
     <p class="eyebrow">Week 3 · Modern &amp; advanced · Day 12</p>
     <h1 id="day-12-title" tabindex="-1">Server Components &amp; the Next.js App Router</h1>
     <p class="tagline">The biggest model shift in the course. Components can run only on the server, and the boundary between server and client is something you design.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d12-concepts"><h2 id="d12-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d12-c0">
@@ -2483,7 +2483,7 @@ app/issues/actions.ts     &#x27;use server&#x27;</code></pre></figure>
     <p class="eyebrow">Week 3 · Modern &amp; advanced · Day 13</p>
     <h1 id="day-13-title" tabindex="-1">Testing React well</h1>
     <p class="tagline">Same philosophy as @ember/test-helpers: test what the user sees. The difference is that nothing waits for "settled". You wait for the outcome.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d13-concepts"><h2 id="d13-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d13-c0">
@@ -2641,7 +2641,7 @@ expect(screen.getByRole(&#x27;tab&#x27;, { name: &#x27;Closed&#x27; })).toHaveFo
     <p class="eyebrow">Week 3 · Modern &amp; advanced · Day 14</p>
     <h1 id="day-14-title" tabindex="-1">Patterns, TypeScript &amp; modern APIs</h1>
     <p class="tagline">Patterns you already know from Ember, in React's vocabulary, plus the APIs React 19 added.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Concepts</span><span class="plan__min">15 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Hands-on</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Check yourself</span><span class="plan__min">10 min</span></span></li></ol>
   </header>
   <section aria-labelledby="d14-concepts"><h2 id="d14-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d14-c0">
@@ -2838,7 +2838,7 @@ useEffect(() =&gt; {
     <p class="eyebrow">Week 3 · Modern &amp; advanced · Day 15</p>
     <h1 id="day-15-title" tabindex="-1">Capstone + final review</h1>
     <p class="tagline">Assemble the app from your own parts, then work through the final review out loud.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">35 min</span><span class="plan__label">Capstone</span></li><li><span class="plan__min">20 min</span><span class="plan__label">Final review</span></li><li><span class="plan__min">5 min</span><span class="plan__label">Cheat sheet</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__n" aria-hidden="true">1</span><span class="plan__text"><span class="plan__label">Capstone</span><span class="plan__min">35 min</span></span></li><li><span class="plan__n" aria-hidden="true">2</span><span class="plan__text"><span class="plan__label">Final review</span><span class="plan__min">20 min</span></span></li><li><span class="plan__n" aria-hidden="true">3</span><span class="plan__text"><span class="plan__label">Cheat sheet</span><span class="plan__min">5 min</span></span></li></ol>
   </header>
   
   
