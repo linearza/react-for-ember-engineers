@@ -56,6 +56,25 @@ Good to know:
 | | 14 | Patterns, TypeScript & modern APIs |
 | | 15 | Capstone + final review |
 
+## The stack
+
+Everything you write runs on this stack, pinned in `package.json`:
+
+| Layer | What | Where |
+|---|---|---|
+| UI | **React 19.3** + React DOM, in **TypeScript 5.9** (TSX) | every day |
+| Performance | **React Compiler** (opt-in) | Day 6 |
+| Server data | **TanStack Query 5** | Day 9, Day 15 |
+| Routing | **React Router 8**, data mode | Day 10, Day 15 |
+| Server | **React Server Components** and Server Functions, with **Next.js App Router** conventions | Day 12 |
+| Build and dev server | **Vite 8** | every day |
+| Tests | **Vitest 5** + jsdom, **Testing Library** (React, user-event, jest-dom) | every day, Day 13 in depth |
+| Tooling | **Node 22.22+**, **pnpm 11** | |
+
+The Day 12 exercise runs in Vitest, not in a real Next.js app. Its stretch goal moves it into one. The API is an in-memory fake, so the exercises have no backend or network dependencies.
+
+Mentioned for context, but not used in the exercises: MSW, Zustand and Redux Toolkit, TanStack Router and TanStack Virtual, `react-error-boundary`, React Hook Form and Playwright.
+
 ## Stretch goals
 
 - **Day 6: React Compiler.** Remove the `memo`/`useCallback` from your `IssueTable` and let the compiler do it:

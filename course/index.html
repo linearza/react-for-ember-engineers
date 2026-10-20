@@ -260,6 +260,8 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 .intro__steps h3 { font-size: 1rem; margin: 0.15rem 0 0.1rem; }
 .intro__steps h3 small { font-weight: 400; color: var(--muted); font-size: 0.85rem; margin-left: 0.35rem; }
 .intro__steps p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.intro__stack { margin: 1.25rem 0 0; font-size: 0.88rem; color: var(--muted); }
+.intro__stack strong { color: var(--text); }
 .intro__foot { margin: 1.25rem 0 0; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.88rem; color: var(--muted); }
 .intro__actions { display: flex; justify-content: flex-end; margin-top: 1.25rem; }
 
@@ -3111,6 +3113,7 @@ useEffect(() =&gt; {
       <p class="live-only">When all of today's tests pass, the day ticks off by itself and the next one is ready.</p>
       <p class="file-only">When today's tests pass, press "Mark day complete" and move on to the next day.</p></div></li>
   </ol>
+  <p class="intro__stack"><strong>The stack:</strong> React 19.3 and TypeScript, built with Vite. TanStack Query for server data, React Router 8 for routing, Server Components with Next.js App Router conventions, and Vitest with Testing Library for tests.</p>
   <p class="intro__foot">Finish all 15 days to get your certificate. Stuck for more than 10 minutes? Peek at <code>solutions/</code> for that day. You can reopen this from the <strong>?</strong> button.</p>
   <div class="intro__actions"><button type="button" class="button button--primary" data-intro-close>Let's go</button></div>
 </dialog>
