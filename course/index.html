@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
+<script>try { var t = localStorage.getItem('react-for-ember:theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>
 :root {
   --bg: #f7f7f5; --surface: #ffffff; --surface-2: #f0f0ec; --text: #17181c; --muted: #5f636d;
@@ -17,20 +18,33 @@
   --green: #15803d; --green-bg: #e9f7ee; --yellow: #a16207; --yellow-bg: #fdf6dd; --red: #b91c1c; --red-bg: #fdecec;
   --code-bg: #fbfbf9; --tok-comment: #7c7f88; --tok-keyword: #a626a4; --tok-string: #2f7d32; --tok-fn: #2759c4;
   --tok-number: #b45309; --tok-tag: #c2410c; --tok-attr: #8a5a00; --tok-punct: #4b4f58;
+  --code-inline: #a3195b; --code-inline-bg: #fbeef4;
   --radius: 12px; --sidebar: 300px;
   color-scheme: light;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   line-height: 1.6;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #111214; --surface: #18191c; --surface-2: #202226; --text: #e9e9ec; --muted: #9b9fa8;
-    --border: #2a2c31; --accent: #fb923c; --accent-soft: #2a1c12; --link: #fdba74; --focus: #60a5fa;
-    --green: #4ade80; --green-bg: #12261a; --yellow: #facc15; --yellow-bg: #29240f; --red: #f87171; --red-bg: #2c1515;
-    --code-bg: #141518; --tok-comment: #7d828c; --tok-keyword: #d19af7; --tok-string: #8bd49c; --tok-fn: #82aaff;
-    --tok-number: #f5b36b; --tok-tag: #fb923c; --tok-attr: #f0c674; --tok-punct: #a8adb7;
-    color-scheme: dark;
+  :root:not([data-theme="light"]) {
+
+  --bg: #111214; --surface: #18191c; --surface-2: #202226; --text: #e9e9ec; --muted: #9b9fa8;
+  --border: #2a2c31; --accent: #fb923c; --accent-soft: #2a1c12; --link: #fdba74; --focus: #60a5fa;
+  --green: #4ade80; --green-bg: #12261a; --yellow: #facc15; --yellow-bg: #29240f; --red: #f87171; --red-bg: #2c1515;
+  --code-bg: #141518; --tok-comment: #7d828c; --tok-keyword: #d19af7; --tok-string: #8bd49c; --tok-fn: #82aaff;
+  --tok-number: #f5b36b; --tok-tag: #fb923c; --tok-attr: #f0c674; --tok-punct: #a8adb7;
+  --code-inline: #f9a8d4; --code-inline-bg: #2a1823;
+  color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+
+  --bg: #111214; --surface: #18191c; --surface-2: #202226; --text: #e9e9ec; --muted: #9b9fa8;
+  --border: #2a2c31; --accent: #fb923c; --accent-soft: #2a1c12; --link: #fdba74; --focus: #60a5fa;
+  --green: #4ade80; --green-bg: #12261a; --yellow: #facc15; --yellow-bg: #29240f; --red: #f87171; --red-bg: #2c1515;
+  --code-bg: #141518; --tok-comment: #7d828c; --tok-keyword: #d19af7; --tok-string: #8bd49c; --tok-fn: #82aaff;
+  --tok-number: #f5b36b; --tok-tag: #fb923c; --tok-attr: #f0c674; --tok-punct: #a8adb7;
+  --code-inline: #f9a8d4; --code-inline-bg: #2a1823;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { scroll-padding-top: 1rem; }
@@ -38,7 +52,8 @@ body { margin: 0; background: var(--bg); color: var(--text); font-size: 16px; }
 a { color: var(--link); }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
 code, pre, kbd { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-ligatures: none; }
-:not(pre) > code { font-size: 0.875em; background: var(--surface-2); padding: 0.1em 0.35em; border-radius: 5px; overflow-wrap: anywhere; }
+:not(pre) > code { font-size: 0.875em; color: var(--code-inline); background: var(--code-inline-bg); padding: 0.1em 0.35em; border-radius: 5px; overflow-wrap: anywhere; }
+a code { color: inherit; }
 h1, h2, h3 { line-height: 1.25; margin: 0; }
 .skip { position: absolute; left: -9999px; top: 0; }
 .skip:focus { left: 1rem; top: 1rem; z-index: 100; background: var(--surface); padding: 0.5rem 1rem; }
@@ -65,6 +80,10 @@ h1, h2, h3 { line-height: 1.25; margin: 0; }
 .nav__n { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 0.8rem; }
 .nav__done { color: var(--green); visibility: hidden; font-weight: 700; }
 .nav a.is-done .nav__done { visibility: visible; }
+.theme { display: flex; gap: 2px; margin: 0 0 1.25rem; padding: 3px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); }
+.theme button { flex: 1; font: inherit; font-size: 0.78rem; padding: 0.3rem 0.4rem; border: 0; border-radius: 7px; background: transparent; color: var(--muted); cursor: pointer; }
+.theme button:hover { color: var(--text); }
+.theme button[aria-pressed='true'] { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
 .sidebar__foot { margin-top: 1.5rem; font-size: 0.8rem; color: var(--muted); }
 .topbar { display: none; }
 
@@ -266,6 +285,7 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
   <aside class="sidebar" id="sidebar">
     <a class="brand" href="#day-1">React <span>for</span> Ember Engineers</a>
     <p class="sub">15 days · 60 minutes each · React 19.3</p>
+    <div class="theme" role="group" aria-label="Colour theme"><button type="button" data-theme-choice="system">System</button><button type="button" data-theme-choice="light">Light</button><button type="button" data-theme-choice="dark">Dark</button></div>
     
 <div class="progress">
   <div class="progress__label"><span>Progress</span><span data-progress-text>0 / 15 complete</span></div>
@@ -3145,6 +3165,21 @@ useEffect(() =&gt; {
   function readList(key) {
     try { var v = JSON.parse(store.get(key) || '[]'); return Array.isArray(v) ? v.map(Number) : []; } catch (e) { return []; }
   }
+  // Theme: 'system' (default, follows the OS), 'light' or 'dark'
+  function applyTheme(choice) {
+    if (choice === 'light' || choice === 'dark') document.documentElement.dataset.theme = choice;
+    else { choice = 'system'; delete document.documentElement.dataset.theme; }
+    document.querySelectorAll('[data-theme-choice]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.themeChoice === choice));
+    });
+    return choice;
+  }
+  applyTheme(store.get('react-for-ember:theme'));
+  document.addEventListener('click', function (event) {
+    var b = event.target.closest('[data-theme-choice]');
+    if (b) store.set('react-for-ember:theme', applyTheme(b.dataset.themeChoice));
+  });
+
   function sorted(set) { return Array.from(set).sort(function (a, b) { return a - b; }); }
   function saveCompleted() {
     store.set(KEY, JSON.stringify(sorted(completed)));
