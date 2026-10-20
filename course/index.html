@@ -354,6 +354,7 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 @keyframes tree-shake { 25% { transform: rotate(-4deg); } 55% { transform: rotate(3deg); } 80% { transform: rotate(-1deg); } }
 .readbar__carrot { position: absolute; bottom: 4px; width: 5px; height: 10px; margin-left: -2.5px; opacity: 0.85; transition: opacity 500ms ease, transform 500ms var(--ease); }
 .readbar__carrot.is-got { opacity: 0; transform: translateY(-6px); }
+.readbar__track.is-settling .readbar__carrot { transition: none; }
 .readbar__horse .f1, .readbar__horse .f2 { animation: none; }
 .readbar__horse .f2 { opacity: 0; }
 .readbar.is-walking .readbar__horse .f1 { animation: frame 0.36s steps(1) infinite reverse; }
@@ -4178,11 +4179,23 @@ useEffect(() =&gt; {
   function each(root, sel, fn) { Array.prototype.forEach.call(root.querySelectorAll(sel), fn); }
   function questions(root) { return Array.prototype.slice.call(root.querySelectorAll('[data-quiz-q]')); }
 
-  // Square-wave blips, like an old console. Off until the learner turns sound on
-  function blip(notes) {
-    if (!soundOn) return;
+  // Browsers only let a page start audio from a click or key press, and a context made any other way
+  // (say, a carrot eaten while scrolling) stays paused. So wake it again on every one
+  function audioContext() {
     try {
       audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      if (audio.state === 'suspended') audio.resume();
+    } catch (e) { audio = null; }
+    return audio;
+  }
+  ['pointerdown', 'keydown'].forEach(function (type) {
+    document.addEventListener(type, function () { if (soundOn) audioContext(); }, true);
+  });
+
+  // Square-wave blips, like an old console. Off until the learner turns sound on
+  function blip(notes) {
+    if (!soundOn || !audioContext()) return;
+    try {
       var t = audio.currentTime;
       notes.forEach(function (f, i) {
         var osc = audio.createOscillator();
@@ -4190,7 +4203,7 @@ useEffect(() =&gt; {
         var at = t + i * 0.08;
         osc.type = 'square';
         osc.frequency.value = f;
-        gain.gain.setValueAtTime(0.05, at);
+        gain.gain.setValueAtTime(0.08, at);
         gain.gain.exponentialRampToValueAtTime(0.001, at + 0.12);
         osc.connect(gain); gain.connect(audio.destination);
         osc.start(at); osc.stop(at + 0.13);
@@ -4580,7 +4593,7 @@ useEffect(() =&gt; {
   // ---------------------------------------------------------------- reading track
   // The horse trots the track as the day's concepts scroll past, eating a carrot per concept on the way to the apple tree.
   // The furthest point you've read is kept per day, so eaten carrots stay eaten when you come back
-  var READ = 'react-for-ember:read';
+  var READ = 'react-for-ember:read-progress';
   var readMax = {};
   try { readMax = JSON.parse(store.get(READ) || '{}') || {}; } catch (e) { readMax = {}; }
   var readbar = document.querySelector('[data-readbar]');
@@ -4618,6 +4631,9 @@ useEffect(() =&gt; {
         readTrack.appendChild(c);
         return c;
       });
+      // Carrots already eaten on an earlier visit start gone, rather than fading out on arrival
+      readTrack.classList.add('is-settling');
+      window.requestAnimationFrame(function () { window.requestAnimationFrame(function () { readTrack.classList.remove('is-settling'); }); });
       reading.day = current;
       reading.region = region;
       reading.got = -1;
