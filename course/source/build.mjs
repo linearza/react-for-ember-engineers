@@ -5,12 +5,10 @@ import { WEEK1 } from './week1.mjs';
 import { WEEK2 } from './week2.mjs';
 import { WEEK3, FINAL_REVIEW, CHEATSHEET } from './week3.mjs';
 import { scenery } from './scenery.mjs';
+import { wordmarkSvg } from './logo.mjs';
 
-// The logo, inlined so index.html stays one self-contained file
-const ICON = 'data:image/svg+xml,' + encodeURIComponent(readFileSync(new URL('../icons/logo.svg', import.meta.url), 'utf8').replace(/\s*\n\s*/g, ''));
-const LOGO = readFileSync(new URL('../icons/logo.svg', import.meta.url), 'utf8')
-  .replace(/<title[^>]*>.*?<\/title>/, '')
-  .replace('role="img" aria-labelledby="t"', 'aria-hidden="true" focusable="false"');
+// The favicon, inlined so index.html stays one self-contained file
+const ICON = 'data:image/svg+xml,' + encodeURIComponent(readFileSync(new URL('../icons/favicon.svg', import.meta.url), 'utf8').trim());
 const REPO = 'https://github.com/linearza/react-for-ember-engineers';
 const DAYS = [...WEEK1, ...WEEK2, ...WEEK3];
 const WEEKS = { 1: 'Core mental model', 2: 'Architecture', 3: 'Modern & advanced' };
@@ -177,28 +175,30 @@ function nav() {
 
 // Dark palette, shared by the system-preference rule and the explicit [data-theme="dark"] rule
 const DARK_TOKENS = String.raw`
-  --bg: #111214; --surface: #18191c; --surface-2: #202226; --text: #e9e9ec; --muted: #9b9fa8;
-  --border: #2a2c31; --accent: #fb923c; --accent-soft: #2a1c12; --link: #fdba74; --focus: #60a5fa;
+  --bg: #10122a; --surface: #161936; --surface-2: #1f2347; --text: #eceef8; --muted: #a4abc8;
+  --border: #2a2f58; --accent: #fb923c; --accent-soft: #2e1f2a; --link: #fdba74; --focus: #60a5fa;
   --green: #4ade80; --green-bg: #12261a; --yellow: #facc15; --yellow-bg: #29240f; --red: #f87171; --red-bg: #2c1515;
-  --code-bg: #141518; --tok-comment: #7d828c; --tok-keyword: #d19af7; --tok-string: #8bd49c; --tok-fn: #82aaff;
+  --code-bg: #0c0e22; --tok-comment: #8a90ad; --tok-keyword: #d19af7; --tok-string: #8bd49c; --tok-fn: #82aaff;
   --tok-number: #f5b36b; --tok-tag: #fb923c; --tok-attr: #f0c674; --tok-punct: #a8adb7;
   --code-inline: #f9a8d4; --code-inline-bg: #2a1823;
-  --sky-1: #12132a; --sky-2: #1a1c3c; --sky-3: #29366f; --sky-4: #3b4a8a; --star-opacity: 1; --fly-opacity: 1;
-  --orb: #f4f4e0; --cloud: #333c57; --hill-1: #2c3463; --hill-2: #1f2a4a; --hill-3: #172038; --tree: #0f1a2a;
-  --ground: #132a2a; --tuft: #1e4a3a;
+  --sky-1: #0a0b20; --sky-2: #10133a; --sky-3: #18205a; --sky-4: #222d70; --star-opacity: 1; --fly-opacity: 1; --day-opacity: 0;
+  --orb: #f4f4e0; --cloud: #262c55; --hill-1: #252c60; --hill-2: #1a2149; --hill-3: #151a3c; --tree: #0d1230;
+  --tuft: #1f2a52; --flower: #3a4478; --bird: #070816; --cast-filter: brightness(0.72) saturate(0.85);
+  --wm-ink: #f4f4f4; --wm-ink-side: #7c84b8; --wm-for: #fb923c; --wm-for-side: #c2410c; --wm-outline: #05060f;
   color-scheme: dark;`;
 
 const CSS = String.raw`
 :root {
-  --bg: #f7f7f5; --surface: #ffffff; --surface-2: #f0f0ec; --text: #17181c; --muted: #5f636d;
-  --border: #e2e2dc; --accent: #c2410c; --accent-soft: #fff1e8; --link: #9a3412; --focus: #2563eb;
+  --bg: #f2f6ee; --surface: #ffffff; --surface-2: #e8eee2; --text: #17181c; --muted: #565f6b;
+  --border: #d8e2cf; --accent: #c2410c; --accent-soft: #fff1e8; --link: #9a3412; --focus: #2563eb;
   --green: #15803d; --green-bg: #e9f7ee; --yellow: #a16207; --yellow-bg: #fdf6dd; --red: #b91c1c; --red-bg: #fdecec;
-  --code-bg: #fbfbf9; --tok-comment: #7c7f88; --tok-keyword: #a626a4; --tok-string: #2f7d32; --tok-fn: #2759c4;
+  --code-bg: #fafcf8; --tok-comment: #7c7f88; --tok-keyword: #a626a4; --tok-string: #2f7d32; --tok-fn: #2759c4;
   --tok-number: #b45309; --tok-tag: #c2410c; --tok-attr: #8a5a00; --tok-punct: #4b4f58;
   --code-inline: #a3195b; --code-inline-bg: #fbeef4;
-  --sky-1: #41a6f6; --sky-2: #5cb8f8; --sky-3: #7fcbfa; --sky-4: #a8defc; --star: #ffffff; --star-opacity: 0; --fly-opacity: 0;
-  --orb: #ffcd75; --cloud: #f4f4f4; --hill-1: #94b0c2; --hill-2: #5a9e7a; --hill-3: #38b764; --tree: #257179;
-  --ground: #a7f070; --tuft: #38b764;
+  --sky-1: #4aa3f2; --sky-2: #66b4f5; --sky-3: #86c6f8; --sky-4: #abd9fa; --star: #ffffff; --star-opacity: 0; --fly-opacity: 0; --day-opacity: 1;
+  --orb: #ffcd75; --cloud: #ffffff; --hill-1: #a3bccd; --hill-2: #63aa80; --hill-3: #48b86a; --tree: #2a7458;
+  --tuft: #2f9a55; --flower: #f8e070; --bird: #2b3a67; --cast-filter: none;
+  --wm-ink: #17181c; --wm-ink-side: #b4bccc; --wm-for: #c2410c; --wm-for-side: #f5b78a; --wm-outline: transparent;
   --radius: 12px; --sidebar: 300px;
   color-scheme: light;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -230,8 +230,8 @@ h1, h2, h3 { line-height: 1.25; margin: 0; }
 /* Shell */
 .shell { display: grid; grid-template-columns: var(--sidebar) minmax(0, 1fr); min-height: 100vh; }
 .sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; border-right: 1px solid var(--border); background: var(--surface); padding: 1.25rem 1rem 2rem; }
-.brand { display: block; font-weight: 800; font-size: 1.05rem; letter-spacing: -0.01em; text-decoration: none; color: var(--text); }
-.brand span { color: var(--accent); }
+.brand { display: block; width: fit-content; color: var(--text); line-height: 0; }
+.brand svg { display: block; height: 12.5px; width: auto; }
 .sub { margin: 0.15rem 0 1rem; font-size: 0.8rem; color: var(--muted); }
 .progress { margin: 0 0 1.25rem; }
 .progress__label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.35rem; }
@@ -253,7 +253,8 @@ h1, h2, h3 { line-height: 1.25; margin: 0; }
 .sidebar__foot { margin-top: 1.5rem; font-size: 0.8rem; color: var(--muted); }
 .topbar { display: none; }
 
-main { padding: 2.5rem clamp(16px, 4vw, 3.5rem) 4rem; max-width: 1080px; width: 100%; }
+main { min-width: 0; }
+.content { padding: 1.25rem clamp(16px, 4vw, 3.5rem) 4rem; max-width: 1080px; }
 
 /* Day */
 .eyebrow { margin: 0 0 0.4rem; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); }
@@ -338,13 +339,13 @@ noscript p { background: var(--yellow-bg); padding: 0.75rem 1rem; border-radius:
 @media (max-width: 900px) {
   .shell { display: block; }
   .topbar { display: flex; position: sticky; top: 0; z-index: 20; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.6rem 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
-  .topbar .brand { font-size: 0.95rem; }
+  .topbar .brand svg { height: 10px; }
   .topbar__right { display: flex; align-items: center; gap: 0.6rem; font-size: 0.8rem; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .sidebar { display: none; position: fixed; inset: 3.1rem 0 0 0; height: auto; z-index: 19; border-right: 0; }
   body.nav-open .sidebar { display: block; }
   body.nav-open { overflow: hidden; }
   .sidebar .brand, .sidebar .sub { display: none; }
-  main { padding: 1.5rem 16px 3rem; }
+  .content { padding: 1rem 16px 3rem; }
   .compare, .exercise__grid { grid-template-columns: minmax(0, 1fr); }
   .plan { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
   .plan li:not(:last-child)::after { top: auto; right: auto; bottom: -0.95rem; left: 1.6rem; transform: rotate(135deg); }
@@ -401,11 +402,10 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 /* How it works */
 .icon-button { display: inline-grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--muted); cursor: pointer; flex: none; }
 .icon-button:hover { color: var(--text); border-color: var(--accent); }
-.sidebar__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+.sidebar__head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .intro { width: min(520px, calc(100vw - 32px)); max-height: calc(100vh - 32px); border: 1px solid var(--border); border-radius: 18px; background: var(--surface); padding: 1.75rem 1.5rem 1.5rem; }
 .intro[open] { animation: pop 380ms cubic-bezier(0.2, 1.4, 0.4, 1); }
 .intro__head { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.4rem; }
-.intro__head svg { width: 48px; height: 48px; flex: none; }
 .intro h2 { font-size: 1.35rem; letter-spacing: -0.02em; }
 .intro__lead { color: var(--muted); margin: 0 0 1.1rem; }
 .intro__steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.85rem; }
@@ -417,30 +417,41 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 .intro__foot { margin: 1.25rem 0 0; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.88rem; color: var(--muted); }
 .intro__actions { display: flex; justify-content: flex-end; margin-top: 1.25rem; }
 
-/* Scenery banner: pixel-art landscape, scrolling in whole-pixel steps */
-.scene { height: 150px; margin: 0 0 2rem; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--sky-1); }
+/* Scenery banner: a still pixel landscape with a moving cast */
+.scene { aspect-ratio: 4 / 1; min-height: 150px; max-height: 360px; width: 100%; overflow: hidden; background: var(--sky-1); }
 .scene svg { display: block; width: 100%; height: 100%; }
-.scene__layer { animation: scene-scroll steps(480) infinite; }
-.scene__layer--clouds { animation-duration: 160s; }
-.scene__layer--far { animation-duration: 240s; }
-.scene__layer--mid { animation-duration: 120s; }
-.scene__layer--near { animation-duration: 60s; }
-@keyframes scene-scroll { to { transform: translateX(-480px); } }
+.scene__cast { filter: var(--cast-filter); }
+.scene__day { opacity: var(--day-opacity); }
+.scene__clouds { animation: drift 240s steps(480) infinite; }
+@keyframes drift { to { transform: translateX(-480px); } }
+.scene__f2 { animation: frame 0.5s steps(1) infinite; }
+.scene__f1 { animation: frame 0.5s steps(1) infinite reverse; }
+@keyframes frame { 50% { opacity: 0; } }
+.scene__walk--hero { animation: walk-right 48s steps(500) infinite; }
+.scene__walk--fox { animation: walk-left 31s steps(500) -12s infinite; }
+.scene__walk--rabbit { animation: walk-left 64s steps(250) -40s infinite; }
+.scene__walk--fox .scene__f1, .scene__walk--fox .scene__f2 { animation-duration: 0.3s; }
+@keyframes walk-right { from { transform: translateX(-12px); } to { transform: translateX(492px); } }
+@keyframes walk-left { from { transform: translateX(492px); } to { transform: translateX(-12px); } }
+.scene__hop { animation: hop 0.7s steps(1) infinite; }
+@keyframes hop { 50% { transform: translateY(-3px); } }
+.scene__bird { animation: fly-across 26s steps(260) infinite; }
+.scene__bird .scene__f1, .scene__bird .scene__f2 { animation-duration: 0.36s; }
+@keyframes fly-across { 0% { transform: translate(-30px, 6px); } 50% { transform: translate(240px, 0); } 100% { transform: translate(510px, 8px); } }
+.scene__butterfly { animation: flutter 7s steps(28) infinite; }
+.scene__butterfly .scene__f1, .scene__butterfly .scene__f2 { animation-duration: 0.24s; }
+@keyframes flutter { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(6px, -5px); } 50% { transform: translate(12px, -1px); } 75% { transform: translate(5px, -7px); } }
 .scene__stars { opacity: var(--star-opacity); }
 .scene__star { animation: twinkle 3.2s steps(2) infinite; }
 @keyframes twinkle { 50% { opacity: 0.2; } }
 .scene__flies { opacity: var(--fly-opacity); }
-.scene__fly { animation: fly 6s steps(12) infinite; }
-@keyframes fly { 0%, 100% { transform: translate(0, 0); opacity: 0; } 25% { transform: translate(3px, -2px); opacity: 1; } 50% { transform: translate(6px, 0); opacity: 0.3; } 75% { transform: translate(3px, 2px); opacity: 1; } }
-.scene__flame--b { animation: flicker 0.5s steps(1) infinite; }
-.scene__flame--a { animation: flicker 0.5s steps(1) infinite reverse; }
-@keyframes flicker { 50% { opacity: 0; } }
+.scene__fly { animation: firefly 6s steps(12) infinite; }
+@keyframes firefly { 0%, 100% { transform: translate(0, 0); opacity: 0; } 25% { transform: translate(3px, -2px); opacity: 1; } 50% { transform: translate(6px, 0); opacity: 0.3; } 75% { transform: translate(3px, 2px); opacity: 1; } }
 .scene__ember { animation: ember 1.6s steps(6) infinite; }
 @keyframes ember { 0% { transform: translate(0, 0); opacity: 1; } 100% { transform: translate(2px, -8px); opacity: 0; } }
-@media (max-width: 900px) { .scene { height: 110px; margin-bottom: 1.5rem; } }
 @media (prefers-reduced-motion: reduce) {
-  .scene *, .scene__layer { animation: none !important; }
-  .scene__flame--b { opacity: 0; }
+  .scene * { animation: none !important; }
+  .scene__f2 { opacity: 0; }
 }
 
 /* Certificate: always on paper, whatever the theme */
@@ -453,7 +464,8 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 .certificate__inner::before, .certificate__inner::after { content: ''; position: absolute; width: 7cqi; height: 7cqi; border: 0.35cqi solid #f59e0b; }
 .certificate__inner::before { top: 2cqi; left: 2cqi; border-right: 0; border-bottom: 0; }
 .certificate__inner::after { bottom: 2cqi; right: 2cqi; border-left: 0; border-top: 0; }
-.certificate__logo svg { display: block; width: 8.5cqi; height: 8.5cqi; margin: 0 auto 1.6cqi; }
+.certificate__logo { --wm-ink: #1c1917; --wm-ink-side: #d6c9b8; --wm-for: #c2410c; --wm-for-side: #f5b78a; --wm-outline: transparent; }
+.certificate__logo svg { display: block; width: 40cqi; height: auto; margin: 0 auto 2.4cqi; }
 .certificate p { margin: 0; }
 .certificate__kicker { font-size: 1.45cqi; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: #c2410c; }
 .certificate__lead { font-size: 1.6cqi; color: #57534e; margin-top: 1.6cqi !important; }
@@ -473,7 +485,8 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
   dialog { display: none !important; }
   .sidebar, .topbar, .day__foot, .skip, [data-print-cheatsheet] { display: none !important; }
   .shell { display: block; }
-  main { padding: 0; max-width: none; }
+  .content { padding: 0; max-width: none; }
+  .scene { display: none !important; }
   .qa .qa__a { display: block; }
   body.print-cheatsheet .day > *:not(.cheatsheet) { display: none !important; }
   body.print-cheatsheet .cheatsheet { border: 0; margin: 0; padding: 0; }
@@ -918,7 +931,7 @@ ${prism}
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="topbar">
-  <a class="brand" href="#day-1">React <span>for</span> Ember Engineers</a>
+  <a class="brand" href="#day-1" aria-label="React for Ember Engineers">${wordmarkSvg()}</a>
   <div class="topbar__right">
     <button type="button" class="icon-button" data-open-intro aria-label="How this course works" title="How this course works"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5"/><path d="M12 17.5h.01"/></svg></button>
     <span data-progress-short aria-label="Days complete">0/15</span>
@@ -927,7 +940,7 @@ ${prism}
 </header>
 <div class="shell">
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar__head"><a class="brand" href="#day-1">React <span>for</span> Ember Engineers</a><button type="button" class="icon-button" data-open-intro aria-label="How this course works" title="How this course works"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5"/><path d="M12 17.5h.01"/></svg></button></div>
+    <div class="sidebar__head"><a class="brand" href="#day-1" aria-label="React for Ember Engineers">${wordmarkSvg()}</a><button type="button" class="icon-button" data-open-intro aria-label="How this course works" title="How this course works"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5"/><path d="M12 17.5h.01"/></svg></button></div>
     <p class="sub">15 days · 60 minutes each · React 19.3</p>
     <div class="theme" role="group" aria-label="Colour theme"><button type="button" data-theme-choice="system">System</button><button type="button" data-theme-choice="light">Light</button><button type="button" data-theme-choice="dark">Dark</button></div>
     ${progress}
@@ -942,12 +955,14 @@ ${prism}
   </aside>
   <main id="main">
     ${scenery()}
+    <div class="content">
     <noscript><p>JavaScript is off: every day is shown below in order, and progress tracking is disabled.</p><style>.day[hidden]{display:block}</style></noscript>
     ${daysHtml}
+    </div>
   </main>
 </div>
 <dialog class="intro" data-intro aria-labelledby="intro-title">
-  <div class="intro__head">${LOGO}<h2 id="intro-title">How this course works</h2></div>
+  <div class="intro__head"><h2 id="intro-title">How this course works</h2></div>
   <p class="intro__lead">15 days, about an hour each. Every day follows the same four steps.</p>
   <ol class="intro__steps">
     <li><span class="intro__n">1</span><div><h3>Read <small>15 min</small></h3><p>Today's ideas, with the Ember way and the React way side by side.</p></div></li>
@@ -975,7 +990,7 @@ ${prism}
 <dialog class="cert-dialog" data-cert-dialog aria-label="Your certificate">
   <div class="certificate" data-certificate>
     <div class="certificate__inner">
-      <div class="certificate__logo">${LOGO}</div>
+      <div class="certificate__logo">${wordmarkSvg()}</div>
       <p class="certificate__kicker">Certificate of completion</p>
       <p class="certificate__lead">This certifies that</p>
       <p class="certificate__name" data-cert-name>Your name</p>

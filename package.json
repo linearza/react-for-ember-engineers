@@ -11,7 +11,8 @@
     "test": "vitest",
     "test:solutions": "SOLUTIONS=1 vitest run",
     "typecheck": "tsc --noEmit -p .",
-    "build:course": "node course/source/build.mjs course/index.html"
+    "build:course": "node course/source/build.mjs course/index.html",
+    "build:logo": "node course/source/logo.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.5",
