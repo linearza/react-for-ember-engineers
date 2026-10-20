@@ -4,7 +4,8 @@ import { FLAGS, dedent, escape as e, inline, md } from './model.mjs';
 import { WEEK1 } from './week1.mjs';
 import { WEEK2 } from './week2.mjs';
 import { WEEK3, FINAL_REVIEW, CHEATSHEET } from './week3.mjs';
-import { scenery } from './scenery.mjs';
+import { scenery, sprite, HERO_A, HERO_B, HERO_PAL, FOX_A, FOX_B, FOX_PAL } from './scenery.mjs';
+import { QUIZ } from './quiz.mjs';
 import { wordmarkSvg } from './logo.mjs';
 
 // The favicon, inlined so index.html stays one self-contained file
@@ -17,6 +18,14 @@ const PRISM_COMPONENTS = ['core', 'markup', 'clike', 'javascript', 'typescript',
 
 if (DAYS.length !== 15) throw new Error(`expected 15 days, got ${DAYS.length}`);
 if (FINAL_REVIEW.length !== 30) throw new Error(`expected 30 review questions, got ${FINAL_REVIEW.length}`);
+for (const day of DAYS) {
+  const quiz = QUIZ[day.n] ?? [];
+  if (quiz.length !== day.drill.length) throw new Error(`day ${day.n}: ${day.drill.length} drill questions but ${quiz.length} in quiz.mjs`);
+  quiz.forEach(({ q, choices }, i) => {
+    if (q !== day.drill[i][0]) throw new Error(`day ${day.n} question ${i + 1}: quiz.mjs has "${q}", drill has "${day.drill[i][0]}"`);
+    if (choices.length !== 4) throw new Error(`day ${day.n} question ${i + 1}: expected 4 choices, got ${choices.length}`);
+  });
+}
 
 function flagBadge(code) {
   const [emoji, label, cls] = FLAGS[code];
@@ -97,13 +106,84 @@ function qa(i, q, a, meta = '') {
 </details>`;
 }
 
-function drill(day) {
-  const items = day.drill.map(([q, a], i) => qa(i + 1, q, a)).join('');
+// 8-bit sprites for the quiz, drawn like the scenery
+const pixelSvg = (rows, palette, cls) =>
+  `<svg class="${cls}" viewBox="0 0 ${rows[0].length} ${rows.length}" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${sprite(rows, palette)}</svg>`;
+const COIN_PAL = { k: '#7a4a00', y: '#f8b800', w: '#fff6c0', o: '#c87800' };
+const COIN = ['..kkkk..', '.kyyyyk.', 'kyywyyok', 'kywyyyok', 'kyyyyyok', 'kyyyyook', '.kooook.', '..kkkk..'];
+const TROPHY = ['.kkkkkkk.', 'kywyyyyok', 'kywyyyyok', '.kyyyyok.', '..kyyok..', '...kyk...', '...kok...', '..kkkkk..', '..kyyok..', '..kkkkk..'];
+const coinSvg = (cls = 'pixel-coin') => pixelSvg(COIN, COIN_PAL, cls);
+const LOCK_PAL = { k: '#3a2a10', s: '#9aa3b8', y: '#f8b800', o: '#c87800' };
+const PADLOCK = ['..ssss..', '.s....s.', '.s....s.', 'kkkkkkkk', 'kyyyyyok', 'kyykkyok', 'kyykkyok', 'kyyyyyok', 'kkkkkkkk'];
+const padlockSvg = (cls) => pixelSvg(PADLOCK, LOCK_PAL, cls);
+const twoFrames = (a, b, pal) => `<g class="f1">${sprite(a, pal)}</g><g class="f2">${sprite(b, pal)}</g>`;
+// The Konami-code parade: the scenery's fox chasing its hero along the bottom of the screen
+const PARADE = '<div class="parade__run">' +
+  `<svg class="parade__fox" viewBox="0 0 10 5" shape-rendering="crispEdges">${twoFrames(FOX_A, FOX_B, FOX_PAL)}</svg>` +
+  `<svg class="parade__hero" viewBox="0 0 9 11" shape-rendering="crispEdges">${twoFrames(HERO_A, HERO_B, HERO_PAL)}</svg></div>`;
+
+// A deterministic shuffle, so the correct choice isn't always first but the page builds the same every time
+function shuffled(items, seed) {
+  let h = 2166136261;
+  for (const ch of seed) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  const out = items.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    h = Math.imul(h ^ (h >>> 15), 2246822507) >>> 0;
+    const j = h % (i + 1);
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+function quizQuestion(day, i, [q, a], { choices }) {
+  const id = `d${day.n}-q${i + 1}`;
+  const options = shuffled(choices.map((text, k) => ({ text, correct: k === 0 })), id)
+    .map((c, k) => `<button type="button" class="quiz__opt" data-quiz-opt${c.correct ? ' data-correct' : ''}><span class="quiz__key" aria-hidden="true">${k + 1}</span><span>${inline(c.text)}</span></button>`)
+    .join('');
   return `
-<section class="panel" aria-labelledby="d${day.n}-drill">
+<li class="quiz__q" data-quiz-q hidden>
+  <p class="quiz__count">Question ${i + 1} of ${day.drill.length}</p>
+  <h3 class="quiz__legend" id="${id}" tabindex="-1">${inline(q)}</h3>
+  <div class="quiz__opts" role="group" aria-labelledby="${id}">${options}</div>
+  <p class="quiz__verdict" data-quiz-verdict role="status"></p>
+  <div class="quiz__why prose" data-quiz-why hidden>${md(a)}</div>
+</li>`;
+}
+
+function drill(day) {
+  const n = day.drill.length;
+  const items = day.drill.map((d, i) => quizQuestion(day, i, d, QUIZ[day.n][i])).join('');
+  return `
+<section class="panel quiz" data-quiz="${day.n}" aria-labelledby="d${day.n}-drill">
   <h2 id="d${day.n}-drill">Check yourself</h2>
-  <p class="muted">Answer out loud first, then open the model answer.</p>
-  <div class="qas">${items}</div>
+  <div class="quiz__start" data-quiz-start-screen>
+    <button type="button" class="quiz__coin" data-quiz-coin aria-label="Coin">${coinSvg()}</button>
+    <p class="quiz__title pixel">Insert coin</p>
+    <p class="quiz__sub">${n} questions on today's ideas. Pick an answer and see why it's right. <span class="quiz__best" data-quiz-best></span></p>
+    <div class="quiz__start-actions">
+      <button type="button" class="quiz__press pixel" data-quiz-start>▶ Press start</button>
+      <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
+    </div>
+  </div>
+  <div class="quiz__game" data-quiz-game hidden>
+    <div class="quiz__hud pixel" aria-hidden="true">
+      <span class="quiz__coins">${coinSvg()}×<span data-quiz-score>0</span></span>
+      <span class="quiz__combo" data-quiz-combo></span>
+      <ol class="quiz__pips">${'<li></li>'.repeat(n)}</ol>
+    </div>
+    <ol class="quiz__qs">${items}</ol>
+    <div class="quiz__nav"><button type="button" class="button button--primary" data-quiz-next hidden>Next ▶</button></div>
+    <div class="quiz__end" data-quiz-end hidden>
+      ${pixelSvg(TROPHY, COIN_PAL, 'quiz__trophy')}
+      <p class="quiz__rank pixel" data-quiz-rank></p>
+      <h3 class="quiz__result" data-quiz-result tabindex="-1"></h3>
+      <p class="quiz__msg" data-quiz-msg></p>
+      <div class="quiz__end-actions">
+        <button type="button" class="button button--primary" data-quiz-retake>↻ Play again</button>
+        <button type="button" class="button quiz__sound" data-quiz-sound aria-pressed="false">♪ Sound off</button>
+      </div>
+    </div>
+  </div>
 </section>`;
 }
 
@@ -167,7 +247,7 @@ function nav() {
     const links = DAYS.filter((d) => d.week === Number(week))
       .map((d) =>
         `<li><a href="#day-${d.n}" data-nav="${d.n}"><span class="nav__n">${d.n}</span>` +
-        `<span class="nav__t">${inline(d.title)}</span><span class="nav__done" aria-hidden="true">✓</span></a></li>`)
+        `<span class="nav__t">${inline(d.title)}</span><span class="nav__done" aria-hidden="true">✓</span><span class="nav__lock">${padlockSvg('')}</span></a></li>`)
       .join('');
     return `<li class="nav__week"><h2 class="nav__heading">Week ${week} · ${e(name)}</h2><ol>${links}</ol></li>`;
   }).join('');
@@ -397,6 +477,101 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 .pips li.is-done { background: var(--accent); color: #fff; }
 .pips li.is-new { animation: pip 700ms ease 200ms both; }
 @keyframes pip { 0% { transform: scale(0.4); } 60% { transform: scale(1.35); } }
+/* Check yourself: an 8-bit mini game. The HUD is an arcade screen, dark in both themes */
+.pixel { font-family: 'Press Start 2P', ui-monospace, monospace; font-weight: 400; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.7; }
+.pixel-coin { width: 1.25em; height: 1.25em; vertical-align: -0.2em; }
+.quiz { scroll-margin-top: 4rem; }
+.quiz__start { display: grid; justify-items: center; gap: 0.6rem; text-align: center; padding: 1.75rem 1rem 1.5rem; border: 2px dashed var(--border); border-radius: 12px; background: repeating-linear-gradient(0deg, transparent 0 3px, color-mix(in srgb, var(--text) 4%, transparent) 3px 4px), var(--bg); }
+.quiz__coin { border: 0; background: none; padding: 0; cursor: pointer; animation: bob 1.2s steps(2) infinite; }
+.quiz__coin .pixel-coin { width: 40px; height: 40px; display: block; }
+.quiz__coin.is-spin { animation: coin-spin 0.4s steps(4); }
+@keyframes bob { 50% { transform: translateY(-4px); } }
+@keyframes coin-spin { 50% { transform: scaleX(0.15); } }
+.quiz__title { margin: 0; font-size: 1rem; color: var(--accent); animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0.25; } }
+.quiz__sub { margin: 0; max-width: 44ch; color: var(--muted); }
+.quiz__best { display: block; margin-top: 0.3rem; font-weight: 700; color: var(--text); }
+.quiz__best:empty { display: none; }
+.quiz__start-actions, .quiz__end-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.6rem; margin-top: 0.5rem; }
+.quiz__press { font-size: 0.8rem; cursor: pointer; color: var(--bg); background: var(--accent); border: 0; border-radius: 0; padding: 0.95rem 1.2rem 0.85rem; box-shadow: 0 4px 0 color-mix(in srgb, var(--accent) 55%, #000), inset -4px -4px 0 rgb(0 0 0 / 0.2); }
+.quiz__press:hover { filter: brightness(1.08); }
+.quiz__press:active { transform: translateY(4px); box-shadow: inset -4px -4px 0 rgb(0 0 0 / 0.2); }
+.quiz__hud { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding: 0.65rem 0.8rem; margin-bottom: 1.1rem; border-radius: 8px; background: #10122a; color: #f4f4f4; font-size: 0.7rem; }
+.quiz__coins { display: inline-flex; align-items: center; gap: 0.4rem; color: #f8b800; }
+.quiz__combo { color: #fb923c; }
+.quiz__combo:empty { display: none; }
+.quiz__combo.is-flash { animation: zoom 0.45s steps(3); }
+.quiz__combo.is-hot { color: #f87171; }
+@keyframes zoom { from { transform: scale(1.7); } }
+.quiz__pips { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.quiz__pips li { width: 12px; height: 12px; background: #2a2f58; }
+.quiz__pips li.is-current { background: #f4f4f4; animation: blink 0.8s steps(1) infinite; }
+.quiz__pips li.is-right { background: #4ade80; animation: none; }
+.quiz__pips li.is-wrong { background: #f87171; animation: none; }
+.quiz__qs { list-style: none; margin: 0; padding: 0; }
+.quiz__start[hidden], .quiz__game[hidden], .quiz__q[hidden], .quiz__why[hidden] { display: none; }
+.quiz__count { margin: 0 0 0.25rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.quiz__legend { margin: 0 0 0.9rem; font-size: 1.1rem; }
+.quiz__legend:focus, .quiz__result:focus { outline: none; }
+.quiz__opts { display: grid; gap: 0.5rem; }
+.quiz__opt { position: relative; display: grid; grid-template-columns: 1.6rem 1fr; gap: 0.6rem; align-items: baseline; text-align: left; font: inherit; color: var(--text); background: var(--bg); border: 2px solid var(--border); border-radius: 10px; padding: 0.7rem 0.9rem; cursor: pointer; transition: transform 90ms steps(2), border-color 90ms; }
+.quiz__opt:hover:not([aria-disabled='true']) { border-color: var(--accent); transform: translateX(3px); }
+.quiz__opt[aria-disabled='true'] { cursor: default; }
+.quiz__key { font-family: 'Press Start 2P', ui-monospace, monospace; font-size: 0.65rem; color: var(--muted); }
+.quiz__q.is-answered .quiz__opt:not(.is-correct):not(.is-wrong) { opacity: 0.55; }
+.quiz__opt.is-correct { border-color: var(--green); background: var(--green-bg); }
+.quiz__opt.is-wrong { border-color: var(--red); background: var(--red-bg); }
+.quiz__opt.is-correct .quiz__key, .quiz__opt.is-wrong .quiz__key { font-size: 0; }
+.quiz__opt.is-correct .quiz__key::after { content: '✓'; font-size: 0.95rem; color: var(--green); }
+.quiz__opt.is-wrong .quiz__key::after { content: '✗'; font-size: 0.95rem; color: var(--red); }
+.quiz__q.shake { animation: shake 0.36s steps(6); }
+@keyframes shake { 0%, 100% { transform: none; } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+.quiz__verdict { margin: 1rem 0 0; font-weight: 700; }
+.quiz__verdict:empty { display: none; }
+.quiz__q.is-right .quiz__verdict { color: var(--green); }
+.quiz__q.is-wrong .quiz__verdict { color: var(--red); }
+.quiz__why { margin-top: 0.5rem; padding: 0.8rem 0.95rem; border-left: 4px solid var(--border); border-radius: 0 8px 8px 0; background: var(--bg); }
+.quiz__q.is-right .quiz__why { border-left-color: var(--green); }
+.quiz__q.is-wrong .quiz__why { border-left-color: var(--red); }
+.quiz__nav { display: flex; justify-content: flex-end; margin-top: 1rem; }
+.quiz__nav [hidden] { display: none; }
+.coin-pop { position: absolute; right: 0.9rem; top: 50%; display: inline-flex; align-items: center; gap: 0.3rem; font-family: 'Press Start 2P', ui-monospace, monospace; font-size: 0.65rem; color: #c87800; pointer-events: none; animation: coin-pop 0.9s steps(9) forwards; }
+@keyframes coin-pop { from { transform: translateY(-50%); } to { transform: translateY(-260%); opacity: 0; } }
+.quiz__end { display: grid; justify-items: center; gap: 0.5rem; text-align: center; padding: 0.75rem 0 0.25rem; }
+.quiz__end[hidden] { display: none; }
+.quiz__trophy { width: 54px; height: 60px; filter: grayscale(1) opacity(0.55); }
+.quiz__end.is-flawless .quiz__trophy { filter: none; animation: bob 1.2s steps(2) infinite; }
+.quiz__rank { margin: 0; font-size: 1.4rem; color: var(--accent); }
+.quiz__rank[data-rank='S'] { color: #f8b800; text-shadow: 3px 3px 0 #c2410c; animation: zoom 0.6s steps(4); }
+.quiz__result { margin: 0; font-size: 1.15rem; }
+.quiz__msg { margin: 0; max-width: 46ch; color: var(--muted); }
+.toasts { position: fixed; left: 50%; bottom: 1.25rem; transform: translateX(-50%); display: grid; gap: 0.5rem; width: min(440px, calc(100vw - 32px)); z-index: 1001; pointer-events: none; }
+.toast { padding: 0.85rem 1rem; background: #10122a; color: #f4f4f4; border: 2px solid #fb923c; box-shadow: 4px 4px 0 rgb(0 0 0 / 0.35); font-size: 0.62rem; text-align: center; animation: toast-in 0.3s steps(3); }
+.toast.is-out { opacity: 0; transition: opacity 0.4s steps(4); }
+@keyframes toast-in { from { transform: translateY(16px); opacity: 0; } }
+.parade { position: fixed; left: 0; bottom: 0; width: 100vw; height: 52px; overflow: hidden; pointer-events: none; z-index: 1000; }
+.parade__run { position: absolute; left: 0; bottom: 4px; display: flex; align-items: flex-end; gap: 28px; animation: parade 4.5s steps(90) forwards; }
+.parade__hero { height: 44px; width: 36px; }
+.parade__fox { height: 20px; width: 40px; transform: scaleX(-1); }
+.parade__run .f1 { animation: frame 0.3s steps(1) infinite reverse; }
+.parade__run .f2 { animation: frame 0.3s steps(1) infinite; }
+@keyframes parade { from { transform: translateX(-160px); } to { transform: translateX(calc(100vw + 40px)); } }
+
+/* Locked days */
+.nav__lock { display: none; }
+.nav__lock svg { width: 10px; height: 12px; vertical-align: -1px; }
+.nav a.is-locked { color: var(--muted); }
+.nav a.is-locked .nav__done { display: none; }
+.nav a.is-locked .nav__lock { display: inline; }
+.locked { display: grid; justify-items: center; gap: 0.7rem; text-align: center; padding: 3rem 1.25rem; margin-top: 1rem; }
+.locked[hidden] { display: none; }
+.locked__padlock { width: 48px; height: 54px; animation: rattle 2.4s steps(1) infinite; }
+@keyframes rattle { 0%, 88% { transform: none; } 91% { transform: rotate(-8deg); } 94% { transform: rotate(8deg); } 97% { transform: rotate(-4deg); } }
+.locked h1 { margin: 0; font-size: 1.6rem; }
+.locked h1:focus { outline: none; }
+.locked p { margin: 0; max-width: 46ch; color: var(--muted); }
+.locked .button { margin-top: 0.75rem; text-decoration: none; }
+.locked__hint { margin-top: 1.75rem !important; font-size: 0.58rem; opacity: 0.75; }
 .confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; pointer-events: none; z-index: 1000; overflow: visible; }
 
 /* How it works */
@@ -454,6 +629,8 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 @media (prefers-reduced-motion: reduce) {
   .scene * { animation: none !important; }
   .scene__f2 { opacity: 0; }
+  .quiz, .quiz *, .locked__padlock, .toast { animation: none !important; transition: none !important; }
+  .coin-pop { display: none; }
 }
 
 /* Certificate: always on paper, whatever the theme */
@@ -490,6 +667,10 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
   .content { padding: 0; max-width: none; }
   .scene { display: none !important; }
   .qa .qa__a { display: block; }
+  .quiz__start, .quiz__hud, .quiz__nav, .quiz__end, .quiz__verdict, .locked, .toasts { display: none !important; }
+  .quiz__game, .quiz__q, .quiz__why { display: block !important; }
+  .quiz__q { margin-bottom: 1.25rem; break-inside: avoid; }
+  .quiz__opt[data-correct] { border-color: currentColor; font-weight: 700; }
   body.print-cheatsheet .day > *:not(.cheatsheet) { display: none !important; }
   body.print-cheatsheet .cheatsheet { border: 0; margin: 0; padding: 0; }
   .code pre { white-space: pre-wrap; }
@@ -514,6 +695,33 @@ const JS = String.raw`
   var days = Array.prototype.slice.call(document.querySelectorAll('.day'));
   var navLinks = Array.prototype.slice.call(document.querySelectorAll('[data-nav]'));
   var highlighted = new Set();
+  var current = null;
+
+  // Days unlock one at a time: the day after the furthest one you've finished is open
+  var UNLOCK_ALL = 'react-for-ember:unlock-all';
+  var unlockAll = store.get(UNLOCK_ALL) === '1';
+  var lockedPanel = document.querySelector('[data-locked]');
+  function frontier() {
+    var max = 0;
+    completed.forEach(function (n) { if (n > max) max = n; });
+    return Math.min(max + 1, TOTAL);
+  }
+  function isUnlocked(n) { return unlockAll || n <= frontier(); }
+  function renderLock() {
+    if (current === null) return;
+    var locked = !isUnlocked(current);
+    days.forEach(function (d) { d.hidden = locked || Number(d.dataset.day) !== current; });
+    lockedPanel.hidden = !locked;
+    if (!locked) return;
+    var f = frontier();
+    lockedPanel.querySelector('[data-locked-title]').textContent = 'Day ' + current + ' is locked';
+    lockedPanel.querySelector('[data-locked-text]').textContent = live
+      ? 'Get Day ' + f + '’s tests passing and the next day opens by itself.'
+      : 'Finish Day ' + f + ' and mark it complete to open the next one.';
+    var go = lockedPanel.querySelector('[data-locked-go]');
+    go.href = '#day-' + f;
+    go.textContent = 'Go to Day ' + f;
+  }
 
   function renderProgress() {
     var count = completed.size;
@@ -522,11 +730,15 @@ const JS = String.raw`
     document.querySelectorAll('.progress__fill').forEach(function (el) { el.style.width = (count / TOTAL * 100) + '%'; });
     document.querySelectorAll('.progress__bar').forEach(function (el) { el.setAttribute('aria-valuenow', String(count)); });
     navLinks.forEach(function (a) {
-      var done = completed.has(Number(a.dataset.nav));
+      var n = Number(a.dataset.nav);
+      var done = completed.has(n);
+      var locked = !isUnlocked(n);
       a.classList.toggle('is-done', done);
+      a.classList.toggle('is-locked', locked);
       var label = a.querySelector('.nav__t').textContent;
-      a.setAttribute('aria-label', 'Day ' + a.dataset.nav + ': ' + label + (done ? ' (complete)' : ''));
+      a.setAttribute('aria-label', 'Day ' + n + ': ' + label + (done ? ' (complete)' : locked ? ' (locked)' : ''));
     });
+    renderLock();
     document.querySelectorAll('[data-complete]').forEach(function (btn) {
       var done = completed.has(Number(btn.dataset.complete));
       btn.setAttribute('aria-pressed', String(done));
@@ -536,7 +748,8 @@ const JS = String.raw`
 
   function show(n, focus) {
     if (!(n >= 1 && n <= TOTAL)) n = 1;
-    days.forEach(function (d) { d.hidden = Number(d.dataset.day) !== n; });
+    current = n;
+    renderLock();
     navLinks.forEach(function (a) {
       if (Number(a.dataset.nav) === n) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
@@ -547,7 +760,7 @@ const JS = String.raw`
     document.body.classList.remove('nav-open');
     var toggle = document.querySelector('[data-nav-toggle]');
     if (toggle) toggle.setAttribute('aria-expanded', 'false');
-    if (focus) { window.scrollTo(0, 0); day.querySelector('h1').focus({ preventScroll: true }); }
+    if (focus) { window.scrollTo(0, 0); (isUnlocked(n) ? day : lockedPanel).querySelector('h1').focus({ preventScroll: true }); }
   }
 
   function fromHash() {
@@ -676,7 +889,8 @@ const JS = String.raw`
     else if (event.target.closest('[data-celebrate-close]') || event.target === celebrateDialog) celebrateDialog.close();
   });
 
-  function confetti(big) {
+  // style: undefined for paper confetti, 'pixel' for 8-bit squares, 'coins' for a gold shower
+  function confetti(big, style) {
     try { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) { /* old browser: animate */ }
     var canvas = document.createElement('canvas');
     canvas.className = 'confetti';
@@ -689,7 +903,9 @@ const JS = String.raw`
     var dpr = window.devicePixelRatio || 1;
     var W = window.innerWidth, H = window.innerHeight;
     canvas.width = W * dpr; canvas.height = H * dpr; ctx.scale(dpr, dpr);
-    var colors = ['#fb923c', '#fbbf24', '#f97316', '#60a5fa', '#4ade80', '#f472b6', '#c084fc'];
+    var colors = style === 'coins' ? ['#f8b800', '#fff6c0', '#c87800']
+      : style === 'pixel' ? ['#f8b800', '#e45c10', '#3cbcfc', '#80d010', '#f878f8', '#fcfcfc']
+      : ['#fb923c', '#fbbf24', '#f97316', '#60a5fa', '#4ade80', '#f472b6', '#c084fc'];
     var parts = [];
     var n = big ? 320 : 160;
     for (var i = 0; i < n; i++) {
@@ -712,7 +928,9 @@ const JS = String.raw`
         p.x += p.vx; p.y += p.vy; p.r += p.vr;
         ctx.save();
         ctx.globalAlpha = Math.max(0, 1 - el / life);
-        ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+        ctx.fillStyle = p.c;
+        if (style) { var px = Math.round(p.s / 4) * 4 || 4; ctx.fillRect(Math.round(p.x / 4) * 4, Math.round(p.y / 4) * 4, px, px); ctx.restore(); return; }
+        ctx.translate(p.x, p.y); ctx.rotate(p.r);
         if (p.round) { ctx.beginPath(); ctx.arc(0, 0, p.s / 2.6, 0, 6.283); ctx.fill(); }
         else ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2 * (0.6 + 0.4 * Math.abs(Math.cos(p.r * 2))));
         ctx.restore();
@@ -722,6 +940,253 @@ const JS = String.raw`
     }
     window.requestAnimationFrame(frame);
   }
+
+  // ---------------------------------------------------------------- check yourself: the 8-bit quiz
+  var QUIZ_BEST = 'react-for-ember:quiz-best';
+  var SOUND = 'react-for-ember:sound';
+  var best = {};
+  try { best = JSON.parse(store.get(QUIZ_BEST) || '{}') || {}; } catch (e) { best = {}; }
+  var soundOn = store.get(SOUND) === '1';
+  var audio = null;
+  var RIGHT = ['Correct!', 'Nice!', 'Spot on.', 'Nailed it.', 'Yes!'];
+  var WRONG = ['Not quite.', 'Close, but no.', 'Oof.', 'Nope.'];
+  var SFX = { coin: [988, 1319], wrong: [196, 147], start: [523, 659, 784, 1047], combo: [784, 988, 1175], win: [523, 659, 784, 1047, 784, 1047] };
+  var toasts = document.querySelector('[data-toasts]');
+
+  function reducedMotion() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
+  function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
+  function each(root, sel, fn) { Array.prototype.forEach.call(root.querySelectorAll(sel), fn); }
+  function questions(root) { return Array.prototype.slice.call(root.querySelectorAll('[data-quiz-q]')); }
+
+  // Square-wave blips, like an old console. Off until the learner turns sound on
+  function blip(notes) {
+    if (!soundOn) return;
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      var t = audio.currentTime;
+      notes.forEach(function (f, i) {
+        var osc = audio.createOscillator();
+        var gain = audio.createGain();
+        var at = t + i * 0.08;
+        osc.type = 'square';
+        osc.frequency.value = f;
+        gain.gain.setValueAtTime(0.05, at);
+        gain.gain.exponentialRampToValueAtTime(0.001, at + 0.12);
+        osc.connect(gain); gain.connect(audio.destination);
+        osc.start(at); osc.stop(at + 0.13);
+      });
+    } catch (e) { /* no Web Audio: stay silent */ }
+  }
+  function renderSound() {
+    each(document, '[data-quiz-sound]', function (b) {
+      b.setAttribute('aria-pressed', String(soundOn));
+      b.textContent = soundOn ? '♪ Sound on' : '♪ Sound off';
+    });
+  }
+
+  function toast(text) {
+    var t = document.createElement('p');
+    t.className = 'toast pixel';
+    t.textContent = text;
+    toasts.appendChild(t);
+    window.setTimeout(function () { t.classList.add('is-out'); }, 3600);
+    window.setTimeout(function () { t.remove(); }, 4100);
+  }
+
+  function renderBest(root) {
+    var score = best[root.dataset.quiz];
+    var total = questions(root).length;
+    root.querySelector('[data-quiz-best]').textContent = score == null ? '' : 'Hi-score: ' + score + ' / ' + total + (score === total ? ' ★' : '');
+  }
+
+  function resetQuestion(li, reshuffle) {
+    li.classList.remove('is-answered', 'is-right', 'is-wrong', 'shake');
+    li.querySelector('[data-quiz-verdict]').textContent = '';
+    li.querySelector('[data-quiz-why]').hidden = true;
+    var opts = li.querySelector('.quiz__opts');
+    var buttons = Array.prototype.slice.call(opts.children);
+    // On a replay, shuffle again so you can't win from memory of positions
+    if (reshuffle) for (var i = buttons.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = buttons[i]; buttons[i] = buttons[j]; buttons[j] = tmp; }
+    buttons.forEach(function (b, k) {
+      b.removeAttribute('aria-disabled');
+      b.classList.remove('is-correct', 'is-wrong');
+      b.querySelector('.quiz__key').textContent = String(k + 1);
+      opts.appendChild(b);
+    });
+  }
+
+  function startQuiz(root) {
+    var replay = !!root._quiz;
+    root._quiz = { i: 0, score: 0, combo: 0 };
+    questions(root).forEach(function (li) { resetQuestion(li, replay); });
+    each(root, '.quiz__pips li', function (p) { p.className = ''; });
+    root.querySelector('[data-quiz-start-screen]').hidden = true;
+    root.querySelector('[data-quiz-game]').hidden = false;
+    root.querySelector('[data-quiz-end]').hidden = true;
+    root.querySelector('[data-quiz-score]').textContent = '0';
+    renderCombo(root, false);
+    blip(SFX.start);
+    goTo(root, 0);
+  }
+
+  function goTo(root, i) {
+    root._quiz.i = i;
+    questions(root).forEach(function (li, k) { li.hidden = k !== i; });
+    root.querySelector('[data-quiz-next]').hidden = true;
+    each(root, '.quiz__pips li', function (p, k) { p.classList.toggle('is-current', k === i); });
+    if (root.getBoundingClientRect().top < 0) root.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' });
+    questions(root)[i].querySelector('.quiz__legend').focus({ preventScroll: true });
+  }
+
+  function renderCombo(root, flash) {
+    var combo = root._quiz.combo;
+    var el = root.querySelector('[data-quiz-combo]');
+    el.textContent = combo >= 5 ? '🔥 On fire ×' + combo : combo >= 2 ? 'Combo ×' + combo : '';
+    el.classList.toggle('is-hot', combo >= 5);
+    el.classList.remove('is-flash');
+    if (flash && combo >= 2) { void el.offsetWidth; el.classList.add('is-flash'); }
+  }
+
+  function popCoin(btn) {
+    var pop = document.createElement('span');
+    pop.className = 'coin-pop';
+    pop.setAttribute('aria-hidden', 'true');
+    pop.innerHTML = document.querySelector('.quiz__coins .pixel-coin').outerHTML + '+1';
+    btn.appendChild(pop);
+    window.setTimeout(function () { pop.remove(); }, 950);
+  }
+
+  function answer(root, btn) {
+    var li = btn.closest('[data-quiz-q]');
+    if (li.classList.contains('is-answered')) return;
+    var st = root._quiz;
+    var right = btn.hasAttribute('data-correct');
+    li.classList.add('is-answered', right ? 'is-right' : 'is-wrong');
+    each(li, '[data-quiz-opt]', function (b) {
+      b.setAttribute('aria-disabled', 'true');
+      if (b.hasAttribute('data-correct')) b.classList.add('is-correct');
+    });
+    if (!right) btn.classList.add('is-wrong');
+    root.querySelectorAll('.quiz__pips li')[st.i].classList.add(right ? 'is-right' : 'is-wrong');
+    if (right) {
+      st.score++;
+      st.combo++;
+      root.querySelector('[data-quiz-score]').textContent = String(st.score);
+      popCoin(btn);
+      blip(st.combo >= 3 ? SFX.combo : SFX.coin);
+    } else {
+      st.combo = 0;
+      blip(SFX.wrong);
+      li.classList.remove('shake'); void li.offsetWidth; li.classList.add('shake');
+    }
+    renderCombo(root, right);
+    li.querySelector('[data-quiz-verdict]').textContent = right
+      ? '✓ ' + pick(RIGHT) + (st.combo >= 3 ? ' Combo ×' + st.combo + '!' : '')
+      : '✗ ' + pick(WRONG) + ' The right answer is marked ✓.';
+    li.querySelector('[data-quiz-why]').hidden = false;
+    var next = root.querySelector('[data-quiz-next]');
+    next.textContent = st.i === questions(root).length - 1 ? 'See your score ▶' : 'Next ▶';
+    next.hidden = false;
+    next.focus({ preventScroll: true });
+  }
+
+  function finish(root) {
+    var st = root._quiz;
+    var n = root.dataset.quiz;
+    var total = questions(root).length;
+    questions(root).forEach(function (li) { li.hidden = true; });
+    root.querySelector('[data-quiz-next]').hidden = true;
+    var ratio = st.score / total;
+    var rank = ratio === 1 ? 'S' : ratio >= 0.8 ? 'A' : ratio >= 0.6 ? 'B' : ratio >= 0.4 ? 'C' : 'D';
+    var msg = {
+      S: 'Flawless. Not a single miss.',
+      A: 'Great run. Revisit the one you missed, then go for the S.',
+      B: 'Solid. Skim the concepts you missed and play again.',
+      C: 'Continue? Re-read today’s concepts and insert another coin.',
+      D: 'Game over… or is it? Re-read today’s concepts and try again.',
+    }[rank];
+    var prev = best[n];
+    var record = prev == null || st.score > prev;
+    if (record) { best[n] = st.score; store.set(QUIZ_BEST, JSON.stringify(best)); }
+    var end = root.querySelector('[data-quiz-end]');
+    end.hidden = false;
+    end.classList.toggle('is-flawless', rank === 'S');
+    var rankEl = root.querySelector('[data-quiz-rank]');
+    rankEl.textContent = 'Rank ' + rank;
+    rankEl.dataset.rank = rank;
+    root.querySelector('[data-quiz-result]').textContent = 'You got ' + st.score + ' of ' + total + (record && prev != null ? '. New hi-score!' : '');
+    root.querySelector('[data-quiz-msg]').textContent = msg;
+    root.querySelector('[data-quiz-result]').focus({ preventScroll: true });
+    renderBest(root);
+    if (rank === 'S') {
+      blip(SFX.win);
+      confetti(false, 'pixel');
+      var all = Array.prototype.every.call(document.querySelectorAll('[data-quiz]'), function (r) { return best[r.dataset.quiz] === questions(r).length; });
+      if (all) toast('★ Every quiz flawless. You are the final boss now.');
+    } else blip(rank === 'A' ? SFX.coin : SFX.wrong);
+  }
+
+  // Easter egg: poke the coin enough times and it pays out
+  function pokeCoin(btn) {
+    btn.classList.remove('is-spin'); void btn.offsetWidth; btn.classList.add('is-spin');
+    blip(SFX.coin);
+    btn._pokes = (btn._pokes || 0) + 1;
+    if (btn._pokes === 5) {
+      btn._pokes = 0;
+      confetti(false, 'coins');
+      toast('🪙 Coin stash found! Sadly, coins have no cash value.');
+    }
+  }
+
+  // Easter egg: the Konami code unlocks every day, with a little parade
+  var KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  var konami = 0;
+  function cheat() {
+    unlockAll = !unlockAll;
+    store.set(UNLOCK_ALL, unlockAll ? '1' : '0');
+    renderProgress();
+    blip(SFX.win);
+    toast(unlockAll ? '↑↑↓↓←→←→BA: cheat accepted. Every day is unlocked.' : 'Cheat off: days unlock as you finish them again.');
+    if (!unlockAll || reducedMotion()) return;
+    var parade = document.createElement('div');
+    parade.className = 'parade';
+    parade.setAttribute('aria-hidden', 'true');
+    parade.innerHTML = document.querySelector('[data-parade]').innerHTML;
+    document.body.appendChild(parade);
+    window.setTimeout(function () { parade.remove(); }, 4700);
+  }
+
+  document.addEventListener('click', function (event) {
+    var root = event.target.closest('[data-quiz]');
+    if (!root) return;
+    var opt = event.target.closest('[data-quiz-opt]');
+    var coin = event.target.closest('[data-quiz-coin]');
+    if (event.target.closest('[data-quiz-start], [data-quiz-retake]')) startQuiz(root);
+    else if (opt) answer(root, opt);
+    else if (event.target.closest('[data-quiz-next]')) {
+      if (root._quiz.i < questions(root).length - 1) goTo(root, root._quiz.i + 1); else finish(root);
+    } else if (event.target.closest('[data-quiz-sound]')) {
+      soundOn = !soundOn;
+      store.set(SOUND, soundOn ? '1' : '0');
+      renderSound();
+      blip(SFX.coin);
+    } else if (coin) pokeCoin(coin);
+  });
+
+  document.addEventListener('keydown', function (event) {
+    var key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    if (key === KONAMI[konami]) konami++;
+    else if (!(key === 'ArrowUp' && konami === 2)) konami = key === KONAMI[0] ? 1 : 0;
+    if (konami === KONAMI.length) { konami = 0; cheat(); return; }
+    // 1–4 pick an answer in the open quiz
+    if (!/^[1-4]$/.test(key) || event.metaKey || event.ctrlKey || event.altKey) return;
+    if (event.target.closest && event.target.closest('input, textarea, select, [contenteditable]')) return;
+    var q = document.querySelector('.day:not([hidden]) [data-quiz-game]:not([hidden]) [data-quiz-q]:not([hidden]):not(.is-answered)');
+    if (q) q.querySelectorAll('[data-quiz-opt]')[Number(key) - 1].click();
+  });
+
+  each(document, '[data-quiz]', renderBest);
+  renderSound();
 
   // ---------------------------------------------------------------- certificate
   var certDialog = document.querySelector('[data-cert-dialog]');
@@ -924,7 +1389,7 @@ function page() {
 <link rel="icon" href="${ICON}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&family=Fraunces:ital,opsz,wght@1,9..144,500&family=Press+Start+2P&display=swap" rel="stylesheet">
 <script>try { var t = localStorage.getItem('react-for-ember:theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>${CSS}</style>
 <script>window.Prism = window.Prism || {}; window.Prism.manual = true;</script>
@@ -958,8 +1423,15 @@ ${prism}
   <main id="main">
     ${scenery()}
     <div class="content">
-    <noscript><p>JavaScript is off: every day is shown below in order, and progress tracking is disabled.</p><style>.day[hidden]{display:block}</style></noscript>
+    <noscript><p>JavaScript is off: every day is shown below in order, and progress tracking is disabled.</p><style>.day[hidden]{display:block}.quiz__start,.quiz__hud,.quiz__nav,.quiz__end{display:none}.quiz__game[hidden],.quiz__q[hidden],.quiz__why[hidden]{display:block}.quiz__q{margin-bottom:1.25rem}.quiz__opt[data-correct]{border-color:var(--green)}</style></noscript>
     ${daysHtml}
+    <section class="panel locked" data-locked hidden aria-labelledby="locked-title">
+      ${padlockSvg('locked__padlock')}
+      <h1 id="locked-title" tabindex="-1" data-locked-title>This day is locked</h1>
+      <p>Days unlock one at a time. <span data-locked-text></span></p>
+      <a class="button button--primary" data-locked-go href="#day-1">Go to Day 1</a>
+      <p class="locked__hint pixel">Old-school players know a way past locked doors.</p>
+    </section>
     </div>
   </main>
 </div>
@@ -971,10 +1443,10 @@ ${prism}
     <li><span class="intro__n">2</span><div><h3>Build <small>35 min</small></h3>
       <p class="live-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Each time you save, the tests run and this page shows what's left.</p>
       <p class="file-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Run <code>pnpm start</code> in the repo and this page shows your tests passing as you go.</p></div></li>
-    <li><span class="intro__n">3</span><div><h3>Check yourself <small>10 min</small></h3><p>Answer each question out loud, then reveal the answer to compare.</p></div></li>
+    <li><span class="intro__n">3</span><div><h3>Check yourself <small>10 min</small></h3><p>Press start for a quick multiple-choice quiz. Every answer comes with the reasoning.</p></div></li>
     <li><span class="intro__n">4</span><div><h3>Done</h3>
-      <p class="live-only">When all of today's tests pass, the day ticks off by itself and the next one is ready.</p>
-      <p class="file-only">When today's tests pass, press "Mark day complete" and move on to the next day.</p></div></li>
+      <p class="live-only">When all of today's tests pass, the day ticks off by itself and the next one unlocks.</p>
+      <p class="file-only">When today's tests pass, press "Mark day complete" to unlock the next day.</p></div></li>
   </ol>
   <p class="intro__stack"><strong>The stack:</strong> React 19.3 and TypeScript, built with Vite. TanStack Query for server data, React Router 8 for routing, Server Components with Next.js App Router conventions, and Vitest with Testing Library for tests.</p>
   <p class="intro__foot">Finish all 15 days to get your certificate. Stuck for more than 10 minutes? Peek at <code>solutions/</code> for that day. You can reopen this from the <strong>?</strong> button.</p>
@@ -1014,6 +1486,8 @@ ${prism}
   </div>
 </dialog>
 <div class="cert-print" data-cert-print-root></div>
+<div class="toasts" data-toasts aria-live="polite"></div>
+<template data-parade>${PARADE}</template>
 <script>window.COURSE = ${JSON.stringify({
     days: Object.fromEntries(DAYS.map((d) => [d.n, d.title.replace(/[`*]/g, '')])),
     concepts: DAYS.reduce((n, d) => n + d.concepts.length, 0),

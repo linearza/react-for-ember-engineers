@@ -48,7 +48,7 @@ export function C(flag, title, body, ember, react, { emberLang = 'handlebars', r
   return { flag, title, body, ember, react, emberLang, reactLang, emberLabel, reactLabel };
 }
 
-/** A day. drill is a list of [question, answerMarkdown]. */
+/** A day. drill is a list of [question, answerMarkdown]; quiz.mjs adds the multiple-choice options. */
 export function Day({ plan = ['Concepts', 'Hands-on', 'Check yourself'], exercise, ...rest }) {
   return { ...rest, plan, exercise: { intro: '', ...exercise } };
 }

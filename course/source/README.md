@@ -8,7 +8,9 @@ pnpm build:course
 ```
 
 - `week1.mjs` … `week3.mjs`: days, concepts (each with exactly one 🟢/🟡/🔴 flag), exercise briefs, self-check questions, final review, cheat sheet
+- `quiz.mjs`: multiple-choice options for each day's Check yourself quiz (the build checks they match the drill)
 - `model.mjs`: content helpers and a tiny inline-markdown renderer
 - `build.mjs`: page template, CSS and JS (progress in localStorage, guarded with try/catch)
 - `scenery.mjs`: the pixel-art landscape banner at the top of the page (still scenery, moving cast, day/night from the theme)
 - `logo.mjs`: the 8-bit wordmark. `pnpm build:logo` regenerates `course/icons/logo.svg`, `favicon.svg` and the README's `banner.svg`
+- `STYLE.md`: the writing brief every content edit follows

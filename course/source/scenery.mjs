@@ -50,7 +50,7 @@ function disc(cx, cy, r) {
 
 // A sprite from text rows: each character is one pixel, '.' is transparent.
 // Runs of the same colour on a row merge into a single rect.
-function sprite(rows, palette) {
+export function sprite(rows, palette) {
   const byColour = {};
   rows.forEach((row, y) => {
     for (let x = 0; x < row.length; ) {
@@ -67,7 +67,7 @@ function sprite(rows, palette) {
 // Two frames that alternate (walk cycle, wing flap)
 const frames = (a, b) => `<g class="scene__f1">${a}</g><g class="scene__f2">${b}</g>`;
 
-const HERO_PAL = { h: '#5a3a22', s: '#f2c79a', t: '#e45c10', d: '#a8380a', b: '#2b3a67', k: '#1a1c2c', w: '#7a4a2a', f: '#ffcd75', o: '#ef7d57' };
+export const HERO_PAL = { h: '#5a3a22', s: '#f2c79a', t: '#e45c10', d: '#a8380a', b: '#2b3a67', k: '#1a1c2c', w: '#7a4a2a', f: '#ffcd75', o: '#ef7d57' };
 const HERO_TOP = [
   '.......f.',
   '..hhh.of.',
@@ -78,12 +78,12 @@ const HERO_TOP = [
   '.dtttd...',
   '..ttt....',
 ];
-const HERO_A = [...HERO_TOP, '..b.b....', '.b...b...', '.k...k...'];
-const HERO_B = [...HERO_TOP, '..bb.....', '..bb.....', '..kk.....'];
+export const HERO_A = [...HERO_TOP, '..b.b....', '.b...b...', '.k...k...'];
+export const HERO_B = [...HERO_TOP, '..bb.....', '..bb.....', '..kk.....'];
 
-const FOX_PAL = { o: '#e45c10', d: '#a8380a', w: '#f4f4f4', k: '#1a1c2c' };
-const FOX_A = ['.o.o......', 'ooo....ooo', 'kooooooodw', '.ooooooo..', '.d.d..d.d.'];
-const FOX_B = ['.o.o......', 'ooo....ooo', 'kooooooodw', '.ooooooo..', '..d.dd.d..'];
+export const FOX_PAL = { o: '#e45c10', d: '#a8380a', w: '#f4f4f4', k: '#1a1c2c' };
+export const FOX_A = ['.o.o......', 'ooo....ooo', 'kooooooodw', '.ooooooo..', '.d.d..d.d.'];
+export const FOX_B = ['.o.o......', 'ooo....ooo', 'kooooooodw', '.ooooooo..', '..d.dd.d..'];
 
 const RABBIT_PAL = { w: '#ece8e0', g: '#b8b0a4', k: '#1a1c2c', p: '#f2a6b0' };
 const RABBIT = ['.w.w..', '.wpw..', 'wkww..', 'wwwwwg', '.wwww.', '.g..g.'];

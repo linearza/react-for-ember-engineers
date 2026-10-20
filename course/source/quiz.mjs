@@ -1,0 +1,472 @@
+// Multiple-choice options for each day's "Check yourself" drill, keyed by day.
+// Each entry repeats its drill question exactly and lists the correct choice first;
+// the build checks both and shuffles the choices, and the drill's model answer becomes the explanation.
+// Wrong choices should be tempting, ideally the answer an Ember instinct would give.
+export const QUIZ = {
+  1: [
+    { q: 'What triggers a re-render?', choices: [
+      'Its own state changing, its parent re-rendering, or a context it reads changing',
+      'Any `@tracked`-style property it reads being mutated',
+      'Only its props changing, compared deeply',
+      'Only an explicit call to `forceUpdate()`',
+    ] },
+    { q: 'What is the difference between render and commit?', choices: [
+      'Render calls components and diffs, purely; commit applies the diff to the DOM and runs effects',
+      'Render writes to the DOM; commit saves state to React’s store',
+      'They’re two names for the same phase',
+      'Render happens on the server; commit happens in the browser',
+    ] },
+    { q: 'Why `className` and not `class`?', choices: [
+      'JSX attribute names follow DOM properties, like `element.className`',
+      'React strips `class` attributes for security',
+      'It’s required by CSS Modules',
+      '`class` only works on custom elements',
+    ] },
+    { q: 'How do JSX and Glimmer templates differ in what the compiler knows?', choices: [
+      'Glimmer knows statically which parts are dynamic; JSX is plain JS, so React diffs at runtime',
+      'JSX is compiled to opcodes that update only the dynamic bits',
+      'Both are compiled to the same virtual DOM, so nothing differs',
+      'Glimmer diffs a virtual DOM; JSX autotracks reads',
+    ] },
+    { q: 'What does `{0 && <X/>}` render?', choices: [
+      'The text "0"',
+      'Nothing',
+      '`<X/>`',
+      'It throws, because `0` isn’t a valid child',
+    ] },
+  ],
+  2: [
+    { q: 'Why not use the array index as a key?', choices: [
+      'On insert, remove or reorder, state and DOM stay with the position, not the item',
+      'Index keys are slower to hash than strings',
+      'React throws on numeric keys',
+      'Keys must be globally unique across the whole app',
+    ] },
+    { q: 'How do you reset a component\'s state?', choices: [
+      'Change its `key`, so React mounts a fresh instance',
+      'Call `this.reset()` on the component instance',
+      'Set every field back in a `useEffect` when the prop changes',
+      'Pass `reset={true}` as a prop',
+    ] },
+    { q: 'Render props vs children vs hooks: when would you use each?', choices: [
+      'Children for slots, render props when the child owns the data, hooks for logic without markup',
+      'Always hooks: render props and children are deprecated',
+      'Children for logic, hooks for markup, render props for styling',
+      'They’re interchangeable; pick whichever is shortest',
+    ] },
+    { q: 'What is prop drilling, and what fixes it?', choices: [
+      'Passing props through layers that don’t use them; fix with composition, then context',
+      'Mutating props deep in the tree; fix with `Object.freeze`',
+      'Re-rendering every child on a prop change; fix with `memo`',
+      'Reading props in effects; fix with refs',
+    ] },
+  ],
+  3: [
+    { q: 'Why must React state be treated as immutable?', choices: [
+      'React detects changes by reference, so a mutated object looks unchanged',
+      'Mutation throws an error in production builds',
+      'State objects are frozen by `useState`',
+      'Only so that DevTools can display it',
+    ] },
+    { q: 'What does `console.log(count)` print right after `setCount(count + 1)`?', choices: [
+      'The old value',
+      'The new value',
+      '`undefined`',
+      'A Promise of the new value',
+    ] },
+    { q: 'What is batching?', choices: [
+      'Grouping all state updates in one tick into a single render',
+      'Rendering lists in chunks of 50 items',
+      'Merging several components into one bundle',
+      'Queuing effects until the user is idle',
+    ] },
+    { q: 'When should you use an updater function?', choices: [
+      'When the next state depends on the previous one',
+      'Only for state that holds objects',
+      'Only inside class components',
+      'Whenever you want the update to be synchronous',
+    ] },
+    { q: 'Derived state vs `useEffect` + `setState`?', choices: [
+      'Derive it in render; an effect adds a render with stale data',
+      'Use the effect: render must not compute anything',
+      'Use the effect, because it runs before paint',
+      'Either is fine; they render the same number of times',
+    ] },
+    { q: 'How is this different from `@tracked`?', choices: [
+      'React replaces values and re-renders the whole component; `@tracked` mutates and updates precisely',
+      'They’re identical, apart from the syntax',
+      'React tracks which JSX reads each field and updates only those bits',
+      '`@tracked` values are immutable snapshots; React state is mutable',
+    ] },
+  ],
+  4: [
+    { q: 'Controlled vs uncontrolled inputs: trade-offs, and when to use each?', choices: [
+      'Controlled when other UI reacts as you type; otherwise uncontrolled is simpler',
+      'Always controlled: uncontrolled inputs are deprecated',
+      'Uncontrolled inputs can’t be submitted with a form',
+      'Controlled inputs render less often',
+    ] },
+    { q: 'What is a synthetic event?', choices: [
+      'React’s cross-browser wrapper, delegated from the root and dispatched through the React tree',
+      'An event created with `new CustomEvent()`',
+      'An event fired only in tests',
+      'A native event React attaches to every element individually',
+    ] },
+    { q: '`useRef` vs `useState`?', choices: [
+      'Both persist; changing a ref doesn’t re-render, changing state does',
+      'Refs reset on every render; state persists',
+      'Refs are only for DOM nodes',
+      'State is synchronous; refs are batched',
+    ] },
+    { q: 'Why avoid reading the DOM (or refs) during render?', choices: [
+      'Render must be pure and may never commit, so the DOM is missing or a commit behind',
+      'Reading the DOM throws inside render',
+      'It triggers an infinite render loop',
+      'Refs are only readable in class components',
+    ] },
+  ],
+  5: [
+    { q: 'When do effects run?', choices: [
+      'After commit, usually after paint, and again when deps change',
+      'During render, before the JSX is returned',
+      'Before the DOM is updated',
+      'Only once, on mount',
+    ] },
+    { q: 'What is the dependency array really for?', choices: [
+      'Listing the reactive values the sync depends on, so React can skip re-syncing',
+      'Controlling exactly when the effect fires, like a lifecycle hook',
+      'Memoizing the effect’s return value',
+      'Declaring which state the effect is allowed to set',
+    ] },
+    { q: 'Why does Strict Mode run effects twice in development?', choices: [
+      'To surface missing or incorrect cleanup',
+      'It’s a known bug that’s fixed in production',
+      'To warm up the cache for the second render',
+      'To measure how long effects take',
+    ] },
+    { q: 'How do you handle race conditions when fetching in an effect?', choices: [
+      'An ignore flag or `AbortController` in cleanup, or a data library',
+      'Add the response to the dependency array',
+      'Use `async` directly as the effect function',
+      'Wrap the fetch in `useMemo`',
+    ] },
+    { q: 'Name three cases where you don\'t need an effect.', choices: [
+      'Derived values, responding to user events, and resetting state on a prop change',
+      'Subscriptions, timers and DOM measurement',
+      'Fetching, analytics and focus management',
+      'Any time a prop changes',
+    ] },
+    { q: 'What does `useEffectEvent` solve?', choices: [
+      'Reading the latest props or state in an effect without making them deps',
+      'Running an effect only on user events',
+      'Replacing `addEventListener` in effects',
+      'Making effects run synchronously',
+    ] },
+    { q: 'How do effects compare to Ember modifiers?', choices: [
+      'Same set-up and tear-down lifecycle; effects belong to the component and are driven by deps',
+      'Effects are bound to a single element, like modifiers',
+      'Modifiers re-run on every render; effects never re-run',
+      'They’re unrelated: modifiers are for styling',
+    ] },
+  ],
+  6: [
+    { q: 'Does a re-render mean a DOM update?', choices: [
+      'No: React only touches the DOM where the output differs',
+      'Yes: every re-render rewrites the component’s DOM',
+      'Only in development mode',
+      'Yes, unless the component uses `memo`',
+    ] },
+    { q: 'When does `memo` fail to prevent a re-render?', choices: [
+      'When a prop is a new reference each render, or a context it reads changes',
+      'When the component has more than ten props',
+      'When the parent is a class component',
+      'Never: `memo` always prevents re-renders',
+    ] },
+    { q: '`useMemo` vs `useCallback`?', choices: [
+      '`useCallback(fn)` memoizes the function; `useMemo` memoizes a result',
+      '`useCallback` runs the function on every render',
+      '`useMemo` is for components, `useCallback` is for hooks',
+      'They differ only in name',
+    ] },
+    { q: 'What does the React Compiler do, and which rules does it rely on?', choices: [
+      'Auto-memoizes at build time, relying on the Rules of React: purity and immutability',
+      'Compiles JSX to Glimmer opcodes',
+      'Removes the need for keys on lists',
+      'Turns state into signals at runtime',
+    ] },
+    { q: 'How would you find a slow render?', choices: [
+      'Record it with the React DevTools Profiler and inspect the flamegraph',
+      'Wrap every component in `memo` and see what changes',
+      'Count `console.log` calls in each render',
+      'Read the bundle analyser report',
+    ] },
+  ],
+  7: [
+    { q: 'How does Context compare to an Ember service?', choices: [
+      'A service is a global singleton; context is scoped to the tree and comes from the nearest provider',
+      'Context is a lazily created global singleton, just like a service',
+      'Context is fine-grained: consumers re-render only for the fields they read',
+      'Services are tree-scoped; context is global',
+    ] },
+    { q: 'Why can context cause performance problems?', choices: [
+      'Every consumer re-renders when the value’s reference changes, and `memo` can’t stop it',
+      'Context values are deep-cloned on every render',
+      'Each provider adds a network request',
+      'Context lookups walk the DOM tree',
+    ] },
+    { q: '`useReducer` vs `useState`?', choices: [
+      'Same mechanism; reach for a reducer when transitions are related or complex',
+      '`useReducer` is global state; `useState` is local',
+      '`useReducer` requires Redux',
+      '`useState` can’t hold objects',
+    ] },
+    { q: 'What problem does `useSyncExternalStore` solve?', choices: [
+      'Subscribing to an outside store without tearing in concurrent renders',
+      'Syncing state to localStorage automatically',
+      'Sharing state between browser tabs',
+      'Making state updates synchronous',
+    ] },
+    { q: 'When would you reach for Zustand or Redux?', choices: [
+      'Shared, frequently updated client state read by many distant components',
+      'For all server data, instead of TanStack Query',
+      'Whenever you have more than one `useState`',
+      'Only for apps that use class components',
+    ] },
+  ],
+  8: [
+    { q: 'Why can\'t hooks be called conditionally?', choices: [
+      'React matches hook state by call order, so skipping one shifts every later slot',
+      'Conditionals inside components are a syntax error',
+      'Hooks are registered by name at import time',
+      'Only for performance: conditionals disable memoization',
+    ] },
+    { q: 'Do two components using the same hook share state?', choices: [
+      'No: each call gets its own state, because hooks share logic, not data',
+      'Yes: a hook is a singleton, like a service',
+      'Yes, if they share a parent',
+      'Only when the hook uses `useRef`',
+    ] },
+    { q: 'Hooks vs HOCs vs render props?', choices: [
+      'Hooks are the default; render props for markup control; HOCs are mostly legacy',
+      'HOCs are the modern replacement for hooks',
+      'Render props are deprecated in React 19',
+      'All three are equally recommended',
+    ] },
+    { q: 'How do you test a custom hook?', choices: [
+      'Through a component that uses it, or with `renderHook` for library hooks',
+      'Call the hook directly in the test body',
+      'Mock `useState` and assert on its calls',
+      'Hooks can’t be tested in isolation',
+    ] },
+  ],
+  9: [
+    { q: 'Server state vs client state?', choices: [
+      'Client state is owned by the UI; server state is async, shared and goes stale',
+      'Server state is anything rendered on the server',
+      'Client state lives in localStorage; server state in memory',
+      'There’s no difference: both belong in `useState`',
+    ] },
+    { q: 'What is stale-while-revalidate?', choices: [
+      'Show cached data immediately and refetch in the background',
+      'Block rendering until fresh data arrives',
+      'Delete cached data once it goes stale',
+      'Retry failed requests with backoff',
+    ] },
+    { q: 'How do query keys work?', choices: [
+      'A serialisable array identifying a cache entry, matched by prefix for invalidation',
+      'A string URL that must be unique per component',
+      'An auto-generated id, from the order queries mount',
+      'A model name and id, like an identity map',
+    ] },
+    { q: 'Optimistic update vs invalidation?', choices: [
+      'Invalidation refetches after the server confirms; optimistic updates first and rolls back on error',
+      'Optimistic updates skip the server entirely',
+      'Invalidation updates the cache before the request',
+      'They’re the same thing',
+    ] },
+    { q: 'How does Suspense work?', choices: [
+      'A component suspends on missing data and the nearest boundary shows its fallback until it resolves',
+      'It delays rendering by a fixed timeout',
+      'It runs data fetching in a web worker',
+      'It catches errors thrown during render',
+    ] },
+    { q: 'Why aren\'t error boundaries hooks?', choices: [
+      'Catching a child’s render error needs class lifecycles with no hook equivalent',
+      'Hooks can’t throw errors',
+      'There is a hook for it: `useErrorBoundary` in React 19',
+      'Error boundaries are browser APIs, not React',
+    ] },
+    { q: 'How does this compare with ember-data?', choices: [
+      'ember-data is a normalised identity map; TanStack Query is a request cache, kept consistent by invalidation',
+      'TanStack Query normalises records by type and id, exactly like ember-data',
+      'Both are ORMs that generate API calls from models',
+      'TanStack Query only works with GraphQL',
+    ] },
+  ],
+  10: [
+    { q: 'Loaders vs fetching in components?', choices: [
+      'Loaders start at navigation, in parallel, so there are no render-then-fetch waterfalls',
+      'Loaders run after the component mounts',
+      'Fetching in components is always faster',
+      'Loaders only run on the server',
+    ] },
+    { q: 'How do nested routes and outlets work?', choices: [
+      'A URL matches a branch; each parent renders `<Outlet/>` where its child goes',
+      'Each route replaces the whole page',
+      'Child routes must be defined in separate apps',
+      'Outlets are only for modals',
+    ] },
+    { q: 'Where should filter state live, and why the URL?', choices: [
+      'In search params: shareable, survives reloads, works with Back, and loaders can read it',
+      'In `useState`, because it’s UI state',
+      'In localStorage, so it persists',
+      'In a global store, so every component can read it',
+    ] },
+    { q: 'How do you handle 404s and other errors per route?', choices: [
+      'Throw from the loader and render the nearest route `errorElement`',
+      'Wrap the whole app in one try/catch',
+      'Return `null` from the component',
+      'Redirect to `/404` in an effect',
+    ] },
+    { q: 'How does this compare with the Ember router?', choices: [
+      'Conceptually close, but loaders run in parallel and routes are config with string paths',
+      'Identical: React Router is a port of the Ember router',
+      'React Router has no nested routes',
+      'Ember loads routes in parallel; React Router loads parent-first',
+    ] },
+  ],
+  11: [
+    { q: 'What is a transition?', choices: [
+      'A non-urgent update that urgent ones can interrupt, keeping the UI responsive',
+      'A CSS animation between routes',
+      'An update that runs synchronously before paint',
+      'A debounced state setter',
+    ] },
+    { q: 'What problem do Actions solve?', choices: [
+      'Pending state, sequencing, errors and resets around async mutations',
+      'Routing between pages',
+      'Fetching data before render',
+      'Dispatching Redux events',
+    ] },
+    { q: '`useActionState` vs `useState` + `onSubmit`?', choices: [
+      '`useActionState` handles the pending flag, ordering and result for you',
+      '`useActionState` only works with Server Functions',
+      'They’re identical, but `useActionState` is slower',
+      '`useState` + `onSubmit` is the newer recommended pattern',
+    ] },
+    { q: 'How does `useOptimistic` roll back?', choices: [
+      'The optimistic layer only exists while the transition is pending, then real state shows again',
+      'It restores a snapshot it took before the update',
+      'You must call `rollback()` in a catch block',
+      'It refetches from the server',
+    ] },
+    { q: '`useDeferredValue` vs debouncing?', choices: [
+      'Deferred updates at once at low priority; debounce delays by a fixed time and suits network calls',
+      'They’re the same thing, implemented differently',
+      '`useDeferredValue` waits a fixed 300ms',
+      'Debouncing is built into React 19',
+    ] },
+  ],
+  12: [
+    { q: 'RSC vs SSR?', choices: [
+      'SSR renders client components to HTML and hydrates; RSC components run only on the server and never ship',
+      'They’re two names for server-side rendering',
+      'RSC is SSR with caching',
+      'SSR runs in the browser; RSC on the server',
+    ] },
+    { q: 'What does `\'use client\'` actually mean?', choices: [
+      'It marks the boundary where server code hands over to modules bundled for the browser',
+      'The component renders only in the browser and is never SSR’d',
+      'It disables Server Components for the whole app',
+      'It marks a file as safe to cache',
+    ] },
+    { q: 'Why can\'t you pass a function from a server component to a client component?', choices: [
+      'Props are serialised across the network, and closures can’t be serialised',
+      'Client components can’t receive any props',
+      'Functions are too large to send',
+      'It works fine; there’s no restriction',
+    ] },
+    { q: 'How do Server Functions work?', choices: [
+      'The bundler swaps them for references; calls POST the arguments and the server runs the function',
+      'The function’s code is shipped to the browser and run there',
+      'They’re REST endpoints you write by hand',
+      'They run in a service worker',
+    ] },
+    { q: 'When would you *not* use RSC?', choices: [
+      'Highly interactive, client-state-heavy apps, or when you can’t run a server',
+      'For any app with more than 50 components',
+      'When you use TypeScript',
+      'Never: RSC is always better',
+    ] },
+  ],
+  13: [
+    { q: 'Why prefer `getByRole`?', choices: [
+      'It queries the accessibility tree, so tests survive refactors and catch a11y breaks',
+      'It’s the fastest query',
+      'It’s the only query that works with TypeScript',
+      'It finds elements by CSS class',
+    ] },
+    { q: 'What\'s wrong with testing implementation details?', choices: [
+      'Tests break on harmless refactors and pass when behaviour breaks',
+      'Nothing: it gives the best coverage',
+      'Only that those tests run slowly',
+      'It’s impossible with Testing Library',
+    ] },
+    { q: '`waitFor` vs `findBy`?', choices: [
+      '`findBy` is `waitFor` + `getBy`: use it for appearance, `waitFor` for other assertions',
+      '`waitFor` is deprecated',
+      '`findBy` returns synchronously',
+      'They’re unrelated: `findBy` is for snapshots',
+    ] },
+    { q: 'How do you test a component that fetches?', choices: [
+      'Use the real data layer, mock the network, and await the result',
+      'Mock the `useQuery` hook to return data',
+      'Use snapshot tests only',
+      'Call the API for real in the test',
+    ] },
+    { q: 'How do you test a custom hook?', choices: [
+      'Through a component, or `renderHook` with `rerender` and `act`',
+      'Mock React and inspect the hook’s internal state',
+      'Call it outside a component',
+      'Use shallow rendering',
+    ] },
+    { q: 'What makes a test flaky?', choices: [
+      'Hidden dependence on timing or shared state',
+      'Using `getByRole` instead of test ids',
+      'Running tests in parallel, always',
+      'Using TypeScript',
+    ] },
+  ],
+  14: [
+    { q: 'What are compound components, and how do you build them?', choices: [
+      'Components that share implicit state under a parent, built with a context the parent provides',
+      'Components merged into one at build time',
+      'A component that renders other components conditionally',
+      'Higher-order components chained together',
+    ] },
+    { q: 'Why portals, and how do events bubble through them?', choices: [
+      'They escape clipping and stacking; events bubble through the React tree, not the DOM',
+      'They improve performance; events don’t bubble out of them',
+      'They’re for iframes; events bubble through the DOM tree only',
+      'They render on the server; events don’t work',
+    ] },
+    { q: 'What changed with refs in React 19?', choices: [
+      '`ref` is a regular prop, so `forwardRef` isn’t needed, and ref callbacks can return cleanup',
+      'Refs were removed in favour of `useElement`',
+      'Refs now trigger re-renders when they change',
+      '`useRef` is now asynchronous',
+    ] },
+    { q: '`<Activity>` vs conditional rendering?', choices: [
+      'Activity hides while keeping state and DOM; conditional rendering unmounts',
+      'Activity unmounts but caches the props',
+      'They behave identically',
+      'Activity is for animations only',
+    ] },
+    { q: 'How do you type a generic component?', choices: [
+      'Declare the type parameter on the function and let TypeScript infer it from props',
+      'Use `any` for the props',
+      'Generic components aren’t possible in TSX',
+      'Wrap it in `React.Generic<T>`',
+    ] },
+  ],
+};
