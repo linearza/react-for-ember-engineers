@@ -127,7 +127,7 @@ const PARADE = '<div class="parade__run">' +
 // The reading track: the hero walks it as you scroll through the day's concepts, a coin per concept
 const READBAR = `<div class="readbar" data-readbar hidden role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress">
   <div class="readbar__track" data-readbar-track>
-    <svg class="readbar__hero" data-readbar-hero viewBox="0 0 9 11" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${twoFrames(HERO_A, HERO_B, HERO_PAL)}</svg>
+    <span class="readbar__runner" data-readbar-runner><svg class="readbar__hero" data-readbar-hero viewBox="0 0 9 11" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${twoFrames(HERO_A, HERO_B, HERO_PAL)}</svg></span>
     ${pixelSvg(FLAG, FLAG_PAL, 'readbar__flag')}
   </div>
   <span class="readbar__label pixel" aria-hidden="true">${coinSvg()}<span data-readbar-label></span></span>
@@ -586,26 +586,27 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 .locked__hint { margin-top: 1.75rem !important; font-size: 0.58rem; opacity: 0.75; }
 
 /* Reading track */
-.readbar { position: sticky; top: 0; z-index: 15; display: flex; align-items: flex-end; gap: 0.9rem; margin: 0 0 1.25rem; padding: 0.4rem 0 0.35rem; background: var(--bg); border-bottom: 1px solid var(--border); }
+.readbar { --ease: cubic-bezier(0.22, 1, 0.36, 1); position: sticky; top: 0; z-index: 15; display: flex; align-items: flex-end; gap: 0.75rem; margin: 0 0 1.25rem; padding: 0.3rem 0 0.3rem; background: var(--bg); }
+.readbar > * { opacity: 0.6; transition: opacity 300ms ease; }
+.readbar:hover > *, .readbar.is-walking > *, .readbar.is-clear > * { opacity: 1; }
 .readbar[hidden] { display: none; }
-.readbar__track { position: relative; flex: 1; height: 40px; margin: 0 30px 0 12px; }
-.readbar__track::before { content: ''; position: absolute; left: -12px; right: -30px; bottom: 0; height: 6px; background: linear-gradient(#38b764 0 2px, #257179 2px 4px, #5a3a22 4px); background-size: 100% 6px; image-rendering: pixelated; }
-.readbar__track::after { content: ''; position: absolute; left: -12px; right: -30px; bottom: 2px; height: 2px; background: repeating-linear-gradient(90deg, transparent 0 6px, #a7f070 6px 8px); opacity: 0.6; }
-.readbar__hero { position: absolute; bottom: 5px; left: 0; width: 22px; height: 27px; transform: translateX(-50%); transition: left 120ms steps(3); }
-.readbar__flag { position: absolute; bottom: 0; right: -28px; width: 17px; height: 29px; }
-.readbar__flag.is-raised { animation: hop 0.6s steps(1) 3; }
-.readbar__coin { position: absolute; bottom: 12px; width: 12px; height: 12px; transform: translateX(-50%); animation: coin-spin 1.2s steps(4) infinite; }
-.readbar__coin.is-got { visibility: hidden; animation: none; }
-.readbar__coin.is-got::after { content: none; }
+.readbar__track { position: relative; flex: 1; height: 22px; margin: 0 20px 0 8px; }
+.readbar__track::before { content: ''; position: absolute; left: -8px; right: -20px; bottom: 0; height: 3px; background: linear-gradient(#38b764 0 1px, #5a3a22 1px); opacity: 0.55; }
+.readbar__runner { position: absolute; bottom: 3px; left: 0; transform: translateX(0); transition: transform 600ms var(--ease); will-change: transform; }
+.readbar__hero { display: block; width: 13px; height: 16px; margin-left: -6.5px; }
+.readbar__hero.is-back { transform: scaleX(-1); }
+.readbar__flag { position: absolute; bottom: 0; right: -19px; width: 10px; height: 17px; transform-origin: 1px 100%; }
+.readbar__flag.is-raised { animation: flag-wave 900ms var(--ease); }
+@keyframes flag-wave { 30% { transform: translateY(-3px) rotate(-6deg); } 60% { transform: translateY(0) rotate(3deg); } }
+.readbar__coin { position: absolute; bottom: 7px; width: 7px; height: 7px; margin-left: -3.5px; opacity: 0.85; transition: opacity 500ms ease, transform 500ms var(--ease); }
+.readbar__coin.is-got { opacity: 0; transform: translateY(-6px); }
 .readbar__hero .f1, .readbar__hero .f2 { animation: none; }
 .readbar__hero .f2 { opacity: 0; }
-.readbar.is-walking .readbar__hero .f1 { animation: frame 0.24s steps(1) infinite reverse; }
-.readbar.is-walking .readbar__hero .f2 { opacity: 1; animation: frame 0.24s steps(1) infinite; }
-.readbar__label { flex: none; min-width: 6em; font-size: 0.6rem; color: var(--muted); text-align: right; white-space: nowrap; line-height: 1; padding-bottom: 2px; }
-.readbar__label .pixel-coin { width: 12px; height: 12px; margin-right: 0.45em; vertical-align: -2px; }
+.readbar.is-walking .readbar__hero .f1 { animation: frame 0.36s steps(1) infinite reverse; }
+.readbar.is-walking .readbar__hero .f2 { opacity: 1; animation: frame 0.36s steps(1) infinite; }
+.readbar__label { flex: none; min-width: 5em; font-size: 0.48rem; color: var(--muted); text-align: right; white-space: nowrap; line-height: 1; padding-bottom: 1px; transition: color 400ms ease; }
+.readbar__label .pixel-coin { width: 8px; height: 8px; margin-right: 0.4em; vertical-align: -1px; }
 .readbar.is-clear .readbar__label { color: var(--accent); }
-.readbar__pop { position: absolute; bottom: 14px; font-family: 'Press Start 2P', ui-monospace, monospace; font-size: 0.5rem; color: #c87800; transform: translateX(-50%); pointer-events: none; animation: readbar-pop 0.7s steps(7) forwards; }
-@keyframes readbar-pop { to { transform: translate(-50%, -20px); opacity: 0; } }
 @media (max-width: 900px) { .readbar { top: var(--topbar-h, 3.75rem); gap: 0.6rem; } }
 .confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; pointer-events: none; z-index: 1000; overflow: visible; }
 
@@ -666,7 +667,6 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
   .scene__f2 { opacity: 0; }
   .quiz, .quiz *, .locked__padlock, .toast, .readbar * { animation: none !important; transition: none !important; }
   .readbar .readbar__hero .f2 { opacity: 0; }
-  .readbar__pop { display: none; }
   .coin-pop { display: none; }
 }
 
@@ -1405,6 +1405,7 @@ const JS = String.raw`
   var readbar = document.querySelector('[data-readbar]');
   var readTrack = readbar.querySelector('[data-readbar-track]');
   var readHero = readbar.querySelector('[data-readbar-hero]');
+  var readRunner = readbar.querySelector('[data-readbar-runner]');
   var readFlag = readbar.querySelector('.readbar__flag');
   var readLabel = readbar.querySelector('[data-readbar-label]');
   var readCoin = readbar.querySelector('[data-readbar-coin]');
@@ -1461,20 +1462,13 @@ const JS = String.raw`
         void readFlag.offsetWidth;
         readFlag.classList.add('is-raised');
         blip(SFX.combo);
-        if (prevMax < 1) toast('Reading clear! Now build it ↓');
       } else {
-        var pop = document.createElement('span');
-        pop.className = 'readbar__pop';
-        pop.textContent = '+1';
-        pop.style.left = (stops[got - 1] * 100) + '%';
-        readTrack.appendChild(pop);
-        window.setTimeout(function () { pop.remove(); }, 800);
         blip(SFX.coin);
       }
     }
     reading.got = got;
-    readHero.style.left = (p * 100) + '%';
-    readHero.style.transform = 'translateX(-50%)' + (p < reading.last ? ' scaleX(-1)' : '');
+    readRunner.style.transform = 'translateX(' + (p * readTrack.clientWidth).toFixed(1) + 'px)';
+    if (Math.abs(p - reading.last) > 0.002) readHero.classList.toggle('is-back', p < reading.last);
     reading.last = p;
     var clear = max === 1;
     readbar.classList.toggle('is-clear', clear);
@@ -1491,7 +1485,7 @@ const JS = String.raw`
       if (reducedMotion()) return;
       readbar.classList.add('is-walking');
       window.clearTimeout(reading.walk);
-      reading.walk = window.setTimeout(function () { readbar.classList.remove('is-walking'); }, 180);
+      reading.walk = window.setTimeout(function () { readbar.classList.remove('is-walking'); }, 500);
     });
   }
   window.addEventListener('scroll', onReadScroll, { passive: true });
