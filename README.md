@@ -1,4 +1,6 @@
-# React for Ember Engineers
+<p align="center"><img src="course/icons/logo.svg" width="128" height="128" alt=""></p>
+
+<h1 align="center">React for Ember Engineers</h1>
 
 A 15-day course, at most an hour a day, for engineers who know Octane/Polaris Ember well and are new to React. It skips the basics of components, routes and tests. It covers how React's model differs from Ember's, and spends most of its time where Ember instincts will mislead you.
 

@@ -1,10 +1,12 @@
 // Generates course/index.html: node course/source/build.mjs course/index.html
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { FLAGS, dedent, escape as e, inline, md } from './model.mjs';
 import { WEEK1 } from './week1.mjs';
 import { WEEK2 } from './week2.mjs';
 import { WEEK3, MOCK_INTERVIEW, CHEATSHEET } from './week3.mjs';
 
+// The logo, inlined so index.html stays one self-contained file
+const ICON = 'data:image/svg+xml,' + encodeURIComponent(readFileSync(new URL('../icons/logo.svg', import.meta.url), 'utf8').replace(/\s*\n\s*/g, ''));
 const REPO = 'https://github.com/linearza/react-for-ember-engineers';
 const DAYS = [...WEEK1, ...WEEK2, ...WEEK3];
 const WEEKS = { 1: 'Core mental model', 2: 'Architecture', 3: 'Modern & advanced' };
@@ -451,7 +453,7 @@ function page() {
 <meta name="color-scheme" content="light dark">
 <title>React for Ember Engineers</title>
 <meta name="description" content="A 15-day React 19 course for experienced Ember engineers: concepts, exercises and interview drills.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23c2410c%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2216%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22700%22%3ER%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="${ICON}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
