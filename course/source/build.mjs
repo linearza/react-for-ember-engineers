@@ -4,6 +4,7 @@ import { FLAGS, dedent, escape as e, inline, md } from './model.mjs';
 import { WEEK1 } from './week1.mjs';
 import { WEEK2 } from './week2.mjs';
 import { WEEK3, FINAL_REVIEW, CHEATSHEET } from './week3.mjs';
+import { scenery } from './scenery.mjs';
 
 // The logo, inlined so index.html stays one self-contained file
 const ICON = 'data:image/svg+xml,' + encodeURIComponent(readFileSync(new URL('../icons/logo.svg', import.meta.url), 'utf8').replace(/\s*\n\s*/g, ''));
@@ -182,6 +183,9 @@ const DARK_TOKENS = String.raw`
   --code-bg: #141518; --tok-comment: #7d828c; --tok-keyword: #d19af7; --tok-string: #8bd49c; --tok-fn: #82aaff;
   --tok-number: #f5b36b; --tok-tag: #fb923c; --tok-attr: #f0c674; --tok-punct: #a8adb7;
   --code-inline: #f9a8d4; --code-inline-bg: #2a1823;
+  --sky-1: #12132a; --sky-2: #1a1c3c; --sky-3: #29366f; --sky-4: #3b4a8a; --star-opacity: 1; --fly-opacity: 1;
+  --orb: #f4f4e0; --cloud: #333c57; --hill-1: #2c3463; --hill-2: #1f2a4a; --hill-3: #172038; --tree: #0f1a2a;
+  --ground: #132a2a; --tuft: #1e4a3a;
   color-scheme: dark;`;
 
 const CSS = String.raw`
@@ -192,6 +196,9 @@ const CSS = String.raw`
   --code-bg: #fbfbf9; --tok-comment: #7c7f88; --tok-keyword: #a626a4; --tok-string: #2f7d32; --tok-fn: #2759c4;
   --tok-number: #b45309; --tok-tag: #c2410c; --tok-attr: #8a5a00; --tok-punct: #4b4f58;
   --code-inline: #a3195b; --code-inline-bg: #fbeef4;
+  --sky-1: #41a6f6; --sky-2: #5cb8f8; --sky-3: #7fcbfa; --sky-4: #a8defc; --star: #ffffff; --star-opacity: 0; --fly-opacity: 0;
+  --orb: #ffcd75; --cloud: #f4f4f4; --hill-1: #94b0c2; --hill-2: #5a9e7a; --hill-3: #38b764; --tree: #257179;
+  --ground: #a7f070; --tuft: #38b764;
   --radius: 12px; --sidebar: 300px;
   color-scheme: light;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -409,6 +416,32 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 .intro__steps p { margin: 0; color: var(--muted); font-size: 0.92rem; }
 .intro__foot { margin: 1.25rem 0 0; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.88rem; color: var(--muted); }
 .intro__actions { display: flex; justify-content: flex-end; margin-top: 1.25rem; }
+
+/* Scenery banner: pixel-art landscape, scrolling in whole-pixel steps */
+.scene { height: 150px; margin: 0 0 2rem; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--sky-1); }
+.scene svg { display: block; width: 100%; height: 100%; }
+.scene__layer { animation: scene-scroll steps(480) infinite; }
+.scene__layer--clouds { animation-duration: 160s; }
+.scene__layer--far { animation-duration: 240s; }
+.scene__layer--mid { animation-duration: 120s; }
+.scene__layer--near { animation-duration: 60s; }
+@keyframes scene-scroll { to { transform: translateX(-480px); } }
+.scene__stars { opacity: var(--star-opacity); }
+.scene__star { animation: twinkle 3.2s steps(2) infinite; }
+@keyframes twinkle { 50% { opacity: 0.2; } }
+.scene__flies { opacity: var(--fly-opacity); }
+.scene__fly { animation: fly 6s steps(12) infinite; }
+@keyframes fly { 0%, 100% { transform: translate(0, 0); opacity: 0; } 25% { transform: translate(3px, -2px); opacity: 1; } 50% { transform: translate(6px, 0); opacity: 0.3; } 75% { transform: translate(3px, 2px); opacity: 1; } }
+.scene__flame--b { animation: flicker 0.5s steps(1) infinite; }
+.scene__flame--a { animation: flicker 0.5s steps(1) infinite reverse; }
+@keyframes flicker { 50% { opacity: 0; } }
+.scene__ember { animation: ember 1.6s steps(6) infinite; }
+@keyframes ember { 0% { transform: translate(0, 0); opacity: 1; } 100% { transform: translate(2px, -8px); opacity: 0; } }
+@media (max-width: 900px) { .scene { height: 110px; margin-bottom: 1.5rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .scene *, .scene__layer { animation: none !important; }
+  .scene__flame--b { opacity: 0; }
+}
 
 /* Certificate: always on paper, whatever the theme */
 .cert-dialog { width: min(900px, calc(100vw - 32px)); max-height: calc(100vh - 32px); border: 0; border-radius: 16px; padding: 1rem; background: var(--surface); }
@@ -908,6 +941,7 @@ ${prism}
     </div>
   </aside>
   <main id="main">
+    ${scenery()}
     <noscript><p>JavaScript is off: every day is shown below in order, and progress tracking is disabled.</p><style>.day[hidden]{display:block}</style></noscript>
     ${daysHtml}
   </main>
