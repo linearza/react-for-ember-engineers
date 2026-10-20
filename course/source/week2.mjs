@@ -100,9 +100,9 @@ function DraftNote() {
 `),
     C('r', 'React Compiler: auto-memoization',
       `
-The React Compiler (v1, stable) is a build-time Babel or Rust plugin. It analyses each component and hook and inserts fine-grained memoization: it caches JSX subtrees, derived values and callbacks keyed on their real inputs. It's effectively \`memo\`/\`useMemo\`/\`useCallback\` everywhere, done correctly. It relies on the **Rules of React**: components are pure, props and state are never mutated, and hooks are called unconditionally at the top level. It skips (or bails out of) code that breaks the rules.
+The React Compiler (v1, stable) is a build-time Babel plugin (an experimental Rust port also exists). It analyses each component and hook and inserts fine-grained memoization: it caches JSX subtrees, derived values and callbacks keyed on their real inputs. It's effectively \`memo\`/\`useMemo\`/\`useCallback\` everywhere, done correctly. It relies on the **Rules of React**: components are pure, props and state are never mutated, and hooks are called unconditionally at the top level. It skips (or bails out of) code that breaks the rules.
 
-Manual memo still matters for code the compiler can't see or bails out of, for values passed to non-React libraries that compare identity, for effect dependencies you want to be explicit about, and on codebases that haven't adopted it. Day 6's stretch goal turns it on.
+Manual memo still matters for code the compiler can't see or bails out of, for values passed to non-React libraries that compare identity, for effect dependencies you want to be explicit about, and on codebases that haven't adopted it. This day's stretch goal turns it on.
 `,
       `
 // Glimmer's compiler already knows static vs dynamic.

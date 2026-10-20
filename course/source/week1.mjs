@@ -43,7 +43,7 @@ export function IssueCard({ issue }: { issue: Issue }) {
 `),
     C('y', 'JSX is JavaScript, not a template language',
       `
-JSX compiles to \`jsx(type, props)\` calls, so anything that works in an expression works in \`{}\`. Attributes are DOM *properties*, which is why you write \`className\` and \`htmlFor\`. There are no block helpers:
+JSX compiles to \`jsx(type, props)\` calls, so anything that works in an expression works in \`{}\`. Attribute *names* follow the DOM properties, which is why you write \`className\` and \`htmlFor\`. There are no block helpers:
 
 - \`{{#if}}\` → \`cond && <X/>\`, a ternary, or an early \`return\`
 - \`{{#each}}\` → \`array.map(item => <Li key={item.id} …/>)\`
@@ -165,7 +165,7 @@ Three things: the component's **own state changes** (a \`useState\`/\`useReducer
 `],
     ['Why `className` and not `class`?',
       `
-JSX attributes map to DOM **properties**, not HTML attributes. The property is \`element.className\`, because \`class\` was a reserved word in early JS. Same for \`htmlFor\` (\`label.htmlFor\`). React 19 also accepts custom-element attributes as written, but for built-ins the property names stand.
+JSX attribute **names** follow DOM properties, not HTML attributes: \`className\` because the property is \`element.className\` (\`class\` was a reserved word in early JS), and \`htmlFor\` because of \`label.htmlFor\`. React still writes most of them to the DOM as attributes. For custom elements, React 19 sets a prop as a property when the element defines one, and as an attribute otherwise.
 `],
     ['How do JSX and Glimmer templates differ in what the compiler knows?',
       `
@@ -283,7 +283,7 @@ Use a stable id from the data. And the flip side: changing a component's \`key\`
 `),
     C('y', 'Props are read-only; composition over configuration',
       `
-Never mutate props. In React 19 dev builds the props object is frozen, so attempting it throws. Data flows down, and changes flow up through callback props, which is DDAU, just enforced harder.
+Never mutate props. In development React freezes the props object, so assigning to a prop throws in strict-mode code (which every ES module is). Nested objects aren't frozen, so mutating \`props.issue.title\` slips through: don't. Data flows down, and changes flow up through callback props, which is DDAU, just enforced harder.
 
 Prefer composition to configuration: rather than \`<Card showHeader headerTitle headerIcon …>\`, accept \`header={<CardHeader …/>}\` or \`children\`. This is also the first fix for prop drilling, before you reach for context.
 `,
@@ -638,7 +638,7 @@ export const DAY5 = Day({
   concepts: [
     C('y', '`useEffect` synchronises with the outside world',
       `
-An effect says: *after this render commits, make the outside world (a subscription, a timer, a socket, a non-React widget) match these values*. When the values change, React tears down the old sync and sets up the new one. Think in terms of **start and stop syncing**, not "on mount" and "on update". Ember's closest analogue is a modifier with \`registerDestructor\`, which also re-runs when its arguments change.
+An effect says: *after this render commits, make the outside world (a subscription, a timer, a socket, a non-React widget) match these values*. When the values change, React tears down the old sync and sets up the new one. Think in terms of **start and stop syncing**, not "on mount" and "on update". Ember's closest analogue is a modifier: a function modifier returns its teardown (a class modifier uses \`registerDestructor\`), and it also re-runs when its arguments change.
 `,
       `
 // modifiers/subscribe.js
@@ -740,7 +740,7 @@ Sometimes an effect needs to *read* a value it shouldn't *react* to. Take a subs
 \`useEffectEvent\` (stable since React 19.2) wraps a function that always sees the latest props and state and doesn't belong in the deps. Call it **only from inside effects**.
 `,
       `
-// args are read live in the callback
+// any arg change (muted, onNotify too) tears down and resubscribes
 export default modifier((el, [channel], { muted, onNotify }) => {
   return issueEvents.subscribe(channel, (e) => {
     if (!muted) onNotify(e);
@@ -776,7 +776,7 @@ useEffect(() => {
   drill: [
     ['When do effects run?',
       `
-After the render is **committed** and the browser has painted (\`useLayoutEffect\` runs before paint). On mount, the setup runs. On any later render where a dependency changed (by \`Object.is\`), the previous cleanup runs, then the new setup. On unmount, cleanup runs. Effects never run during server rendering.
+After the render is **committed**, usually after the browser has painted (\`useLayoutEffect\` always runs before paint). Effects caused by a discrete input such as a click are flushed before paint, so don't rely on paint having happened. On mount, the setup runs. On any later render where a dependency changed (by \`Object.is\`), the previous cleanup runs, then the new setup. On unmount, cleanup runs. Effects never run during server rendering.
 `],
     ['What is the dependency array really for?',
       `

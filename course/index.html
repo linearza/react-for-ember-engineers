@@ -454,7 +454,7 @@ export function IssueCard({ issue }: { issue: Issue }) {
     <h3 id="d1-c1">JSX is JavaScript, not a template language</h3>
     <span class="flag flag--yellow"><span aria-hidden="true">🟡</span> Same goal, different mechanics</span>
   </header>
-  <div class="prose"><p>JSX compiles to <code>jsx(type, props)</code> calls, so anything that works in an expression works in <code>{}</code>. Attributes are DOM <em>properties</em>, which is why you write <code>className</code> and <code>htmlFor</code>. There are no block helpers:</p>
+  <div class="prose"><p>JSX compiles to <code>jsx(type, props)</code> calls, so anything that works in an expression works in <code>{}</code>. Attribute <em>names</em> follow the DOM properties, which is why you write <code>className</code> and <code>htmlFor</code>. There are no block helpers:</p>
 <ul><li><code>{{#if}}</code> → <code>cond &amp;&amp; &lt;X/&gt;</code>, a ternary, or an early <code>return</code></li><li><code>{{#each}}</code> → <code>array.map(item =&gt; &lt;Li key={item.id} …/&gt;)</code></li><li><code>{{else}}</code> → the other branch of the ternary</li><li><code>{{!-- --}}</code> → <code>{/* */}</code></li></ul>
 <p>You lose the compile-time knowledge Glimmer has about which parts are static. The React Compiler (Day 6) exists partly to win that back.</p></div>
   <div class="compare">
@@ -581,7 +581,7 @@ export const formatDate = (iso: string) =&gt; fmt.format(new Date(iso));
 </details>
 <details class="qa">
   <summary><span class="qa__n">3</span><span class="qa__q">Why <code>className</code> and not <code>class</code>?</span></summary>
-  <div class="qa__a prose"><p>JSX attributes map to DOM <strong>properties</strong>, not HTML attributes. The property is <code>element.className</code>, because <code>class</code> was a reserved word in early JS. Same for <code>htmlFor</code> (<code>label.htmlFor</code>). React 19 also accepts custom-element attributes as written, but for built-ins the property names stand.</p></div>
+  <div class="qa__a prose"><p>JSX attribute <strong>names</strong> follow DOM properties, not HTML attributes: <code>className</code> because the property is <code>element.className</code> (<code>class</code> was a reserved word in early JS), and <code>htmlFor</code> because of <code>label.htmlFor</code>. React still writes most of them to the DOM as attributes. For custom elements, React 19 sets a prop as a property when the element defines one, and as an attribute otherwise.</p></div>
 </details>
 <details class="qa">
   <summary><span class="qa__n">4</span><span class="qa__q">How do JSX and Glimmer templates differ in what the compiler knows?</span></summary>
@@ -714,7 +714,7 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
     <h3 id="d2-c5">Props are read-only; composition over configuration</h3>
     <span class="flag flag--yellow"><span aria-hidden="true">🟡</span> Same goal, different mechanics</span>
   </header>
-  <div class="prose"><p>Never mutate props. In React 19 dev builds the props object is frozen, so attempting it throws. Data flows down, and changes flow up through callback props, which is DDAU, just enforced harder.</p>
+  <div class="prose"><p>Never mutate props. In development React freezes the props object, so assigning to a prop throws in strict-mode code (which every ES module is). Nested objects aren't frozen, so mutating <code>props.issue.title</code> slips through: don't. Data flows down, and changes flow up through callback props, which is DDAU, just enforced harder.</p>
 <p>Prefer composition to configuration: rather than <code>&lt;Card showHeader headerTitle headerIcon …&gt;</code>, accept <code>header={&lt;CardHeader …/&gt;}</code> or <code>children</code>. This is also the first fix for prop drilling, before you reach for context.</p></div>
   <div class="compare">
     <figure class="code"><figcaption>Ember</figcaption><pre class="language-handlebars" tabindex="0"><code class="language-handlebars">{{!-- data down, actions up --}}
@@ -1138,7 +1138,7 @@ inputRef.current?.focus();</code></pre></figure>
     <h3 id="d5-c0"><code>useEffect</code> synchronises with the outside world</h3>
     <span class="flag flag--yellow"><span aria-hidden="true">🟡</span> Same goal, different mechanics</span>
   </header>
-  <div class="prose"><p>An effect says: <em>after this render commits, make the outside world (a subscription, a timer, a socket, a non-React widget) match these values</em>. When the values change, React tears down the old sync and sets up the new one. Think in terms of <strong>start and stop syncing</strong>, not "on mount" and "on update". Ember's closest analogue is a modifier with <code>registerDestructor</code>, which also re-runs when its arguments change.</p></div>
+  <div class="prose"><p>An effect says: <em>after this render commits, make the outside world (a subscription, a timer, a socket, a non-React widget) match these values</em>. When the values change, React tears down the old sync and sets up the new one. Think in terms of <strong>start and stop syncing</strong>, not "on mount" and "on update". Ember's closest analogue is a modifier: a function modifier returns its teardown (a class modifier uses <code>registerDestructor</code>), and it also re-runs when its arguments change.</p></div>
   <div class="compare">
     <figure class="code"><figcaption>Ember</figcaption><pre class="language-javascript" tabindex="0"><code class="language-javascript">// modifiers/subscribe.js
 export default modifier((el, [channel, onMessage]) =&gt; {
@@ -1237,7 +1237,7 @@ const counts = countByStatus(issues);</code></pre></figure>
   <div class="prose"><p>Sometimes an effect needs to <em>read</em> a value it shouldn't <em>react</em> to. Take a subscription that calls <code>onNotify</code> unless <code>muted</code>. Putting <code>muted</code> and <code>onNotify</code> in the deps would resubscribe on every toggle, and on every parent render (inline callbacks are new each time). Leaving them out makes the closure stale.</p>
 <p><code>useEffectEvent</code> (stable since React 19.2) wraps a function that always sees the latest props and state and doesn't belong in the deps. Call it <strong>only from inside effects</strong>.</p></div>
   <div class="compare">
-    <figure class="code"><figcaption>Ember</figcaption><pre class="language-javascript" tabindex="0"><code class="language-javascript">// args are read live in the callback
+    <figure class="code"><figcaption>Ember</figcaption><pre class="language-javascript" tabindex="0"><code class="language-javascript">// any arg change (muted, onNotify too) tears down and resubscribes
 export default modifier((el, [channel], { muted, onNotify }) =&gt; {
   return issueEvents.subscribe(channel, (e) =&gt; {
     if (!muted) onNotify(e);
@@ -1283,7 +1283,7 @@ useEffect(() =&gt; {
   <div class="qas">
 <details class="qa">
   <summary><span class="qa__n">1</span><span class="qa__q">When do effects run?</span></summary>
-  <div class="qa__a prose"><p>After the render is <strong>committed</strong> and the browser has painted (<code>useLayoutEffect</code> runs before paint). On mount, the setup runs. On any later render where a dependency changed (by <code>Object.is</code>), the previous cleanup runs, then the new setup. On unmount, cleanup runs. Effects never run during server rendering.</p></div>
+  <div class="qa__a prose"><p>After the render is <strong>committed</strong>, usually after the browser has painted (<code>useLayoutEffect</code> always runs before paint). Effects caused by a discrete input such as a click are flushed before paint, so don't rely on paint having happened. On mount, the setup runs. On any later render where a dependency changed (by <code>Object.is</code>), the previous cleanup runs, then the new setup. On unmount, cleanup runs. Effects never run during server rendering.</p></div>
 </details>
 <details class="qa">
   <summary><span class="qa__n">2</span><span class="qa__q">What is the dependency array really for?</span></summary>
@@ -1422,8 +1422,8 @@ const handleSelect = useCallback((id: string) =&gt; setSelectedId(id), []);
     <h3 id="d6-c4">React Compiler: auto-memoization</h3>
     <span class="flag flag--red"><span aria-hidden="true">🔴</span> New mental model</span>
   </header>
-  <div class="prose"><p>The React Compiler (v1, stable) is a build-time Babel or Rust plugin. It analyses each component and hook and inserts fine-grained memoization: it caches JSX subtrees, derived values and callbacks keyed on their real inputs. It's effectively <code>memo</code>/<code>useMemo</code>/<code>useCallback</code> everywhere, done correctly. It relies on the <strong>Rules of React</strong>: components are pure, props and state are never mutated, and hooks are called unconditionally at the top level. It skips (or bails out of) code that breaks the rules.</p>
-<p>Manual memo still matters for code the compiler can't see or bails out of, for values passed to non-React libraries that compare identity, for effect dependencies you want to be explicit about, and on codebases that haven't adopted it. Day 6's stretch goal turns it on.</p></div>
+  <div class="prose"><p>The React Compiler (v1, stable) is a build-time Babel plugin (an experimental Rust port also exists). It analyses each component and hook and inserts fine-grained memoization: it caches JSX subtrees, derived values and callbacks keyed on their real inputs. It's effectively <code>memo</code>/<code>useMemo</code>/<code>useCallback</code> everywhere, done correctly. It relies on the <strong>Rules of React</strong>: components are pure, props and state are never mutated, and hooks are called unconditionally at the top level. It skips (or bails out of) code that breaks the rules.</p>
+<p>Manual memo still matters for code the compiler can't see or bails out of, for values passed to non-React libraries that compare identity, for effect dependencies you want to be explicit about, and on codebases that haven't adopted it. This day's stretch goal turns it on.</p></div>
   <div class="compare">
     <figure class="code"><figcaption>Ember</figcaption><pre class="language-javascript" tabindex="0"><code class="language-javascript">// Glimmer&#x27;s compiler already knows static vs dynamic.
 // Autotracking gives fine-grained updates at runtime.</code></pre></figure>
@@ -2228,7 +2228,7 @@ function selectTab(next: Tab) {
     <span class="flag flag--red"><span aria-hidden="true">🔴</span> New mental model</span>
   </header>
   <div class="prose"><p>In React 19, a transition can be <strong>async</strong>: that's an Action. Pass an async function to <code>&lt;form action={fn}&gt;</code> and React calls it with the <code>FormData</code>, inside a transition, and resets uncontrolled fields when it finishes. <code>useActionState(action, initial)</code> wraps it: it gives you <code>[state, formAction, isPending]</code>, where <code>state</code> is whatever the action returned last (a result or an error), and it queues submissions in order. <code>useFormStatus()</code> lets any component <em>inside</em> the form read <code>pending</code> without prop drilling.</p>
-<p>This replaces the <code>useState</code> × 3 + <code>onSubmit</code> + <code>try/finally</code> boilerplate. The same Actions run as Server Functions (Day 12).</p></div>
+<p>This replaces the <code>useState</code> × 3 + <code>onSubmit</code> + <code>try/finally</code> boilerplate. One gotcha: the reset also happens when your action <em>returns</em> an error, so fields snap back to their <code>defaultValue</code>. If the user should keep what they typed, return the submitted values in the state and use them as defaults. The same Actions run as Server Functions (Day 12).</p></div>
   <div class="compare">
     <figure class="code"><figcaption>Ember</figcaption><pre class="language-javascript" tabindex="0"><code class="language-javascript">saveTitle = dropTask(async (event) =&gt; {
   event.preventDefault();
@@ -2476,8 +2476,8 @@ export async function updateStatusAction(formData: FormData) {
     <h3 id="d12-c4">SSR vs RSC vs FastBoot</h3>
     <span class="flag flag--yellow"><span aria-hidden="true">🟡</span> Same goal, different mechanics</span>
   </header>
-  <div class="prose"><ul><li><strong>SSR</strong> (classic): render the <em>client</em> app to HTML on the server, then ship <em>all</em> of its JS and hydrate. FastBoot is this.</li><li><strong>RSC</strong>: some components exist <strong>only</strong> on the server. Their code and dependencies never ship, and their output arrives as a serialised tree. RSC is <em>orthogonal</em> to SSR: you usually do both (RSC builds the tree, SSR turns it into HTML for first paint).</li><li>Benefit: less JS, direct data access, no client-server waterfalls. Cost: a server runtime, a mental boundary, and a bundler/framework (Next.js, React Router framework mode, Waku).</li></ul>
-<p>React 19.3: Server Components can render a <code>&lt;Context&gt;</code> provider directly. Providers no longer need their own <code>'use client'</code> wrapper file, although only client components can <em>read</em> context.</p></div>
+  <div class="prose"><ul><li><strong>SSR</strong> (classic): render the <em>client</em> app to HTML on the server, then ship <em>all</em> of its JS and hydrate. FastBoot is this.</li><li><strong>RSC</strong>: some components exist <strong>only</strong> on the server. Their code and dependencies never ship, and their output arrives as a serialised tree. RSC is <em>orthogonal</em> to SSR: you usually do both (RSC builds the tree, SSR turns it into HTML for first paint).</li><li>Benefit: less JS, direct data access, no client-server waterfalls. Cost: a server runtime, a mental boundary, and a bundler/framework (Next.js, Waku, or React Router's RSC support).</li></ul>
+<p>Context doesn't exist on the server: <code>createContext</code> isn't available to server components and only client components can read context. Put providers in a small <code>'use client'</code> wrapper and render it from a server layout around server-rendered <code>children</code>.</p></div>
   <div class="compare">
     <figure class="code"><figcaption>Ember</figcaption><pre class="language-javascript" tabindex="0"><code class="language-javascript">// ember-cli-fastboot + prember: SSR/SSG of a client app</code></pre></figure>
     <figure class="code"><figcaption>React</figcaption><pre class="language-javascript" tabindex="0"><code class="language-javascript">// RSC payload (conceptually): a serialised tree with holes
@@ -2619,7 +2619,7 @@ await user.keyboard(&#x27;{Escape}&#x27;);</code></pre></figure>
     <span class="flag flag--yellow"><span aria-hidden="true">🟡</span> Same goal, different mechanics</span>
   </header>
   <div class="prose"><p>Ember's test waiters track the runloop, pending AJAX and timers, so <code>await settled()</code> waits until <em>everything</em> is idle. React has <strong>no global settled state</strong>. Instead you wait for the <strong>outcome you expect</strong>: <code>await screen.findByRole(…)</code> retries until the element appears (1 s default), and <code>await waitFor(() =&gt; expect(…))</code> retries an assertion. <code>act()</code> flushes React's own work and is already wrapped around render, userEvent and RTL's async utilities. Don't wrap those in <code>act</code> yourself.</p>
-<p>Fake timers: <code>vi.useFakeTimers()</code> + <code>act(() =&gt; vi.advanceTimersByTime(ms))</code>.</p></div>
+<p>Fake timers: <code>vi.useFakeTimers()</code> + <code>act(() =&gt; vi.advanceTimersByTime(ms))</code>. Tell userEvent about them with <code>userEvent.setup({ advanceTimers: vi.advanceTimersByTime })</code>, or its internal delays hang.</p></div>
   <div class="compare">
     <figure class="code"><figcaption>Ember</figcaption><pre class="language-javascript" tabindex="0"><code class="language-javascript">await click(&#x27;[data-test-load]&#x27;);
 await settled(); // waits for fetch, runloop, timers
@@ -2851,9 +2851,10 @@ type ButtonProps =
     <figure class="code"><figcaption>React</figcaption><pre class="language-tsx" tabindex="0"><code class="language-tsx">const ref = useRef&lt;FragmentInstance&gt;(null);
 
 useEffect(() =&gt; {
+  const fragment = ref.current!;
   const io = new IntersectionObserver(onVisible);
-  ref.current!.observeUsing(io);
-  return () =&gt; ref.current?.unobserveUsing(io);
+  fragment.observeUsing(io);
+  return () =&gt; { fragment.unobserveUsing(io); io.disconnect(); };
 }, []);
 
 &lt;Fragment ref={ref}&gt;{children}&lt;/Fragment&gt;</code></pre></figure>

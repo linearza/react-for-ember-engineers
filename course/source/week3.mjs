@@ -29,7 +29,7 @@ function selectTab(next: Tab) {
       `
 In React 19, a transition can be **async**: that's an Action. Pass an async function to \`<form action={fn}>\` and React calls it with the \`FormData\`, inside a transition, and resets uncontrolled fields when it finishes. \`useActionState(action, initial)\` wraps it: it gives you \`[state, formAction, isPending]\`, where \`state\` is whatever the action returned last (a result or an error), and it queues submissions in order. \`useFormStatus()\` lets any component *inside* the form read \`pending\` without prop drilling.
 
-This replaces the \`useState\` × 3 + \`onSubmit\` + \`try/finally\` boilerplate. The same Actions run as Server Functions (Day 12).
+This replaces the \`useState\` × 3 + \`onSubmit\` + \`try/finally\` boilerplate. One gotcha: the reset also happens when your action *returns* an error, so fields snap back to their \`defaultValue\`. If the user should keep what they typed, return the submitted values in the state and use them as defaults. The same Actions run as Server Functions (Day 12).
 `,
       `
 saveTitle = dropTask(async (event) => {
@@ -257,9 +257,9 @@ export default function Page() {
       `
 - **SSR** (classic): render the *client* app to HTML on the server, then ship *all* of its JS and hydrate. FastBoot is this.
 - **RSC**: some components exist **only** on the server. Their code and dependencies never ship, and their output arrives as a serialised tree. RSC is *orthogonal* to SSR: you usually do both (RSC builds the tree, SSR turns it into HTML for first paint).
-- Benefit: less JS, direct data access, no client-server waterfalls. Cost: a server runtime, a mental boundary, and a bundler/framework (Next.js, React Router framework mode, Waku).
+- Benefit: less JS, direct data access, no client-server waterfalls. Cost: a server runtime, a mental boundary, and a bundler/framework (Next.js, Waku, or React Router's RSC support).
 
-React 19.3: Server Components can render a \`<Context>\` provider directly. Providers no longer need their own \`'use client'\` wrapper file, although only client components can *read* context.
+Context doesn't exist on the server: \`createContext\` isn't available to server components and only client components can read context. Put providers in a small \`'use client'\` wrapper and render it from a server layout around server-rendered \`children\`.
 `,
       `
 // ember-cli-fastboot + prember: SSR/SSG of a client app
@@ -379,7 +379,7 @@ await user.keyboard('{Escape}');
       `
 Ember's test waiters track the runloop, pending AJAX and timers, so \`await settled()\` waits until *everything* is idle. React has **no global settled state**. Instead you wait for the **outcome you expect**: \`await screen.findByRole(…)\` retries until the element appears (1 s default), and \`await waitFor(() => expect(…))\` retries an assertion. \`act()\` flushes React's own work and is already wrapped around render, userEvent and RTL's async utilities. Don't wrap those in \`act\` yourself.
 
-Fake timers: \`vi.useFakeTimers()\` + \`act(() => vi.advanceTimersByTime(ms))\`.
+Fake timers: \`vi.useFakeTimers()\` + \`act(() => vi.advanceTimersByTime(ms))\`. Tell userEvent about them with \`userEvent.setup({ advanceTimers: vi.advanceTimersByTime })\`, or its internal delays hang.
 `,
       `
 await click('[data-test-load]');
@@ -589,9 +589,10 @@ type ButtonProps =
 const ref = useRef<FragmentInstance>(null);
 
 useEffect(() => {
+  const fragment = ref.current!;
   const io = new IntersectionObserver(onVisible);
-  ref.current!.observeUsing(io);
-  return () => ref.current?.unobserveUsing(io);
+  fragment.observeUsing(io);
+  return () => { fragment.unobserveUsing(io); io.disconnect(); };
 }, []);
 
 <Fragment ref={ref}>{children}</Fragment>
