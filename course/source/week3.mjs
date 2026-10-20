@@ -7,9 +7,9 @@ export const DAY11 = Day({
   concepts: [
     C('r', 'Transitions: urgent vs non-urgent updates',
       `
-Every update has a priority. Typing, clicking and hovering are **urgent**: the UI must respond immediately. Re-rendering a big filtered list or switching tabs can wait. \`startTransition(() => setX(…))\` marks an update as a **transition**: React renders it in the background, keeps showing the current UI, interrupts the work if something urgent happens, and **won't replace visible content with a Suspense fallback**. \`useTransition()\` also gives you \`isPending\`.
+Ember renders every change synchronously inside the runloop, whereas React gives each update a priority. Typing, clicking and hovering are **urgent**, because the UI must respond immediately. Re-rendering a big filtered list or switching tabs can wait.
 
-Ember has no equivalent. Rendering there is synchronous inside the runloop.
+\`startTransition(() => setX(…))\` marks an update as one that can wait, a **transition**. React renders it in the background while the current UI stays on screen, interrupts the work if something urgent happens, and **won't replace visible content with a Suspense fallback**. \`useTransition()\` adds an \`isPending\` flag.
 `,
       `
 // no priority concept: every tracked change
@@ -27,9 +27,11 @@ function selectTab(next: Tab) {
 `, { emberLang: 'javascript' }),
     C('r', 'Actions: `<form action>`, `useActionState`, `useFormStatus`',
       `
-In React 19, a transition can be **async**: that's an Action. Pass an async function to \`<form action={fn}>\` and React calls it with the \`FormData\`, inside a transition, and resets uncontrolled fields when it finishes. \`useActionState(action, initial)\` wraps it: it gives you \`[state, formAction, isPending]\`, where \`state\` is whatever the action returned last (a result or an error), and it queues submissions in order. \`useFormStatus()\` lets any component *inside* the form read \`pending\` without prop drilling.
+In React 19 a transition can be **async**, and an async transition is an Action. Pass an async function to \`<form action={fn}>\` and React calls it with the \`FormData\` inside a transition, then resets uncontrolled fields when it finishes.
 
-This replaces the \`useState\` × 3 + \`onSubmit\` + \`try/finally\` boilerplate. One gotcha: the reset also happens when your action *returns* an error, so fields snap back to their \`defaultValue\`. If the user should keep what they typed, return the submitted values in the state and use them as defaults. The same Actions run as Server Functions (Day 12).
+\`useActionState(action, initial)\` wraps the action and returns \`[state, formAction, isPending]\`. \`state\` is whatever the action returned last, a result or an error, and submissions queue in order. Inside the form, \`useFormStatus()\` lets any component read \`pending\` without prop drilling. Together they replace the \`useState\` × 3 + \`onSubmit\` + \`try/finally\` boilerplate that an ember-concurrency task saved you from.
+
+One gotcha: the reset also happens when your action *returns* an error, so fields snap back to their \`defaultValue\`. If the user should keep what they typed, return the submitted values in the state and use them as defaults. The same Actions run as Server Functions on Day 12.
 `,
       `
 saveTitle = dropTask(async (event) => {
@@ -58,7 +60,9 @@ const [state, formAction] = useActionState(async (prev, formData) => {
 `, { emberLang: 'javascript' }),
     C('r', '`useOptimistic`',
       `
-\`const [optimistic, addOptimistic] = useOptimistic(actual, reducer?)\` returns \`actual\`, except while a transition is pending, when it returns the optimistic value you set. When the transition settles, React drops the optimistic layer and shows \`actual\` again. On success you've updated \`actual\`, so nothing visibly changes. **On failure you haven't**, so the optimistic value just disappears: rollback comes for free. Call \`addOptimistic\` inside \`startTransition\` or an Action.
+In an ember-concurrency task you save the previous value and restore it by hand. \`useOptimistic\` needs no snapshot. \`const [optimistic, addOptimistic] = useOptimistic(actual, reducer?)\` returns \`actual\`, except while a transition is pending, when it returns the optimistic value you set. Once the transition settles, React drops that layer and shows \`actual\` again.
+
+So on success, where you've updated \`actual\`, nothing visibly changes. **On failure you haven't**, so the optimistic value just disappears, and rollback comes for free. Call \`addOptimistic\` inside \`startTransition\` or an Action.
 `,
       `
 toggle = task(async () => {
@@ -84,7 +88,7 @@ startTransition(async () => {
 `, { emberLang: 'javascript' }),
     C('y', '`useDeferredValue`',
       `
-\`const deferred = useDeferredValue(query)\` returns a value that **lags behind** during heavy renders. React first re-renders urgently with the *old* deferred value (the input stays responsive), then renders with the new one in the background, abandoning that render if \`query\` changes again. Unlike debouncing, there's no fixed delay: on a fast device it's instant, and on a slow one it adapts. It doesn't reduce network calls, though. For requests, you still debounce.
+\`const deferred = useDeferredValue(query)\` returns a value that **lags behind** during heavy renders. React first re-renders urgently with the *old* deferred value, so the input stays responsive, then renders the new one in the background and abandons that render if \`query\` changes again. Unlike a \`timeout()\` debounce there's no fixed delay, which means it's instant on a fast device and adapts on a slow one. But it doesn't reduce network calls, so for requests you still debounce.
 `,
       `
 search = restartableTask(async (q) => {
@@ -118,7 +122,7 @@ const isStale = query !== deferredQuery;
 `, { emberLang: 'javascript' }),
     C('g', '`<ViewTransition>` (stable in 19.3)',
       `
-Wrap content in \`<ViewTransition>\` and updates made in a **transition** (\`startTransition\`, Actions, router navigations) animate through the browser's View Transitions API: a cross-fade by default, customised with CSS (\`::view-transition-*\`) or by name for shared-element morphs. \`addTransitionType('forward')\` tags a transition so CSS can vary per type. Urgent updates don't animate, which is one more reason to use transitions for navigations.
+Where Ember reaches for ember-animated, React wraps content in \`<ViewTransition>\`. Updates made in a **transition**, whether \`startTransition\`, an Action or a router navigation, then animate through the browser's View Transitions API. The default is a cross-fade, which you customise with CSS (\`::view-transition-*\`) or by name for shared-element morphs, and \`addTransitionType('forward')\` tags a transition so the CSS can vary per type. Urgent updates don't animate, which is one more reason to make navigations transitions.
 `,
       `
 // ember-animated: <AnimatedContainer>, {{#animated-each}}
@@ -151,23 +155,23 @@ startTransition(() => setId(nextId)); // animates
   drill: [
     ['What is a transition?',
       `
-An update marked as non-urgent with \`startTransition\` or \`useTransition\`. React renders it concurrently: it can be interrupted by urgent updates (typing), it keeps the current UI interactive, it avoids replacing already-visible content with Suspense fallbacks, and it reports \`isPending\`. Since React 19 transitions can be async, which makes them Actions.
+It's an update marked as non-urgent with \`startTransition\` or \`useTransition\`, which React renders concurrently. That means urgent updates such as typing can interrupt it, the current UI stays interactive, already-visible content isn't replaced by Suspense fallbacks, and you get \`isPending\`. Since React 19 transitions can also be async, and then they're called Actions.
 `],
     ['What problem do Actions solve?',
       `
-The boilerplate and the bugs around async mutations: tracking pending state, sequencing submissions, handling errors, resetting forms, optimistic UI. An Action is an async function run in a transition. React tracks its pending state (\`useActionState\`, \`useFormStatus\`), queues repeated submissions, integrates with \`useOptimistic\`, resets uncontrolled forms on success, and the same model works for Server Functions with progressive enhancement.
+They remove the boilerplate and the bugs around async mutations: pending state, submission order, errors, form resets and optimistic UI. An Action is an async function run in a transition, so React can own all of that. It tracks the pending state for \`useActionState\` and \`useFormStatus\`, queues repeated submissions, integrates with \`useOptimistic\` and resets uncontrolled forms on success. The same model also works for Server Functions, with progressive enhancement.
 `],
     ['`useActionState` vs `useState` + `onSubmit`?',
       `
-With \`useState\` + \`onSubmit\` you manage \`isSubmitting\`, \`error\` and \`result\` yourself, remember \`preventDefault\`, guard against double-submits and order async results by hand. \`useActionState\` returns the last result as state plus \`isPending\`, runs the action in a transition, queues calls so results arrive in order, receives \`FormData\` directly, and (when given a server function) works before hydration via a permalink. Less code, fewer race conditions.
+\`useActionState\` does by itself what \`useState\` + \`onSubmit\` makes you do by hand. With the manual version you manage \`isSubmitting\`, \`error\` and \`result\`, remember \`preventDefault\`, guard against double submits and order async results yourself. \`useActionState\` instead returns the last result as state plus \`isPending\`, runs the action in a transition, queues calls so results arrive in order and receives \`FormData\` directly. Given a server function, it even works before hydration via a permalink. So it's less code with fewer race conditions.
 `],
     ['How does `useOptimistic` roll back?',
       `
-It doesn't keep a snapshot. The optimistic value is a temporary layer that only exists **while the surrounding transition is pending**. When the transition ends, React renders from the real state again. If the server call succeeded you updated the real state, so the UI stays put. If it failed you didn't, so the optimistic value simply disappears. You only need to surface the error.
+It doesn't need a snapshot, because the optimistic value is a temporary layer that only exists **while the surrounding transition is pending**. When the transition ends, React renders from the real state again. If the server call succeeded, you updated the real state, so the UI stays put. If it failed, you didn't, so the optimistic value simply disappears and all you do is surface the error.
 `],
     ['`useDeferredValue` vs debouncing?',
       `
-Debouncing delays the *update* by a fixed time, even on fast devices, and it's still the right tool for limiting **network** requests. \`useDeferredValue\` updates immediately at low priority. React renders the urgent UI first, then the deferred render in the background, interrupting it if the value changes again. There's no arbitrary delay, it adapts to device speed, and the input never janks. It doesn't reduce how often expensive work is *attempted*, only how it's scheduled.
+Debouncing delays the *update* by a fixed time, even on fast devices, whereas \`useDeferredValue\` updates immediately at low priority. React renders the urgent UI first, then the deferred render in the background, and interrupts that if the value changes again. So there's no arbitrary delay, it adapts to device speed and the input never janks. But it only changes how expensive work is *scheduled*, not how often it's attempted, which is why debouncing is still the tool for limiting **network** requests.
 `],
   ],
 });
@@ -179,7 +183,7 @@ export const DAY12 = Day({
   concepts: [
     C('r', 'React Server Components',
       `
-A **Server Component** runs only on the server (at request time or build time) and never ships its code to the browser. It can be \`async\` and \`await\` data directly: the database, the filesystem, secrets. It **can't** use state, effects, refs, browser APIs or event handlers, because it never re-renders on the client. Its output is serialised (the RSC payload) and merged into the client tree. In the App Router, components are server components **by default**.
+FastBoot renders your client app in Node, and then the browser downloads and runs all of it again. A **Server Component** is different: it runs only on the server, at request or build time, and never ships its code to the browser. That's why it can be \`async\` and \`await\` the database, the filesystem or secrets directly. It's also why it **can't** use state, effects, refs, browser APIs or event handlers, since it never re-renders on the client. Its output is serialised as the RSC payload and merged into the client tree. In the App Router, components are server components **by default**.
 `,
       `
 // FastBoot renders your whole (client) app in Node,
@@ -194,9 +198,9 @@ export default async function IssuesPage() {
 `, { emberLang: 'javascript' }),
     C('r', '`\'use client\'` marks a boundary, not "client-only"',
       `
-\`'use client'\` at the top of a file says: *this module, and everything it imports, is part of the client bundle*. Client components still **render on the server** (SSR) for the initial HTML, then hydrate. The directive marks the **entry point** where the server tree hands over to interactive code. You only need it on the boundary file, not on every component below it.
+\`'use client'\` at the top of a file says *this module, and everything it imports, is part of the client bundle*. It marks the **entry point** where the server tree hands over to interactive code, so you only need it on the boundary file, not on every component below it. Client components still **render on the server** (SSR) for the initial HTML, then hydrate.
 
-Props crossing the boundary must be **serialisable**: primitives, plain objects and arrays, Dates, Maps and Sets, promises, JSX, and Server Functions. Regular functions and class instances can't cross. Server components *can* be passed through client components as \`children\`.
+Props crossing the boundary must be **serialisable**: primitives, plain objects and arrays, Dates, Maps and Sets, promises, JSX and Server Functions. Regular functions and class instances can't cross. Server components *can*, though, as the \`children\` of a client component.
 `,
       `
 // no equivalent: in Ember everything is client code
@@ -215,7 +219,9 @@ export function IssueFilterBar({ status }: { status: string }) {
 `, { emberLang: 'javascript' }),
     C('r', 'Server Functions (`\'use server\'`)',
       `
-A function in a \`'use server'\` module (or with the directive in its body) becomes a **Server Function**. The client gets an opaque reference, and calling it makes a POST that runs the function on the server. Pass one to \`<form action>\` and the form works **before JS loads** (progressive enhancement). Pair it with \`useActionState\` for results and pending state. Its arguments come from the network, so treat it as a public API endpoint: validate the input, check auth.
+In Ember a write is an adapter call plus an API endpoint you also maintain. A **Server Function** collapses the two: a function in a \`'use server'\` module, or with the directive in its body, gives the client an opaque reference, and calling it makes a POST that runs the function on the server. Pass one to \`<form action>\` and the form works **before JS loads**, which is progressive enhancement, and pair it with \`useActionState\` for results and pending state.
+
+But its arguments come from the network, so treat it as a public API endpoint: validate the input and check auth.
 `,
       `
 // an adapter call to your API, plus the API endpoint itself
@@ -236,7 +242,7 @@ export async function updateStatusAction(formData: FormData) {
 `, { emberLang: 'javascript', reactLang: 'typescript' }),
     C('r', 'Streaming + Suspense',
       `
-On the server, every \`<Suspense>\` boundary is a **streaming point**. React sends the shell HTML right away with the fallbacks, then streams each boundary's HTML (and RSC payload) as its data resolves, inlined into the same response. Slow data no longer blocks the whole page. Client components inside hydrate selectively, prioritising whichever part the user interacts with. In Next.js, \`loading.tsx\` is a Suspense boundary around a route segment.
+FastBoot waits for every model hook, then sends everything. On the server, by contrast, every \`<Suspense>\` boundary is a **streaming point**. React sends the shell HTML right away with the fallbacks, then streams each boundary's HTML and RSC payload into the same response as its data resolves, so slow data no longer blocks the whole page. Client components inside hydrate selectively, starting with whichever part the user interacts with. In Next.js, \`loading.tsx\` is a Suspense boundary around a route segment.
 `,
       `
 // FastBoot: wait for every model hook, then send everything
@@ -256,10 +262,10 @@ export default function Page() {
     C('y', 'SSR vs RSC vs FastBoot',
       `
 - **SSR** (classic): render the *client* app to HTML on the server, then ship *all* of its JS and hydrate. FastBoot is this.
-- **RSC**: some components exist **only** on the server. Their code and dependencies never ship, and their output arrives as a serialised tree. RSC is *orthogonal* to SSR: you usually do both (RSC builds the tree, SSR turns it into HTML for first paint).
-- Benefit: less JS, direct data access, no client-server waterfalls. Cost: a server runtime, a mental boundary, and a bundler/framework (Next.js, Waku, or React Router's RSC support).
+- **RSC**: some components exist **only** on the server, so their code and dependencies never ship and their output arrives as a serialised tree. RSC is *orthogonal* to SSR, and you usually do both: RSC builds the tree, then SSR turns it into HTML for first paint.
+- The benefit is less JS, direct data access and no client-server waterfalls. The cost is a server runtime, a mental boundary, and a bundler or framework (Next.js, Waku, or React Router's RSC support).
 
-Context doesn't exist on the server: \`createContext\` isn't available to server components and only client components can read context. Put providers in a small \`'use client'\` wrapper and render it from a server layout around server-rendered \`children\`.
+One catch: context doesn't exist on the server. Server components can't call \`createContext\`, and only client components can read context. So put providers in a small \`'use client'\` wrapper, and render it from a server layout around server-rendered \`children\`.
 `,
       `
 // ember-cli-fastboot + prember: SSR/SSG of a client app
@@ -272,7 +278,7 @@ Context doesn't exist on the server: \`createContext\` isn't available to server
 `, { emberLang: 'javascript', reactLang: 'javascript' }),
     C('y', 'Where the Next.js App Router fits',
       `
-File-system routes under \`app/\`. \`layout.tsx\` is a persistent wrapper (your \`application.hbs\` / parent route), \`page.tsx\` is a route's UI, and \`loading.tsx\` and \`error.tsx\` are Suspense and error-boundary substates. Pages are server components that receive \`params\` and \`searchParams\` **as Promises** (Next 15+): \`const { status } = await searchParams\`. Mutations use Server Functions plus \`revalidatePath\` / \`revalidateTag\`, and the client router caches RSC payloads between navigations.
+The App Router replaces \`Router.map\` with file-system routes under \`app/\`. \`layout.tsx\` is a persistent wrapper, like \`application.hbs\` or a parent route, and \`page.tsx\` is a route's UI. \`loading.tsx\` and \`error.tsx\` are the substates, built on Suspense and error boundaries. Pages are server components that receive \`params\` and \`searchParams\` **as Promises** (Next 15+), so you write \`const { status } = await searchParams\`. Mutations use Server Functions plus \`revalidatePath\` / \`revalidateTag\`, and the client router caches RSC payloads between navigations.
 `,
       `
 app/router.js            Router.map(...)
@@ -308,23 +314,23 @@ app/issues/actions.ts     'use server'
   drill: [
     ['RSC vs SSR?',
       `
-**SSR** renders client components to HTML on the server for a fast first paint, then ships all of that code to the browser to hydrate. **RSC** introduces components that run *only* on the server. Their code never ships, they can access server resources directly, and their output is a serialised React tree, not HTML. They're complementary: frameworks use RSC to build the tree and SSR to turn it into initial HTML. RSC reduces bundle size and client waterfalls. SSR improves first paint.
+They solve different problems, so frameworks use both. **SSR** renders client components to HTML on the server for a fast first paint, then ships all of that code to the browser to hydrate. **RSC** introduces components that run *only* on the server, so their code never ships, they can reach server resources directly, and their output is a serialised React tree rather than HTML. RSC builds the tree and SSR turns it into initial HTML. So RSC cuts bundle size and client waterfalls, whereas SSR improves first paint.
 `],
     ['What does `\'use client\'` actually mean?',
       `
-It marks a module as a **client entry point**: the boundary where the server module graph hands over to modules that are bundled for the browser. That file and everything it imports become client code, which is still SSR'd and then hydrated. It doesn't mean "skip SSR", and it isn't needed on every interactive component, only at the boundary. Props passed into it from the server must be serialisable.
+It marks a module as a **client entry point**, the boundary where the server module graph hands over to modules bundled for the browser. That file and everything it imports become client code, which is still SSR'd and then hydrated. So it doesn't mean "skip SSR", and it only belongs at the boundary, not on every interactive component. Props passed into it from the server must be serialisable.
 `],
     ['Why can\'t you pass a function from a server component to a client component?',
       `
-Server and client run in different environments, separated by a network. Props crossing the boundary are serialised into the RSC payload, and closures can't be serialised: they capture server scope and code that never ships. The exception is a **Server Function** (\`'use server'\`), which is passed as a reference ID the client can invoke over the network. Pass data, JSX (\`children\`) or server functions, never plain callbacks.
+Because server and client are separate environments with a network between them. Props crossing the boundary are serialised into the RSC payload, and a closure can't be serialised, since it captures server scope and code that never ships. The exception is a **Server Function** (\`'use server'\`), which crosses as a reference ID the client can invoke over the network. So pass data, JSX as \`children\`, or server functions, but never plain callbacks.
 `],
     ['How do Server Functions work?',
       `
-The bundler replaces each exported function in a \`'use server'\` module with a reference (an ID plus the endpoint) in client code. When the client calls it, or a form submits to it, React serialises the arguments and POSTs them. The framework runs the real function on the server and serialises the result back. In Next.js the response can also carry an updated RSC payload after \`revalidatePath\`. Forms with a Server Function action work before hydration. They are public endpoints: authenticate and validate every call.
+In client code, the bundler replaces each exported function in a \`'use server'\` module with a reference, an ID plus the endpoint. When the client calls it, or a form submits to it, React serialises the arguments and POSTs them, and the framework runs the real function on the server and serialises the result back. In Next.js that response can also carry an updated RSC payload after \`revalidatePath\`. Forms with a Server Function action work before hydration. And because they're public endpoints, you authenticate and validate every call.
 `],
     ['When would you *not* use RSC?',
       `
-Highly interactive, client-state-heavy apps (editors, canvases, offline-first tools, dashboards behind auth with little SEO need), where most components would be \`'use client'\` anyway. Also when you can't or don't want to run a Node server (static hosting, an existing non-JS backend), when the team or tooling isn't ready for the boundary model, or for embedded widgets. A well-built SPA with a server cache is still a valid architecture.
+When most components would be \`'use client'\` anyway, as in highly interactive, client-state-heavy apps: editors, canvases, offline-first tools, or dashboards behind auth with little need for SEO. Also when you can't or don't want to run a Node server, because you host statically or have an existing non-JS backend, when the team or tooling isn't ready for the boundary model, and for embedded widgets. A well-built SPA with a server cache is still a valid architecture.
 `],
   ],
 });
@@ -336,7 +342,7 @@ export const DAY13 = Day({
   concepts: [
     C('g', '`@ember/test-helpers` → Testing Library',
       `
-\`render(<Comp/>)\` mounts into a container attached to \`document.body\`. \`screen.*\` queries the document. \`userEvent\` drives real event sequences. Assertions come from \`@testing-library/jest-dom\` (\`toBeInTheDocument\`, \`toHaveAttribute\`, \`toBeVisible\`). It's the same "test like a user" philosophy as \`@ember/test-helpers\` + qunit-dom. React has no container or owner to set up. You wrap the component in whatever providers it needs (a QueryClient, a router, context).
+Testing Library shares the "test like a user" philosophy of \`@ember/test-helpers\` + qunit-dom. \`render(<Comp/>)\` mounts into a container attached to \`document.body\`, \`screen.*\` queries the document, and \`userEvent\` drives real event sequences. Assertions such as \`toBeInTheDocument\`, \`toHaveAttribute\` and \`toBeVisible\` come from \`@testing-library/jest-dom\`. What's missing is a container or owner to set up, so instead you wrap the component in whatever providers it needs: a QueryClient, a router, a context.
 `,
       `
 await render(<template><IssueCard @issue={{issue}} /></template>);
@@ -350,7 +356,9 @@ await user.click(screen.getByRole('button', { name: 'Select' }));
 `, { emberLang: 'javascript' }),
     C('g', 'Query priority',
       `
-In order: \`getByRole\` (with \`name\`) → \`getByLabelText\` → \`getByPlaceholderText\` → \`getByText\` → \`getByDisplayValue\` → \`getByAltText\` / \`getByTitle\` → \`getByTestId\` as a last resort. Role queries check what assistive tech sees. If you can't find an element by role and name, a screen reader user probably can't either. Variants: \`getBy\` (throws if missing), \`queryBy\` (returns null, for asserting absence) and \`findBy\` (async, waits).
+Where Ember tests lean on \`data-test-*\` selectors, Testing Library has a preferred order: \`getByRole\` (with \`name\`) → \`getByLabelText\` → \`getByPlaceholderText\` → \`getByText\` → \`getByDisplayValue\` → \`getByAltText\` / \`getByTitle\` → \`getByTestId\` as a last resort. Role queries come first because they check what assistive tech sees: if you can't find an element by role and name, a screen reader user probably can't either.
+
+Each query has three variants. \`getBy\` throws if the element is missing, \`queryBy\` returns null for asserting absence, and \`findBy\` waits asynchronously.
 `,
       `
 assert.dom('[data-test-save]').exists();
@@ -362,7 +370,7 @@ screen.queryByRole('dialog'); // null when absent
 `, { emberLang: 'javascript' }),
     C('g', '`userEvent` vs `fireEvent`',
       `
-\`fireEvent.click(el)\` dispatches **one** synthetic DOM event. \`userEvent.click(el)\` simulates the whole interaction: pointer events, mousedown, focus change, mouseup, click. It also respects \`disabled\` and \`pointer-events\`, and \`user.type\` fires per-key events. Always \`const user = userEvent.setup()\` and \`await\` every call. Reach for \`fireEvent\` only for events that userEvent doesn't model.
+\`fireEvent.click(el)\` dispatches **one** synthetic DOM event, whereas \`userEvent.click(el)\` simulates the whole interaction: pointer events, mousedown, focus change, mouseup, click. It also respects \`disabled\` and \`pointer-events\`, and \`user.type\` fires per-key events, which makes it the closer match to Ember's \`click\` and \`fillIn\`. Always create \`const user = userEvent.setup()\` and \`await\` every call. Reach for \`fireEvent\` only for events userEvent doesn't model.
 `,
       `
 await click('button');
@@ -377,9 +385,9 @@ await user.keyboard('{Escape}');
 `, { emberLang: 'javascript' }),
     C('y', '`findBy` / `waitFor` vs `await settled()`',
       `
-Ember's test waiters track the runloop, pending AJAX and timers, so \`await settled()\` waits until *everything* is idle. React has **no global settled state**. Instead you wait for the **outcome you expect**: \`await screen.findByRole(…)\` retries until the element appears (1 s default), and \`await waitFor(() => expect(…))\` retries an assertion. \`act()\` flushes React's own work and is already wrapped around render, userEvent and RTL's async utilities. Don't wrap those in \`act\` yourself.
+Ember's test waiters track the runloop, pending AJAX and timers, so \`await settled()\` waits until *everything* is idle. React has **no global settled state**, so you wait for the **outcome you expect** instead. \`await screen.findByRole(…)\` retries until the element appears (1 s by default), and \`await waitFor(() => expect(…))\` retries an assertion. \`act()\` flushes React's own work, but render, userEvent and RTL's async utilities already wrap it, so don't add your own.
 
-Fake timers: \`vi.useFakeTimers()\` + \`act(() => vi.advanceTimersByTime(ms))\`. Tell userEvent about them with \`userEvent.setup({ advanceTimers: vi.advanceTimersByTime })\`, or its internal delays hang.
+Fake timers are \`vi.useFakeTimers()\` + \`act(() => vi.advanceTimersByTime(ms))\`. Tell userEvent about them with \`userEvent.setup({ advanceTimers: vi.advanceTimersByTime })\`, or its internal delays hang.
 `,
       `
 await click('[data-test-load]');
@@ -394,7 +402,7 @@ await waitFor(() => expect(getDbSnapshot()[0].status).toBe('done'));
 `, { emberLang: 'javascript' }),
     C('g', 'Mocking the network: MSW',
       `
-Mock at the **network** boundary, not at the module boundary. Mock Service Worker intercepts \`fetch\` in Node and in the browser, so your real data layer (Query, loaders) runs unchanged. That's the closest thing to Mirage, with handlers per test (\`server.use(http.get(…))\`). This course uses an in-memory fake API instead, so the exercises stay dependency-free.
+Mock at the **network** boundary, not the module boundary, so your real data layer runs unchanged. Mock Service Worker, the closest thing to Mirage, does this by intercepting \`fetch\` in Node and the browser, with per-test handlers through \`server.use(http.get(…))\`. This course uses an in-memory fake API instead, which keeps the exercises dependency-free.
 `,
       `
 this.server.get('/issues', () => [...]); // Mirage
@@ -408,7 +416,7 @@ afterEach(() => server.resetHandlers());
 `, { emberLang: 'javascript', reactLang: 'typescript' }),
     C('g', 'Test behaviour, use accessibility as the strategy',
       `
-A good test survives a refactor that doesn't change behaviour, and fails when behaviour breaks. Avoid asserting state values, hook calls, class names you don't need, component internals or snapshot blobs. Query by role, name and state (\`selected\`, \`expanded\`, \`pressed\`), drive with the keyboard, and you're testing accessibility for free. The Day 13 exercise turns this into a measurement: your tests are only as good as the bugs they catch.
+A good test survives a refactor that doesn't change behaviour, and fails when behaviour breaks. So avoid asserting on state values, hook calls, incidental class names, internals or snapshot blobs. Query by role, name and state (\`selected\`, \`expanded\`, \`pressed\`) and drive with the keyboard, and you test accessibility for free. Today's exercise makes this measurable, because your tests are only as good as the bugs they catch.
 `,
       `
 assert.dom('[data-test-tab].active').hasText('Mine');
@@ -436,27 +444,27 @@ expect(screen.getByRole('tab', { name: 'Closed' })).toHaveFocus();
   drill: [
     ['Why prefer `getByRole`?',
       `
-It queries the accessibility tree, the same thing assistive technology uses, by role and accessible name. That makes tests resilient to markup and styling changes, documents intent ("the Save button"), and fails when accessibility breaks (a missing label, the wrong role). If an element can't be found by role, that's often a real a11y bug.
+Because it queries the accessibility tree, by role and accessible name, which is what assistive technology uses. So tests survive markup and styling changes, document intent ("the Save button"), and fail when accessibility breaks, say a missing label or the wrong role. An element you can't find by role is often a real a11y bug.
 `],
     ['What\'s wrong with testing implementation details?',
       `
-Such tests break on refactors that don't change behaviour (false negatives that erode trust) and pass when behaviour is broken (false positives). Examples: asserting on component state, calling instance methods, checking which hook was used, shallow rendering, or snapshotting markup. Test inputs and outputs the user or caller can observe: rendered text and roles, focus, callbacks invoked, network effects.
+They fail both ways. They break on refactors that don't change behaviour, which erodes trust, and they pass when behaviour is broken. Asserting on component state, calling instance methods, checking which hook was used, shallow rendering and snapshotting markup all do this. Instead, test what the user or caller can observe: rendered text and roles, focus, callbacks invoked and network effects.
 `],
     ['`waitFor` vs `findBy`?',
       `
-\`findBy*\` is \`waitFor\` + \`getBy*\`. It retries a query until an element appears or the timeout passes. Use it to wait for something to *appear*. \`waitFor(cb)\` retries any callback until it stops throwing. Use it for other assertions (disappearance, call counts, db state). Keep \`waitFor\` callbacks side-effect-free, with one assertion each, and never put \`userEvent\` calls inside them.
+\`findBy*\` is just \`waitFor\` + \`getBy*\`: it retries a query until the element appears or the timeout passes, so use it to wait for something to *appear*. \`waitFor(cb)\` retries any callback until it stops throwing, which suits everything else, such as disappearance, call counts or db state. Keep \`waitFor\` callbacks free of side effects, with one assertion each and never a \`userEvent\` call.
 `],
     ['How do you test a component that fetches?',
       `
-Render it with its real data layer (a fresh \`QueryClient\` per test with \`retry: false\`, or a memory router for loaders) and mock the **network**, using MSW or a fake API, not the hook. Assert the loading state, then \`await findBy…\` for the data, and cover the error path (a handler returning 500, then "Retry"). Isolate tests with fresh caches and handlers reset between them.
+Render it with its real data layer and mock the **network**, not the hook. That means a fresh \`QueryClient\` per test with \`retry: false\`, or a memory router for loaders, in front of MSW or a fake API. Assert the loading state, \`await findBy…\` for the data, and cover the error path with a handler that returns 500, then "Retry". Fresh caches and reset handlers keep tests isolated.
 `],
     ['How do you test a custom hook?',
       `
-Ideally through a component that uses it. For reusable hooks, use \`renderHook(() => useX(props), { initialProps, wrapper })\`, read \`result.current\`, change inputs with \`rerender\`, trigger updates in \`act()\`, and use fake timers for time-based hooks. Assert observable results (returned values, side effects such as storage), not internal state.
+Ideally through a component that uses it. For reusable hooks, use \`renderHook(() => useX(props), { initialProps, wrapper })\`: read \`result.current\`, change inputs with \`rerender\`, trigger updates in \`act()\`, and use fake timers for anything time-based. Assert on observable results, such as returned values and storage, not on internal state.
 `],
     ['What makes a test flaky?',
       `
-Hidden dependence on timing or shared state: fixed \`setTimeout\` sleeps instead of waiting for an outcome, forgetting to \`await\` userEvent or \`findBy\`, leaking state between tests (a shared QueryClient, module singletons, unrestored fake timers, leftover listeners), real network calls, animation or transition timing, and order-dependent tests. Fix it with outcome-based waiting, per-test setup and teardown, and deterministic fakes.
+Hidden dependence on timing or shared state. On the timing side, that's fixed \`setTimeout\` sleeps, a forgotten \`await\` on userEvent or \`findBy\`, real network calls, and animation or transition timing. On the state side, it's a shared QueryClient, module singletons, unrestored fake timers, leftover listeners and order-dependent tests. The fixes mirror the causes: outcome-based waiting, per-test setup and teardown, and deterministic fakes.
 `],
   ],
 });
@@ -468,7 +476,7 @@ export const DAY14 = Day({
   concepts: [
     C('y', 'Compound components via context',
       `
-\`<Accordion><Accordion.Item><Accordion.Trigger/>…\` gives the caller full control of the markup while the parent owns the state. The parent provides state through **context**, and each part reads it (and throws a helpful error outside a parent). That's the React spelling of yielding contextual components with \`hash\`. Attach the parts with \`Object.assign(Root, { Item, Trigger, Panel })\`.
+Compound components are the React spelling of yielding contextual components with \`hash\`. \`<Accordion><Accordion.Item><Accordion.Trigger/>…\` gives the caller full control of the markup while the parent owns the state. The parent provides that state through **context**, and each part reads it, throwing a helpful error outside a parent. Attach the parts with \`Object.assign(Root, { Item, Trigger, Panel })\`.
 `,
       `
 {{!-- accordion.hbs --}}
@@ -499,7 +507,9 @@ export const Accordion = Object.assign(Root, { Item, Trigger, Panel });
 `),
     C('y', 'Portals',
       `
-\`createPortal(jsx, domNode)\` renders children into another DOM node, usually \`document.body\`, so modals, toasts and popovers escape \`overflow: hidden\` and stacking contexts. The surprise: in the **React tree** the portal is still a child of the component that rendered it. Context flows into it, and synthetic events **bubble to React ancestors**, not DOM ancestors. Don't \`stopPropagation\` inside a dialog just to stop backdrop clicks: check \`e.target === e.currentTarget\` on the backdrop instead. (Also consider the native \`<dialog>\` element with \`showModal()\`.)
+Like \`{{#in-element}}\`, \`createPortal(jsx, domNode)\` renders children into another DOM node, usually \`document.body\`, so modals, toasts and popovers escape \`overflow: hidden\` and stacking contexts.
+
+The surprise is that in the **React tree** the portal is still a child of the component that rendered it. Context flows into it, and synthetic events **bubble to React ancestors**, not DOM ancestors. So don't \`stopPropagation\` inside a dialog just to stop backdrop clicks; check \`e.target === e.currentTarget\` on the backdrop instead. The native \`<dialog>\` element with \`showModal()\` is also worth considering.
 `,
       `
 {{#in-element this.destination insertBefore=null}}
@@ -516,7 +526,7 @@ return createPortal(
 `),
     C('g', '`ref` is just a prop now',
       `
-In React 19, function components receive \`ref\` like any other prop, so \`forwardRef\` is obsolete (still supported, slated for deprecation). Type it with \`ComponentProps<'input'>\`, which already includes \`ref\`, and pass it on to the element. Ref callbacks can return a **cleanup** function, so a ref callback is now a complete "element modifier".
+In React 19, function components receive \`ref\` like any other prop, so \`forwardRef\` is obsolete: still supported, but slated for deprecation. Type it with \`ComponentProps<'input'>\`, which already includes \`ref\`, and pass it on to the element. Ref callbacks can also return a **cleanup** function, which makes a ref callback a complete element modifier.
 `,
       `
 <TextField @label="Title" {{autofocus}} />
@@ -533,7 +543,7 @@ function TextField({ label, ref, ...inputProps }: TextFieldProps) {
 `),
     C('r', '`<Activity>`: hide without unmounting',
       `
-Conditional rendering **unmounts**: state, DOM and scroll position are gone. \`<Activity mode="hidden">\` (stable since 19.2) keeps the subtree mounted but hidden (\`display: none\`), **preserves its state and DOM**, unmounts its effects (subscriptions pause) and renders updates to it at the lowest priority. \`mode="visible"\` restores it instantly, with effects re-mounted. Use it for tabs, back/forward caches and pre-rendering the likely next screen.
+Conditional rendering **unmounts**, so state, DOM and scroll position are gone. In Ember you'd keep the element and toggle a class, but its modifiers keep running. \`<Activity mode="hidden">\` (stable since 19.2) does better: the subtree stays mounted behind \`display: none\` and **keeps its state and DOM**, while its effects unmount, so subscriptions pause, and updates to it render at the lowest priority. \`mode="visible"\` restores it instantly and re-mounts the effects. Use it for tabs, back/forward caches and pre-rendering the likely next screen.
 `,
       `
 {{!-- keep it rendered and toggle a class:
@@ -556,7 +566,7 @@ Conditional rendering **unmounts**: state, DOM and scroll position are gone. \`<
 - **Discriminated-union props** make invalid combinations unrepresentable: \`{ variant: 'link'; href: string } | { variant: 'button'; onClick(): void }\`.
 - \`ReactNode\` for anything renderable, \`ReactElement\` only when you must have an element.
 
-Ember's Glint gave you template type-checking. With JSX it's just TypeScript.
+Ember needed Glint to type-check templates, whereas JSX is just TypeScript.
 `,
       `
 interface Signature<T> {
@@ -579,7 +589,7 @@ type ButtonProps =
 `, { emberLang: 'typescript' }),
     C('r', 'Fragment refs and `<ViewTransition>` (19.3)',
       `
-**Fragment refs** (stable in 19.3): \`<Fragment ref={ref}>\` gives you a \`FragmentInstance\` that addresses **all of its first-level DOM children** without a wrapper element: \`addEventListener\`, \`observeUsing(intersectionObserver)\`, \`getClientRects()\`, \`focus()\`. That's useful for visibility tracking and focus management around arbitrary children. **\`<ViewTransition>\`** (Day 11) animates transition-driven updates with the View Transitions API.
+Ember reaches a group of elements through a modifier on a wrapper, or \`querySelectorAll\`. **Fragment refs** (stable in 19.3) need no wrapper: \`<Fragment ref={ref}>\` gives you a \`FragmentInstance\` that addresses **all of its first-level DOM children** through \`addEventListener\`, \`observeUsing(intersectionObserver)\`, \`getClientRects()\` and \`focus()\`. That makes visibility tracking and focus management around arbitrary children straightforward. **\`<ViewTransition>\`**, from Day 11, animates transition-driven updates with the View Transitions API.
 `,
       `
 // a modifier on a wrapper element, or
@@ -618,23 +628,23 @@ useEffect(() => {
   drill: [
     ['What are compound components, and how do you build them?',
       `
-A set of components that work together under a parent, such as \`<Tabs><Tabs.List><Tabs.Tab/>…\`, sharing implicit state. The caller composes the markup freely and the parent owns the behaviour. Build them with a context created by the parent (state + actions), consumed by each part through a hook that throws outside the parent. Attach the parts as static properties. They're the React equivalent of yielding contextual components via \`hash\`.
+They're a set of components that work together under a parent and share implicit state, such as \`<Tabs><Tabs.List><Tabs.Tab/>…\`, so the caller composes the markup freely while the parent owns the behaviour. The parent creates a context holding state and actions, each part consumes it through a hook that throws outside the parent, and the parts hang off the parent as static properties. They're the React equivalent of yielding contextual components via \`hash\`.
 `],
     ['Why portals, and how do events bubble through them?',
       `
-Portals render into a different DOM node (usually \`body\`) to escape clipping, \`overflow\` and \`z-index\` stacking: modals, tooltips, toasts. Events bubble through the **React tree**, not the DOM tree. A click inside a portal reaches the \`onClick\` of the React component that rendered it, even though DOM-wise it's elsewhere. Context also flows through. Native listeners attached to DOM ancestors won't see those events.
+Portals render into a different DOM node, usually \`body\`, so modals, tooltips and toasts escape clipping, \`overflow\` and \`z-index\` stacking. Events, though, bubble through the **React tree**, not the DOM tree. So a click inside a portal reaches the \`onClick\` of the component that rendered it, even though the DOM node lives elsewhere, and context flows through the same way. Native listeners on the DOM ancestors won't see those events.
 `],
     ['What changed with refs in React 19?',
       `
-\`ref\` is a regular prop for function components, so \`forwardRef\` is no longer needed. Ref callbacks can return a cleanup function, called on detach, instead of being called with \`null\`. \`useRef\` requires an argument. \`<Context>\` replaced \`<Context.Provider>\` in the same release. In 19.3, \`<Fragment ref>\` exposes a \`FragmentInstance\` spanning the fragment's children.
+\`ref\` became a regular prop for function components, so \`forwardRef\` is no longer needed. Ref callbacks can now return a cleanup function that runs on detach, instead of being called with \`null\`, and \`useRef\` requires an argument. The same release replaced \`<Context.Provider>\` with \`<Context>\`. Then 19.3 added \`<Fragment ref>\`, which exposes a \`FragmentInstance\` spanning the fragment's children.
 `],
     ['`<Activity>` vs conditional rendering?',
       `
-Conditional rendering unmounts the hidden branch, which destroys its state and DOM and runs effect cleanups. Showing it again mounts fresh. \`<Activity mode="hidden">\` keeps the component mounted and hidden with \`display: none\`, preserves its state and DOM, tears down its effects while hidden (re-running them when visible), and renders its updates at low priority. Use Activity when returning to a view should be instant and stateful. Use conditional rendering when hidden UI should really go away.
+Conditional rendering unmounts the hidden branch, destroying its state and DOM and running effect cleanups, so showing it again mounts fresh. \`<Activity mode="hidden">\` instead keeps it mounted behind \`display: none\` with its state and DOM intact. Its effects are torn down while hidden and re-run when visible, and its updates render at low priority. So use Activity when returning to a view should be instant and stateful, and conditional rendering when hidden UI should really go away.
 `],
     ['How do you type a generic component?',
       `
-Declare the type parameter on the function and use it in the props: \`function List<T>({ items, renderItem }: { items: T[]; renderItem: (t: T) => ReactNode })\`. TypeScript infers \`T\` from the props at the call site. Constrain it when you need fields (\`T extends { id: string }\`). With arrow functions in \`.tsx\`, write \`<T,>\` so it isn't parsed as JSX. With \`memo\` or \`forwardRef\` wrappers you used to need a cast. In 19, with ref as a prop, plain generic functions just work.
+Declare the type parameter on the function and use it in the props, as in \`function List<T>({ items, renderItem }: { items: T[]; renderItem: (t: T) => ReactNode })\`, and TypeScript infers \`T\` at the call site. Constrain it when you need fields (\`T extends { id: string }\`). For arrow functions in \`.tsx\`, write \`<T,>\` so it isn't parsed as JSX. Wrapping in \`memo\` or \`forwardRef\` used to need a cast, but with ref as a prop in 19, plain generic functions just work.
 `],
   ],
 });
@@ -668,123 +678,134 @@ export const WEEK3 = [DAY11, DAY12, DAY13, DAY14, DAY15];
 export const FINAL_REVIEW = [
   ['Rendering', 'Walk me through what happens when `setState` is called.',
     `
-The setter enqueues an update on that component's fiber with a priority (lane). In an event it's batched with others, and it's lower priority inside a transition. React schedules a render. During **render** it walks down from the root, re-running the updated component and (by default) its descendants. Memoized subtrees bail out when their props are \`Object.is\`-equal. The new state is computed by applying the queued updates in order. React reconciles the new elements against the current fiber tree (type + key) and collects DOM mutations. Concurrent renders can be interrupted. Then **commit**: apply the DOM changes synchronously, attach refs, run layout effects, paint, then run passive effects (\`useEffect\`). If the new state is \`Object.is\`-equal to the old, React can bail out early.
+The setter enqueues an update on that component's fiber with a priority, or lane. Inside an event it's batched with other updates, and inside a transition it gets a lower priority. Then React schedules a render, which happens in two phases.
+
+During **render**, React walks down from the root, re-running the updated component and, by default, its descendants, while memoized subtrees bail out when their props are \`Object.is\`-equal. It computes the new state by applying the queued updates in order, reconciles the new elements against the current fiber tree by type and key, and collects DOM mutations. A concurrent render can be interrupted at this point.
+
+During **commit**, React applies the DOM changes synchronously, attaches refs and runs layout effects. The browser paints, then passive effects (\`useEffect\`) run. And if the new state is \`Object.is\`-equal to the old, React can bail out before any of this.
 `],
   ['Rendering', 'React has no fine-grained reactivity. Why is it still fast enough, and when isn\'t it?',
     `
-Re-rendering is a JS function call plus a diff of lightweight element objects. DOM work, which is the expensive part, happens only where output changed. Batching collapses updates, concurrent rendering keeps input responsive during heavy work, and the React Compiler auto-memoizes to skip unchanged subtrees. It struggles with very large trees re-rendering on high-frequency updates (typing in a big form, dragging) and with expensive render functions. Fix those with state colocation, memoization, \`useDeferredValue\`, virtualisation, or an external store with selectors.
+Because a re-render is only a JS function call plus a diff of lightweight element objects, and the expensive part, DOM work, happens only where the output changed. On top of that, batching collapses updates, concurrent rendering keeps input responsive during heavy work, and the React Compiler skips unchanged subtrees. It struggles when very large trees re-render on high-frequency updates, such as typing in a big form or dragging, and when render functions are expensive. The fixes are state colocation, memoization, \`useDeferredValue\`, virtualisation, or an external store with selectors.
 `],
   ['Components', 'How do keys affect component identity and state?',
     `
-React matches children between renders by type and key. Same type and key: the instance is reused with its state, refs and DOM. A different key means unmount and remount. Index keys tie state to positions, so reordering moves state to the wrong items. Stable data ids prevent this, and changing a key on purpose resets a component (\`<Form key={id}/>\`).
+React matches children between renders by type and key. With the same type and key, the instance is reused along with its state, refs and DOM, whereas a different key means unmount and remount. That's why index keys are risky: they tie state to positions, so reordering moves state onto the wrong items. Stable data ids prevent this, and changing a key on purpose resets a component, as in \`<Form key={id}/>\`.
 `],
   ['Components', 'How would you design a reusable Select that works with any item type?',
     `
-A generic component, \`Select<T>\`, with \`items: T[]\`, \`getKey\`, \`getLabel\` and \`value\` / \`onChange\` typed by \`T\`. Make it controlled with an optional uncontrolled default, accessible (a listbox/combobox pattern or native \`<select>\`), and compositional (render props or compound parts for custom options), with native props passed through to the trigger and \`ref\` as a prop. Ideally it's built on a headless library (React Aria, Radix, Ariakit) so keyboard handling and a11y are solved.
+As a generic component, \`Select<T>\`, with \`items: T[]\`, \`getKey\`, \`getLabel\`, and \`value\` / \`onChange\` typed by \`T\`. Beyond the types, it should be controlled with an optional uncontrolled default, accessible through a listbox or combobox pattern or a native \`<select>\`, and compositional, with render props or compound parts for custom options. Native props and \`ref\` pass through to the trigger. Ideally I'd build it on a headless library such as React Aria, Radix or Ariakit, so keyboard handling and a11y are already solved.
 `],
   ['State', 'How would you structure state in a large app?',
     `
-By ownership and lifetime, not by "global vs local". **Server state** goes in a server cache (TanStack Query, or loaders/RSC), which is usually most of it. **URL state** (filters, tabs, selection, pagination) goes in the router. **Local UI state** stays colocated in components and is lifted only as far as needed. **Cross-cutting client state** (auth session, preferences, complex editors) goes in context for low-frequency values, or an external store with selectors (Zustand/Redux) for high-frequency, widely read values. Derive rather than duplicate, keep a single source of truth per fact, use reducers for complex transitions, and put feature boundaries around providers.
+By ownership and lifetime, not by "global vs local". First, **server state**, usually most of it, goes in a server cache: TanStack Query, loaders or RSC. Second, **URL state** such as filters, tabs, selection and pagination goes in the router. Third, **local UI state** stays colocated in components, lifted only as far as needed. Fourth, **cross-cutting client state** such as the auth session, preferences or a complex editor goes in context when it changes rarely, or in an external store with selectors when it changes often and is widely read. Throughout, derive rather than duplicate, keep one source of truth per fact, use reducers for complex transitions, and put feature boundaries around providers.
 `],
   ['State', 'Why is mutating state a bug, even when the UI seems to update?',
     `
-React decides whether to re-render by reference equality. A mutated object is the same reference, so \`memo\`, \`useMemo\`, effect deps and bail-outs treat it as unchanged. The UI only appeared to update because something else triggered a render. Mutation also corrupts the previous render's snapshot (breaking concurrent rendering, transitions and Strict Mode double renders) and makes behaviour depend on timing.
+Because React decides whether to re-render by reference equality, and a mutated object is still the same reference. So \`memo\`, \`useMemo\`, effect deps and bail-outs all treat it as unchanged, and the UI only appeared to update because something else triggered a render. Mutation also corrupts the previous render's snapshot, which breaks concurrent rendering, transitions and Strict Mode's double renders, and it makes behaviour depend on timing.
 `],
   ['Events & forms', 'Controlled or uncontrolled for a 30-field settings form?',
     `
-Mostly uncontrolled: native inputs with \`defaultValue\`, read via \`FormData\` in a form Action, and validation on submit or blur (with native constraints plus a schema). Controlled re-renders the form on every keystroke and needs a state field per input. Use controlled fields only where other UI depends on the live value. Or use a form library (React Hook Form is uncontrolled and ref-based) for field arrays, dirty tracking and validation.
+Mostly uncontrolled, because controlled inputs re-render the form on every keystroke and need a state field each. So use native inputs with \`defaultValue\`, read them through \`FormData\` in a form Action, and validate on submit or blur with native constraints plus a schema. Make a field controlled only where other UI depends on its live value. For field arrays, dirty tracking and richer validation, a form library such as React Hook Form, which is itself uncontrolled and ref-based, is the next step.
 `],
   ['Events & forms', 'How do React events differ from native DOM events?',
     `
-They're synthetic wrappers dispatched via delegation from the root container, propagating through the React component tree (including through portals). The handlers are props. \`onChange\` fires on every input, unlike the native \`change\` event. \`e.nativeEvent\` gives you the original. \`stopPropagation\` stops React propagation, and native listeners on ancestors may still see the event depending on attachment. Return values don't prevent defaults: call \`preventDefault()\`.
+They're synthetic wrappers, dispatched by delegation from the root container and propagating through the React component tree, portals included. The handlers are props, and \`e.nativeEvent\` gives you the original. A few behaviours differ. \`onChange\` fires on every input, unlike the native \`change\` event. \`stopPropagation\` stops React propagation, but native listeners on ancestors may still see the event, depending on where they're attached. And returning \`false\` doesn't prevent the default, so call \`preventDefault()\`.
 `],
   ['Effects', 'When is `useEffect` the right tool, and when is it a code smell?',
     `
-It's right for synchronising with **external systems** keyed on props or state: subscriptions, timers, non-React widgets, imperative DOM APIs, analytics on visibility. It's a smell when it computes derived state, responds to user events (put that in the handler), resets state on prop change (use \`key\`), fetches without a race guard or cache (use a data library), or chains state updates. Rule of thumb: if there's no external system, there's no effect.
+It's right for synchronising with **external systems** keyed on props or state: subscriptions, timers, non-React widgets, imperative DOM APIs and analytics on visibility. It's a smell when it computes derived state, responds to a user event that belongs in the handler, resets state on a prop change where \`key\` would do, fetches without a race guard or cache, or chains state updates. The rule of thumb is that if there's no external system, there's no effect.
 `],
   ['Effects', 'Explain stale closures with an example, and how you avoid them.',
     `
-Each render's functions capture that render's props and state. A \`setInterval(() => setCount(count + 1), 1000)\` created in an effect with \`[]\` deps keeps seeing \`count = 0\` forever. Avoid it with updater functions (\`setCount(c => c + 1)\`), correct dependency arrays (re-subscribe when inputs change), \`useEffectEvent\` for reading the latest values in an effect callback without re-syncing, or a ref holding the latest value for imperative code.
+Each render's functions capture that render's props and state. So a \`setInterval(() => setCount(count + 1), 1000)\` created in an effect with \`[]\` deps sees \`count = 0\` forever. There are four ways out. First, an updater function, \`setCount(c => c + 1)\`. Second, a correct dependency array, so the effect re-subscribes when inputs change. Third, \`useEffectEvent\`, which reads the latest values in an effect callback without re-syncing. Fourth, for imperative code, a ref holding the latest value.
 `],
   ['Performance', 'When do you use `memo`, `useMemo` and `useCallback`, and what changes with the React Compiler?',
     `
-Without the compiler: \`memo\` for components that re-render often with the same props and are expensive (list rows, charts). \`useCallback\` and \`useMemo\` to keep the props to those components stable, to cache expensive computations, and to stabilise effect deps. Measure first. With the compiler, most of this is automatic and you remove manual memoization. You still care about code the compiler skips (rule violations), identity for third-party libraries, and architectural fixes (state colocation, virtualisation), which no compiler does for you.
+Without the compiler, after measuring, I use \`memo\` for expensive components that often re-render with the same props, such as list rows and charts. \`useCallback\` and \`useMemo\` then keep those components' props stable, cache expensive computations and stabilise effect deps. With the compiler most of this is automatic, so manual memoization comes out. What's left is code the compiler skips because it breaks the rules, identity for third-party libraries, and architectural fixes such as state colocation and virtualisation, which no compiler does for you.
 `],
   ['Performance', 'A list of 5,000 issues stutters when typing in its filter. What do you do?',
     `
-Profile first. Then: keep the input responsive with \`useDeferredValue\` (or \`startTransition\`) for the filter applied to the list. **Virtualise** the list (TanStack Virtual) so only visible rows render. Memoize rows with stable props (or let the compiler do it). Make the filter itself cheap (precompute lower-cased titles with \`useMemo\`). And, if the data allows, move filtering server-side with debounced queries.
+Profile first, then work through the fixes. First, keep the input responsive by applying the filter to the list through \`useDeferredValue\` or \`startTransition\`. Second, **virtualise** the list with TanStack Virtual so only visible rows render. Third, memoize rows with stable props, or let the compiler do it. Fourth, make the filter itself cheap, for example by precomputing lower-cased titles with \`useMemo\`. And if the data allows, move filtering to the server with debounced queries.
 `],
   ['Architecture', 'Context vs an external store vs TanStack Query: how do you choose?',
     `
-**Query** for anything fetched from a server: caching, invalidation and background refresh. **Context** for injecting dependencies and low-frequency tree-wide values (theme, user, a client instance), because every consumer re-renders on change. **An external store** with selector subscriptions (Zustand/Redux via \`useSyncExternalStore\`) for frequently changing client state shared across distant components. These are often combined: context provides a store, and components select from it.
+By where the data comes from and how often it changes. **Query** is for anything fetched from a server, because it brings caching, invalidation and background refresh. **Context** is for injecting dependencies and rarely changing tree-wide values such as the theme, the user or a client instance, since every consumer re-renders on change. **An external store** with selector subscriptions, like Zustand or Redux on \`useSyncExternalStore\`, is for frequently changing client state shared across distant components. They often combine: context provides a store, and components select from it.
 `],
   ['Architecture', 'What is tearing, and how does React prevent it?',
     `
-Tearing is when one render shows inconsistent versions of the same external data, because a concurrent render yielded mid-way and the store changed in between, so some components read the old value and some the new. \`useSyncExternalStore\` prevents it by checking snapshots during render and forcing a synchronous re-render if the store changed during a concurrent render. React-managed state (useState/context) can't tear.
+Tearing is when one render shows inconsistent versions of the same external data. A concurrent render yielded mid-way, the store changed in between, and so some components read the old value and some the new. \`useSyncExternalStore\` prevents it by checking snapshots during render and forcing a synchronous re-render if the store changed. React-managed state, \`useState\` and context, can't tear in the first place.
 `],
   ['Hooks', 'Why do the Rules of Hooks exist?',
     `
-React associates hook state with a component by **call order**, not by name. Calling hooks conditionally, in loops or after early returns changes that order between renders, so state is read from the wrong slot. The rules (top level only, only from components and hooks) keep the order stable. The lint plugin enforces them, and the Compiler relies on them.
+Because React associates hook state with a component by **call order**, not by name. Calling hooks conditionally, in loops or after early returns changes that order between renders, so state is read from the wrong slot. The rules, top level only and only from components and hooks, keep the order stable. The lint plugin enforces them, and the Compiler relies on them.
 `],
   ['Hooks', 'Design a `useFetch(url)` hook. Then tell me why you wouldn\'t ship it.',
     `
-State \`{ data, error, status }\`. An effect on \`[url]\` with an \`AbortController\` (or an ignore flag) cleaned up on change, that sets state on resolve or reject, and resets to loading when the url changes. I wouldn't ship it because it lacks caching and dedupe across components, background revalidation, invalidation after mutations, retries, pagination, SSR and Suspense integration, and request-ordering guarantees beyond the latest url. It produces render-then-fetch waterfalls. TanStack Query (or router loaders/RSC) solves all of that.
+It holds \`{ data, error, status }\` in state, with an effect on \`[url]\` that resets to loading, fetches with an \`AbortController\` or an ignore flag cleaned up on change, and sets state on resolve or reject. I wouldn't ship it because of everything it lacks: caching and dedupe across components, background revalidation, invalidation after mutations, retries, pagination, SSR and Suspense integration, and ordering guarantees beyond the latest url. It also produces render-then-fetch waterfalls. TanStack Query, router loaders or RSC solve all of that.
 `],
   ['Data', 'Explain stale-while-revalidate and query invalidation in TanStack Query.',
     `
-A query's data becomes stale after \`staleTime\` (0 by default). Stale data is still served instantly from the cache, and a background refetch fires on mount, window focus, reconnect or invalidation. \`isFetching\` is true while the old data stays on screen. After a mutation, \`invalidateQueries({ queryKey })\` marks matching keys (prefix match) stale and refetches the active ones. That's how you keep views consistent without a normalised store.
+A query's data becomes stale after \`staleTime\`, which is 0 by default. Stale data is still served instantly from the cache, while a background refetch fires on mount, window focus, reconnect or invalidation, and \`isFetching\` is true as the old data stays on screen. After a mutation, \`invalidateQueries({ queryKey })\` marks keys matching that prefix stale and refetches the active ones. That's how you keep views consistent without a normalised store.
 `],
   ['Data', 'How does Suspense change data loading, and what are its pitfalls?',
     `
-Components declare what they need and suspend until it's ready. The nearest \`<Suspense>\` shows a fallback, and error boundaries handle failures, so loading and error UI move to wherever you want them in the tree, and components get non-nullable data. Pitfalls: sequential suspenses cause **waterfalls** (prefetch in loaders, or use parallel queries), promises must be cached and not created during render, fallbacks can flash (use transitions for updates), and you need error boundaries with reset (\`QueryErrorResetBoundary\`).
+Components declare what they need and suspend until it's ready. The nearest \`<Suspense>\` shows a fallback and error boundaries handle failures, so loading and error UI move wherever you want them in the tree, and components get non-nullable data. There are four pitfalls. First, sequential suspenses cause **waterfalls**, so prefetch in loaders or use parallel queries. Second, promises must be cached, not created during render. Third, fallbacks can flash, so make updates transitions. Fourth, you need error boundaries that reset, such as \`QueryErrorResetBoundary\`.
 `],
   ['Routing', 'Where should filter, sort and pagination state live, and why?',
     `
-In the URL search params, which become the single source of truth. That makes them shareable, bookmarkable and reload-safe, Back/Forward works, they're server-renderable, and loaders can read them before render, so there's no flash. Read with \`useSearchParams\` and validate (the URL is user input), and write through navigation. Avoid copying them into \`useState\`.
+In the URL search params, as the single source of truth. That makes them shareable, bookmarkable and reload-safe, Back and Forward work, they're server-renderable, and loaders can read them before render, so nothing flashes. Read them with \`useSearchParams\` and validate them, because the URL is user input. Write them through navigation, and don't copy them into \`useState\`.
 `],
   ['Routing', 'Compare React Router loaders with Ember route model hooks.',
     `
-Both fetch before the route renders and feed the component, and both support redirects and error substates. Loaders for all matched routes run **in parallel**, while Ember resolves parent models first. There are no controllers: query params are plain \`URLSearchParams\`. There are no default loading substates (the old UI stays, with \`useNavigation()\` for pending). Errors bubble to the nearest \`errorElement\`. Loaders re-run after actions or on navigation, and they pair well with a query cache for client-side caching.
+Both fetch before the route renders and feed the component, and both support redirects and error substates. The differences start with timing: loaders for all matched routes run **in parallel**, whereas Ember resolves parent models first. There are no controllers, so query params are plain \`URLSearchParams\`. There are no default loading substates either; the old UI stays while \`useNavigation()\` reports pending. Errors bubble to the nearest \`errorElement\`. And loaders re-run after actions or on navigation, which pairs well with a query cache for client-side caching.
 `],
   ['Concurrent', 'What are transitions, and when would you use one?',
     `
-Updates marked as non-urgent (\`startTransition\`/\`useTransition\`) that React can interrupt for urgent input, and during which visible content isn't replaced by Suspense fallbacks. Use them for tab switches, navigations, filtering large lists, or any update that triggers heavy rendering or suspends, so the current UI stays interactive with an \`isPending\` hint. In React 19 they can be async (Actions).
+They're updates marked as non-urgent with \`startTransition\` or \`useTransition\`. React can interrupt them for urgent input, and it doesn't replace visible content with Suspense fallbacks while they run. So use them for tab switches, navigations, filtering large lists, or any update that renders heavily or suspends, and the current UI stays interactive with an \`isPending\` hint. In React 19 they can also be async, which makes them Actions.
 `],
   ['Concurrent', 'How do Actions, `useActionState` and `useOptimistic` fit together?',
     `
-An Action is an async function run inside a transition (a form \`action\` or \`startTransition(async…)\`). \`useActionState\` wraps it, exposing the last result as state plus \`isPending\`, and queueing submissions. \`useFormStatus\` exposes pending to children of the form. \`useOptimistic\` shows a temporary value while the Action is pending, which disappears when it settles, giving automatic rollback on failure. Together they replace manual loading, error and optimistic plumbing, and they work with Server Functions.
+An Action is an async function run inside a transition, either as a form \`action\` or through \`startTransition(async…)\`. The hooks layer onto it. \`useActionState\` wraps the Action, exposing the last result as state plus \`isPending\`, and queues submissions. \`useFormStatus\` exposes pending to the form's children. \`useOptimistic\` shows a temporary value while the Action is pending, which disappears when it settles, so failure rolls back automatically. Together they replace manual loading, error and optimistic plumbing, and they work with Server Functions too.
 `],
   ['Server', 'Explain the server/client boundary in React Server Components.',
     `
-Server components run only on the server, can be async and access server resources, and ship no JS. \`'use client'\` marks the module where the client graph starts. Those components (and everything they import) are bundled for the browser, still SSR'd, then hydrated. Props crossing the boundary must be serialisable. Functions can't cross, except Server Function references. Server components can be passed into client components as \`children\`. You design the boundary to keep heavy, non-interactive code on the server and push interactivity to the leaves.
+Server components run only on the server, so they can be async, access server resources and ship no JS. \`'use client'\` marks the module where the client graph starts: it and everything it imports are bundled for the browser, still SSR'd, then hydrated. Props crossing that boundary must be serialisable, so functions can't cross unless they're Server Function references, although server components can be passed into client components as \`children\`. You design the boundary to keep heavy, non-interactive code on the server and push interactivity to the leaves.
 `],
   ['Server', 'How would you protect a Server Function?',
     `
-Treat it as a public HTTP endpoint, because it is one. Authenticate the session inside the function and authorise per resource. Validate and parse every argument with a schema (FormData is untrusted). Avoid leaking internals in errors. Rate-limit where needed. Don't rely on the UI hiding the button. Remember that closure-captured values are sent to the client (encrypted in Next.js) and come back, so don't capture secrets.
+Treat it as a public HTTP endpoint, because it is one. First, authenticate the session inside the function and authorise per resource, rather than relying on the UI hiding the button. Second, validate and parse every argument with a schema, since FormData is untrusted. Third, don't leak internals in errors, and rate-limit where needed. Finally, remember that closure-captured values travel to the client and back, encrypted in Next.js, so don't capture secrets.
 `],
   ['Testing', 'How do you test a React app, and how is that different from Ember?',
     `
-Testing Library and userEvent at the component level, querying by role and label. Network-level mocking with MSW. Fresh providers per test (QueryClient, memory router). Async assertions with \`findBy\`/\`waitFor\`. Plus a thin layer of Playwright end-to-end tests. Unlike Ember there's no global \`settled()\` (you wait for the expected outcome), no container or owner (you compose providers), and component, integration and acceptance tests blur together because rendering a route tree is just rendering components.
+Mostly at the component level, with Testing Library and userEvent querying by role and label, MSW mocking the network, fresh providers such as a QueryClient and memory router per test, and async assertions through \`findBy\`/\`waitFor\`. A thin layer of Playwright end-to-end tests sits on top. Three things differ from Ember. There's no global \`settled()\`, so you wait for the expected outcome. There's no container or owner, so you compose providers. And component, integration and acceptance tests blur together, because rendering a route tree is just rendering components.
 `],
   ['Testing', 'A test passes locally but fails on CI one time in twenty. How do you approach it?',
     `
-Reproduce under stress (\`--repeat\`, CPU throttling, \`--sequence.shuffle\`). Look for un-awaited userEvent or \`findBy\` calls, fixed sleeps, shared state between tests (a module singleton, a reused QueryClient, unrestored fake timers or mocks, leaking listeners), dependence on wall-clock time or timezones, and assertions that race background refetches. Replace sleeps with outcome-based waits, isolate state per test, and make time and data deterministic.
+First, reproduce it under stress with \`--repeat\`, CPU throttling or \`--sequence.shuffle\`. Then look for the usual suspects: un-awaited userEvent or \`findBy\` calls, fixed sleeps, state shared between tests (a module singleton, a reused QueryClient, unrestored fake timers or mocks, leaking listeners), dependence on wall-clock time or timezones, and assertions that race background refetches. The fix is to replace sleeps with outcome-based waits, isolate state per test, and make time and data deterministic.
 `],
   ['Patterns', 'Compound components vs a config-object API: trade-offs?',
     `
-**Config** (\`<Tabs items=[…]>\`) is concise, easy to validate and type, and rigid: every customisation becomes a new prop. **Compound components** (\`<Tabs><Tabs.Tab/>…\`) give callers control over markup, ordering and wrappers with less prop bloat, but they need context plumbing, are looser about invalid structures, and are harder to iterate over (you can't easily inspect children). Libraries often offer both: compound primitives with a convenience config wrapper.
+It's control against simplicity. A **config** API (\`<Tabs items=[…]>\`) is concise and easy to validate and type, but rigid, because every customisation becomes a new prop. **Compound components** (\`<Tabs><Tabs.Tab/>…\`) give callers control over markup, ordering and wrappers with less prop bloat. In exchange they need context plumbing, are looser about invalid structures, and are harder to iterate over, since you can't easily inspect children. So libraries often offer both: compound primitives with a convenience config wrapper.
 `],
   ['Patterns', 'What does `<Activity>` give you over conditional rendering?',
     `
-Hidden-but-mounted UI: state and DOM preserved (form drafts, scroll), effects torn down while hidden and restored when visible, and low-priority pre-rendering of hidden content (the next tab can render before you click it). Conditional rendering destroys and recreates. Costs: memory for hidden trees, and the need for effects that clean up properly (Strict Mode already checks that).
+Hidden-but-mounted UI, whereas conditional rendering destroys and recreates. State and DOM survive, so form drafts and scroll positions do too. Effects are torn down while hidden and restored when visible. And hidden content pre-renders at low priority, so the next tab can render before you click it. The costs are memory for hidden trees and effects that must clean up properly, which Strict Mode already checks.
 `],
   ['Migration', 'How would you migrate an Ember app to React incrementally?',
     `
-Strangler pattern, by route or by leaf. 1) Stand up a React build next to Ember with shared design tokens and an API client. 2) Mount React "islands" inside Ember: a component or modifier that calls \`createRoot(element).render(<Widget {...args}/>)\` and unmounts in \`willDestroy\`, passing args as props and callbacks for actions. 3) Bridge state: start with server data through a shared TanStack Query client or the same REST/GraphQL API (not ember-data). Bridge auth and session explicitly. 4) Migrate whole routes at a time once leaves are done, ideally behind a top-level router that delegates unknown routes to Ember (or a reverse proxy splitting by path). 5) Port tests with the features, using Testing Library for components and Playwright across both. Avoid a big-bang rewrite, avoid two-way state sync between the frameworks, and keep a running list of what's left.
+With the strangler pattern, by route or by leaf. First, stand up a React build next to Ember, sharing design tokens and an API client. Second, mount React "islands" inside Ember: a component or modifier calls \`createRoot(element).render(<Widget {...args}/>)\`, passes args as props and callbacks for actions, and unmounts in \`willDestroy\`. Third, bridge state, starting with server data through a shared TanStack Query client or the same REST/GraphQL API rather than ember-data, and bridge auth and session explicitly. Fourth, once the leaves are done, migrate whole routes, ideally behind a top-level router that delegates unknown routes to Ember, or a reverse proxy that splits by path. Fifth, port tests with the features, using Testing Library for components and Playwright across both. Throughout, avoid a big-bang rewrite and two-way state sync between the frameworks, and keep a running list of what's left.
 `],
   ['Migration', 'Which Ember instincts are most dangerous in React?',
     `
-1) **Mutating state** and expecting the UI to follow (\`@tracked\` habit). 2) Expecting fine-grained updates and being surprised that children re-render, then over- or under-memoizing. 3) Treating \`useEffect\` like \`didInsert\`/observers and syncing state with state. 4) Expecting a DI container: services become context, which isn't a store and re-renders every consumer. 5) Reading a value right after setting it (state is a snapshot). 6) Waiting for \`settled()\` in tests instead of for outcomes. 7) Assuming the framework owns data (ember-data), when React leaves server state to a library.
+The worst is **mutating state** and expecting the UI to follow, which is the \`@tracked\` habit. Close behind it:
+
+- Expecting fine-grained updates, being surprised that children re-render, then over- or under-memoizing.
+- Treating \`useEffect\` like \`didInsert\` or an observer, and syncing state with state.
+- Expecting a DI container. Services become context, which isn't a store and re-renders every consumer.
+- Reading a value right after setting it, when state is a snapshot.
+- Waiting for \`settled()\` in tests instead of for outcomes.
+- Assuming the framework owns data, as ember-data did, when React leaves server state to a library.
 `],
 ];
 

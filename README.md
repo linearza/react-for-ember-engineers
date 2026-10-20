@@ -1,8 +1,8 @@
 <p align="center"><img src="course/icons/banner.svg" width="960" alt="React for Ember Engineers"></p>
 
-A 15-day course, at most an hour a day, for engineers who know Octane/Polaris Ember well and are new to React. It skips the basics of components, routes and tests. It covers how React's model differs from Ember's, and spends most of its time where Ember instincts will mislead you.
+A 15-day course, at most an hour a day, for engineers who know Octane/Polaris Ember well and are new to React. You already know what components, routes and tests are for, so the course skips those basics. Instead it covers how React's model differs from Ember's, and spends most of its time where Ember instincts will mislead you.
 
-Every exercise builds part of one small issue tracker. On Day 15 you put the parts together into a running app.
+Every exercise builds part of one small issue tracker, and on Day 15 you put the parts together into a running app.
 
 ## Quick start
 
@@ -25,7 +25,9 @@ Each day takes about an hour:
 2. **Hands-on (~35 min).** Open the day's files in `exercises/dayNN/` and follow the TODO comments. Every time you save, the tests run and the course page shows which ones still fail.
 3. **Check yourself (~10 min).** Press start for a short multiple-choice quiz. Each answer comes with the reasoning, and you earn coins, combos and a rank along the way.
 
-Days unlock one at a time. When all of a day's tests pass, the day is marked complete, the page celebrates and the next day opens. When you finish all 15 days, you get a certificate with your name on it. You can print it or save it as a PDF. The first time you open the page, a short "How this course works" guide pops up. Reopen it any time from the **?** button.
+Days unlock one at a time: when all of a day's tests pass, the day is marked complete, the page celebrates and the next day opens. Finish all 15 and you get a certificate with your name on it, which you can print or save as a PDF.
+
+The first time you open the page, a short "How this course works" guide pops up. Reopen it any time from the **?** button.
 
 On Day 15 your assembled app runs at **http://localhost:1515/app/**.
 
@@ -71,7 +73,7 @@ Everything you write runs on this stack, pinned in `package.json`:
 | Tests | **Vitest 5** + jsdom, **Testing Library** (React, user-event, jest-dom) | every day, Day 13 in depth |
 | Tooling | **Node 22.22+**, **pnpm 11** | |
 
-The Day 12 exercise runs in Vitest, not in a real Next.js app. Its stretch goal moves it into one. The API is an in-memory fake, so the exercises have no backend or network dependencies.
+The Day 12 exercise runs in Vitest rather than a real Next.js app, and its stretch goal moves it into one. The API is an in-memory fake, so the exercises have no backend or network dependencies.
 
 Mentioned for context, but not used in the exercises: MSW, Zustand and Redux Toolkit, TanStack Router and TanStack Virtual, `react-error-boundary`, React Hook Form and Playwright.
 
@@ -88,7 +90,7 @@ Mentioned for context, but not used in the exercises: MSW, Zustand and Redux Too
   // plugins: [react(), babel({ presets: [reactCompilerPreset()] })]
   ```
   The Day 6 tests should still pass. (`@vitejs/plugin-react` also has an experimental Rust compiler: `react({ compiler: true })` with `oxc-transform-react`.)
-  Another way to fix Day 6's typing case: extract the "Draft note" input and its state into its own component. Then typing never re-renders the table at all ("move state down"). No memo needed.
+  The typing case also has a fix with no memo at all: move the "Draft note" input and its state into their own component, and typing never re-renders the table ("move state down").
 - **Day 8:** make `useLocalStorage` sync across tabs (the `storage` event, ideally via `useSyncExternalStore`).
 - **Day 9:** make the status change optimistic with `onMutate` / `onError` rollback / `onSettled` invalidate.
 - **Day 10:** add `<ViewTransition>` or a pending UI with `useNavigation()`; try the same routes in TanStack Router for type-safe params.
@@ -125,9 +127,9 @@ Mentioned for context, but not used in the exercises: MSW, Zustand and Redux Too
 
 ## Under the hood
 
-Stack: React 19.3, React Router 8 (data mode), TanStack Query 5, Vite 8, Vitest 5 + Testing Library, TypeScript 5.9. TypeScript 7 (the native Go port) exists. This repo stays on 5.9 for editor and tooling stability, and nothing here depends on the difference.
+Stack: React 19.3, React Router 8 (data mode), TanStack Query 5, Vite 8, Vitest 5 + Testing Library, TypeScript 5.9. TypeScript 7, the native Go port, exists, but this repo stays on 5.9 for editor and tooling stability, and nothing here depends on the difference.
 
-`pnpm start` runs one Vite server: the course page at `/`, your Day 15 app at `/app/`, and Vitest in watch mode in the same process. A small reporter streams results to the page.
+`pnpm start` runs one Vite server that serves the course page at `/` and your Day 15 app at `/app/`, with Vitest in watch mode in the same process. A small reporter streams the results to the page.
 
 ### Your work vs. the solutions
 
@@ -143,7 +145,7 @@ Tests import `@ex/dayNN/...`. One switch in `vite.config.ts` decides what `@ex` 
 | `pnpm dev:solutions` | `solutions/` | run the reference app |
 | `pnpm typecheck` | — | `tsc --noEmit`: passes for both trees |
 
-The stubs fail on purpose. Against an untouched `exercises/`, every day's tests fail except for at most one or two trivial ones. Cross-day imports (for example, Day 15 importing Day 9's hooks) also go through `@ex`. So `pnpm dev` runs the app on *your* earlier days, which makes it a good integration check.
+The stubs fail on purpose: against an untouched `exercises/`, every day's tests fail except for at most one or two trivial ones. Cross-day imports, such as Day 15 importing Day 9's hooks, also go through `@ex`. So `pnpm dev` runs the app on *your* earlier days, which makes it a good integration check.
 
 ### Layout
 
