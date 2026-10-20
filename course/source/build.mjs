@@ -116,11 +116,23 @@ const coinSvg = (cls = 'pixel-coin') => pixelSvg(COIN, COIN_PAL, cls);
 const LOCK_PAL = { k: '#3a2a10', s: '#9aa3b8', y: '#f8b800', o: '#c87800' };
 const PADLOCK = ['..ssss..', '.s....s.', '.s....s.', 'kkkkkkkk', 'kyyyyyok', 'kyykkyok', 'kyykkyok', 'kyyyyyok', 'kkkkkkkk'];
 const padlockSvg = (cls) => pixelSvg(PADLOCK, LOCK_PAL, cls);
+// The reading track's goal flag, in the scenery's pennant orange
+const FLAG_PAL = { k: '#1a1c2c', o: '#e45c10', y: '#ffcd75', g: '#38b764', d: '#257179' };
+const FLAG = ['kooo...', 'kooyoo.', 'koooooo', 'kooo...', 'k......', 'k......', 'k......', 'k......', 'k......', 'kk.....', 'gggg...', 'dddd...'];
 const twoFrames = (a, b, pal) => `<g class="f1">${sprite(a, pal)}</g><g class="f2">${sprite(b, pal)}</g>`;
 // The Konami-code parade: the scenery's fox chasing its hero along the bottom of the screen
 const PARADE = '<div class="parade__run">' +
   `<svg class="parade__fox" viewBox="0 0 10 5" shape-rendering="crispEdges">${twoFrames(FOX_A, FOX_B, FOX_PAL)}</svg>` +
   `<svg class="parade__hero" viewBox="0 0 9 11" shape-rendering="crispEdges">${twoFrames(HERO_A, HERO_B, HERO_PAL)}</svg></div>`;
+// The reading track: the hero walks it as you scroll through the day's concepts, a coin per concept
+const READBAR = `<div class="readbar" data-readbar hidden role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress">
+  <div class="readbar__track" data-readbar-track>
+    <svg class="readbar__hero" data-readbar-hero viewBox="0 0 9 11" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${twoFrames(HERO_A, HERO_B, HERO_PAL)}</svg>
+    ${pixelSvg(FLAG, FLAG_PAL, 'readbar__flag')}
+  </div>
+  <span class="readbar__label pixel" aria-hidden="true">${coinSvg()}<span data-readbar-label></span></span>
+  <template data-readbar-coin>${coinSvg('readbar__coin')}</template>
+</div>`;
 
 // A deterministic shuffle, so the correct choice isn't always first but the page builds the same every time
 function shuffled(items, seed) {
@@ -216,7 +228,7 @@ function day15Extra() {
 function dayView(day) {
   const concepts = day.concepts.map((c, i) => concept(day, i, c)).join('');
   const conceptsHtml = day.concepts.length
-    ? `<section aria-labelledby="d${day.n}-concepts"><h2 id="d${day.n}-concepts">Concepts</h2>${concepts}</section>`
+    ? `<section class="day__concepts" aria-labelledby="d${day.n}-concepts"><h2 id="d${day.n}-concepts">Concepts</h2>${concepts}</section>`
     : '';
   const prevLink = day.n > 1 ? `<a class="pager__link" href="#day-${day.n - 1}">← Day ${day.n - 1}</a>` : '<span></span>';
   const nextLink = day.n < 15 ? `<a class="pager__link" href="#day-${day.n + 1}">Day ${day.n + 1} →</a>` : '<span></span>';
@@ -572,6 +584,29 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 .locked p { margin: 0; max-width: 46ch; color: var(--muted); }
 .locked .button { margin-top: 0.75rem; text-decoration: none; }
 .locked__hint { margin-top: 1.75rem !important; font-size: 0.58rem; opacity: 0.75; }
+
+/* Reading track */
+.readbar { position: sticky; top: 0; z-index: 15; display: flex; align-items: flex-end; gap: 0.9rem; margin: 0 0 1.25rem; padding: 0.4rem 0 0.35rem; background: var(--bg); border-bottom: 1px solid var(--border); }
+.readbar[hidden] { display: none; }
+.readbar__track { position: relative; flex: 1; height: 40px; margin: 0 30px 0 12px; }
+.readbar__track::before { content: ''; position: absolute; left: -12px; right: -30px; bottom: 0; height: 6px; background: linear-gradient(#38b764 0 2px, #257179 2px 4px, #5a3a22 4px); background-size: 100% 6px; image-rendering: pixelated; }
+.readbar__track::after { content: ''; position: absolute; left: -12px; right: -30px; bottom: 2px; height: 2px; background: repeating-linear-gradient(90deg, transparent 0 6px, #a7f070 6px 8px); opacity: 0.6; }
+.readbar__hero { position: absolute; bottom: 5px; left: 0; width: 22px; height: 27px; transform: translateX(-50%); transition: left 120ms steps(3); }
+.readbar__flag { position: absolute; bottom: 0; right: -28px; width: 17px; height: 29px; }
+.readbar__flag.is-raised { animation: hop 0.6s steps(1) 3; }
+.readbar__coin { position: absolute; bottom: 12px; width: 12px; height: 12px; transform: translateX(-50%); animation: coin-spin 1.2s steps(4) infinite; }
+.readbar__coin.is-got { visibility: hidden; animation: none; }
+.readbar__coin.is-got::after { content: none; }
+.readbar__hero .f1, .readbar__hero .f2 { animation: none; }
+.readbar__hero .f2 { opacity: 0; }
+.readbar.is-walking .readbar__hero .f1 { animation: frame 0.24s steps(1) infinite reverse; }
+.readbar.is-walking .readbar__hero .f2 { opacity: 1; animation: frame 0.24s steps(1) infinite; }
+.readbar__label { flex: none; min-width: 6em; font-size: 0.6rem; color: var(--muted); text-align: right; white-space: nowrap; line-height: 1; padding-bottom: 2px; }
+.readbar__label .pixel-coin { width: 12px; height: 12px; margin-right: 0.45em; vertical-align: -2px; }
+.readbar.is-clear .readbar__label { color: var(--accent); }
+.readbar__pop { position: absolute; bottom: 14px; font-family: 'Press Start 2P', ui-monospace, monospace; font-size: 0.5rem; color: #c87800; transform: translateX(-50%); pointer-events: none; animation: readbar-pop 0.7s steps(7) forwards; }
+@keyframes readbar-pop { to { transform: translate(-50%, -20px); opacity: 0; } }
+@media (max-width: 900px) { .readbar { top: var(--topbar-h, 3.75rem); gap: 0.6rem; } }
 .confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; pointer-events: none; z-index: 1000; overflow: visible; }
 
 /* How it works */
@@ -629,7 +664,9 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 @media (prefers-reduced-motion: reduce) {
   .scene * { animation: none !important; }
   .scene__f2 { opacity: 0; }
-  .quiz, .quiz *, .locked__padlock, .toast { animation: none !important; transition: none !important; }
+  .quiz, .quiz *, .locked__padlock, .toast, .readbar * { animation: none !important; transition: none !important; }
+  .readbar .readbar__hero .f2 { opacity: 0; }
+  .readbar__pop { display: none; }
   .coin-pop { display: none; }
 }
 
@@ -662,7 +699,7 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
   body.print-certificate .cert-print { display: block; }
   .cert-print .certificate { width: 100%; border-radius: 0; }
   dialog { display: none !important; }
-  .sidebar, .topbar, .day__foot, .skip, [data-print-cheatsheet] { display: none !important; }
+  .sidebar, .topbar, .day__foot, .skip, .readbar, [data-print-cheatsheet] { display: none !important; }
   .shell { display: block; }
   .content { padding: 0; max-width: none; }
   .scene { display: none !important; }
@@ -739,6 +776,7 @@ const JS = String.raw`
       a.setAttribute('aria-label', 'Day ' + n + ': ' + label + (done ? ' (complete)' : locked ? ' (locked)' : ''));
     });
     renderLock();
+    renderReading();
     document.querySelectorAll('[data-complete]').forEach(function (btn) {
       var done = completed.has(Number(btn.dataset.complete));
       btn.setAttribute('aria-pressed', String(done));
@@ -761,6 +799,7 @@ const JS = String.raw`
     var toggle = document.querySelector('[data-nav-toggle]');
     if (toggle) toggle.setAttribute('aria-expanded', 'false');
     if (focus) { window.scrollTo(0, 0); (isUnlocked(n) ? day : lockedPanel).querySelector('h1').focus({ preventScroll: true }); }
+    renderReading();
   }
 
   function fromHash() {
@@ -1357,6 +1396,111 @@ const JS = String.raw`
     };
   }
 
+  // ---------------------------------------------------------------- reading track
+  // The hero walks the track as the day's concepts scroll past, picking up a coin per concept.
+  // The furthest point you've read is kept per day, so coins stay collected when you come back
+  var READ = 'react-for-ember:read';
+  var readMax = {};
+  try { readMax = JSON.parse(store.get(READ) || '{}') || {}; } catch (e) { readMax = {}; }
+  var readbar = document.querySelector('[data-readbar]');
+  var readTrack = readbar.querySelector('[data-readbar-track]');
+  var readHero = readbar.querySelector('[data-readbar-hero]');
+  var readFlag = readbar.querySelector('.readbar__flag');
+  var readLabel = readbar.querySelector('[data-readbar-label]');
+  var readCoin = readbar.querySelector('[data-readbar-coin]');
+  var reading = { day: null, region: null, concepts: [], coins: [], got: 0, last: 0, raf: 0, walk: 0 };
+
+  function readFraction(region) {
+    var r = region.getBoundingClientRect();
+    // "Read" means the text has scrolled up past the lower part of the screen
+    var line = window.innerHeight * 0.8;
+    return Math.max(0, Math.min(1, (line - r.top) / Math.max(1, r.height)));
+  }
+  function coinStops(region, concepts) {
+    var r = region.getBoundingClientRect();
+    return concepts.map(function (c) { return Math.min(1, (c.getBoundingClientRect().bottom - r.top) / Math.max(1, r.height)); });
+  }
+  function renderReading(moved) {
+    if (!readbar || current === null) return;
+    var day = document.getElementById('day-' + current);
+    var region = isUnlocked(current) && day ? day.querySelector('.day__concepts') : null;
+    readbar.hidden = !region;
+    if (!region) return;
+    var concepts = Array.prototype.slice.call(region.querySelectorAll('.concept'));
+    var stops = coinStops(region, concepts);
+    if (reading.day !== current) {
+      // A new day: lay out its coins. The last concept's coin is the flag
+      reading.coins.forEach(function (c) { c.remove(); });
+      reading.coins = stops.slice(0, -1).map(function () {
+        var c = readCoin.content.firstElementChild.cloneNode(true);
+        readTrack.appendChild(c);
+        return c;
+      });
+      reading.day = current;
+      reading.region = region;
+      reading.got = -1;
+      reading.last = readFraction(region);
+      readFlag.classList.remove('is-raised');
+      moved = false;
+    }
+    var p = readFraction(region);
+    var prevMax = Number(readMax[current]) || 0;
+    var max = Math.max(prevMax, p);
+    if (max >= 0.995) max = 1;
+    if (max - prevMax >= 0.01 || (max === 1 && prevMax < 1)) {
+      readMax[current] = Math.round(max * 100) / 100;
+      store.set(READ, JSON.stringify(readMax));
+    }
+    reading.coins.forEach(function (c, i) { c.style.left = (stops[i] * 100) + '%'; });
+    var got = stops.filter(function (at) { return at <= max + 0.001; }).length;
+    if (max === 1) got = stops.length;
+    reading.coins.forEach(function (c, i) { c.classList.toggle('is-got', stops[i] <= max + 0.001 || max === 1); });
+    if (moved && got > reading.got && reading.got >= 0) {
+      if (got === stops.length) {
+        readFlag.classList.remove('is-raised');
+        void readFlag.offsetWidth;
+        readFlag.classList.add('is-raised');
+        blip(SFX.combo);
+        if (prevMax < 1) toast('Reading clear! Now build it ↓');
+      } else {
+        var pop = document.createElement('span');
+        pop.className = 'readbar__pop';
+        pop.textContent = '+1';
+        pop.style.left = (stops[got - 1] * 100) + '%';
+        readTrack.appendChild(pop);
+        window.setTimeout(function () { pop.remove(); }, 800);
+        blip(SFX.coin);
+      }
+    }
+    reading.got = got;
+    readHero.style.left = (p * 100) + '%';
+    readHero.style.transform = 'translateX(-50%)' + (p < reading.last ? ' scaleX(-1)' : '');
+    reading.last = p;
+    var clear = max === 1;
+    readbar.classList.toggle('is-clear', clear);
+    readLabel.textContent = clear ? 'Clear!' : got + '/' + stops.length;
+    readbar.setAttribute('aria-label', 'Day ' + current + ' reading progress');
+    readbar.setAttribute('aria-valuenow', String(Math.round(p * 100)));
+    readbar.setAttribute('aria-valuetext', got + ' of ' + stops.length + ' concepts read');
+  }
+  function onReadScroll() {
+    if (reading.raf) return;
+    reading.raf = window.requestAnimationFrame(function () {
+      reading.raf = 0;
+      renderReading(true);
+      if (reducedMotion()) return;
+      readbar.classList.add('is-walking');
+      window.clearTimeout(reading.walk);
+      reading.walk = window.setTimeout(function () { readbar.classList.remove('is-walking'); }, 180);
+    });
+  }
+  window.addEventListener('scroll', onReadScroll, { passive: true });
+  // On phones the track sticks just under the top bar, whatever height that ends up
+  var topbar = document.querySelector('.topbar');
+  function measureTopbar() { if (topbar && topbar.offsetHeight) document.documentElement.style.setProperty('--topbar-h', topbar.offsetHeight + 'px'); }
+  measureTopbar();
+  window.addEventListener('resize', function () { measureTopbar(); onReadScroll(); });
+
   renderCertificateButton();
   renderProgress();
   if (!store.get(INTRO_SEEN)) openIntro();
@@ -1423,6 +1567,7 @@ ${prism}
   <main id="main">
     ${scenery()}
     <div class="content">
+    ${READBAR}
     <noscript><p>JavaScript is off: every day is shown below in order, and progress tracking is disabled.</p><style>.day[hidden]{display:block}.quiz__start,.quiz__hud,.quiz__nav,.quiz__end{display:none}.quiz__game[hidden],.quiz__q[hidden],.quiz__why[hidden]{display:block}.quiz__q{margin-bottom:1.25rem}.quiz__opt[data-correct]{border-color:var(--green)}</style></noscript>
     ${daysHtml}
     <section class="panel locked" data-locked hidden aria-labelledby="locked-title">
@@ -1439,7 +1584,7 @@ ${prism}
   <div class="intro__head"><h2 id="intro-title">How this course works</h2></div>
   <p class="intro__lead">15 days, about an hour each. Every day follows the same four steps.</p>
   <ol class="intro__steps">
-    <li><span class="intro__n">1</span><div><h3>Read <small>15 min</small></h3><p>Today's ideas, with the Ember way and the React way side by side.</p></div></li>
+    <li><span class="intro__n">1</span><div><h3>Read <small>15 min</small></h3><p>Today's ideas, with the Ember way and the React way side by side. As you scroll, a little hero walks the track at the top and picks up a coin for each concept.</p></div></li>
     <li><span class="intro__n">2</span><div><h3>Build <small>35 min</small></h3>
       <p class="live-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Each time you save, the tests run and this page shows what's left.</p>
       <p class="file-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Run <code>pnpm start</code> in the repo and this page shows your tests passing as you go.</p></div></li>

@@ -21,7 +21,7 @@ Your browser opens the course at **http://localhost:1515**. Leave that terminal 
 
 Each day takes about an hour:
 
-1. **Concepts (~15 min).** Read the day on the course page. Each concept puts Ember and React side by side and is flagged 🟢 direct translation · 🟡 same goal, different mechanics · 🔴 new mental model.
+1. **Concepts (~15 min).** Read the day on the course page. Each concept puts Ember and React side by side and is flagged 🟢 direct translation · 🟡 same goal, different mechanics · 🔴 new mental model. A pixel track at the top of the page shows how far you've read: the hero walks it as you scroll and collects a coin per concept.
 2. **Hands-on (~35 min).** Open the day's files in `exercises/dayNN/` and follow the TODO comments. Every time you save, the tests run and the course page shows which ones still fail.
 3. **Check yourself (~10 min).** Press start for a short multiple-choice quiz. Each answer comes with the reasoning, and you earn coins, combos and a rank along the way.
 
