@@ -4,6 +4,31 @@ A 15-day course, at most an hour a day, for engineers who know Octane/Polaris Em
 
 Every exercise builds part of one small issue tracker, and on Day 15 you put the parts together into a running app.
 
+## What you'll build
+
+<p align="center"><img src="course/icons/tracker.png" width="800" alt="The finished issue tracker: a list of issue cards with status badges, priorities and labels, a status filter, and the selected issue open in a detail pane"></p>
+
+By Day 15 you have a working issue tracker built from your own code. You can list issues and filter them by status (the filter lives in the URL), open one in a detail pane, change its status, and create issues in a modal form. It runs against a fake in-memory API with real latency, so loading states, errors and cache updates all behave as they would against a server.
+
+Each day you build the pieces the app needs, and each piece is tested on its own:
+
+| Days | You build | Where it ends up |
+|---|---|---|
+| 1–2 | `StatusBadge`, `IssueCard`, a composable `Card` and keyed lists | the issue cards |
+| 3–4 | a board with derived state, the `NewIssueForm`, a quick search | the "New issue" form |
+| 5 | an issue detail that fetches without races, a live feed, a ticking relative time | effects you'll reuse |
+| 6 | an issue table whose rows don't re-render while you type next to it | |
+| 7–8 | context with a reducer, an external store, custom hooks (`useLocalStorage`, `useDebouncedValue`) | |
+| 9 | TanStack Query hooks with cache invalidation, plus error boundaries | all the data loading and saving |
+| 10 | React Router routes with loaders, a 404 and an error page | the URLs, the filter and the detail pane |
+| 11 | an `EditTitle` with `useActionState` and an optimistic status toggle | a stretch goal for the detail pane |
+| 12 | the issue list as Server Components with a Server Function | a Next.js version on the side |
+| 13 | tests for a `Tabs` component that catch five planted bugs | |
+| 14 | a `Modal`, an `Accordion` and a `TextField` with refs and portals | the "New issue" modal |
+| 15 | `App.tsx`: one router, one query client, everything wired together | the app itself |
+
+Days 1, 4, 9, 10 and 14 plug straight into the app. The other days teach the ideas around them: performance, state architecture, hooks, Actions, Server Components and testing. Run `pnpm dev:solutions` to see the reference version.
+
 ## Quick start
 
 You need **Node 22.22 or newer** and **pnpm** (`corepack enable` sets up the pinned version).
