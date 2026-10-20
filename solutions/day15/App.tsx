@@ -184,7 +184,9 @@ export function AppRoot({ initialEntries }: AppRootProps) {
   // mounted app, created once. Module scope would leak cache between tests.
   const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { retry: false } } }));
   const [router] = useState(() =>
-    initialEntries ? createMemoryRouter(routes, { initialEntries }) : createBrowserRouter(routes),
+    initialEntries
+      ? createMemoryRouter(routes, { initialEntries })
+      : createBrowserRouter(routes, { basename: import.meta.env.BASE_URL }),
   );
 
   return (

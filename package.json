@@ -5,6 +5,7 @@
   "type": "module",
   "description": "15-day React course for experienced Ember engineers — exercises, tests and solutions.",
   "scripts": {
+    "start": "node scripts/start.mjs",
     "dev": "vite",
     "dev:solutions": "SOLUTIONS=1 vite",
     "test": "vitest",

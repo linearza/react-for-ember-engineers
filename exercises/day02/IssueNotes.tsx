@@ -4,7 +4,7 @@ import type { Issue } from '@domain/types';
 // Each issue has a free-text note input. Type a note, then re-sort the list (the parent passes the
 // issues in a new order) and the note "jumps" to a different issue. Find and fix the bug.
 //
-// Interview question hiding in here: "Why shouldn't you use the array index as a key?"
+// Question hiding in here: "Why shouldn't you use the array index as a key?"
 
 interface IssueNotesProps {
   issues: Issue[];

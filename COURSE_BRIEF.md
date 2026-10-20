@@ -5,7 +5,7 @@
 ## 1. Goal & learner
 
 - **Learner:** a very experienced Ember engineer (Octane/Polaris era: Glimmer components, `@tracked`, services, modifiers, ember-data/WarpDrive, ember-concurrency, `.gjs`/template-tag). Knows JS/TS, testing and SPA architecture deeply. New to React.
-- **Outcome:** in 15 sessions of **≤ 60 minutes each**, the learner can (a) write idiomatic modern React 19, and (b) clearly answer interview questions about every major React concern.
+- **Outcome:** in 15 sessions of **≤ 60 minutes each**, the learner can (a) write idiomatic modern React 19, and (b) clearly explain every major React concern to a teammate.
 - **Teaching stance:** never explain what a component, route or test *is*. Explain how React's *model* differs from Ember's, and spend time where Ember instincts will mislead.
 
 ## 2. Deliverables
@@ -20,7 +20,7 @@
 |---|---|---|
 | Concept read | ~15 min | 3–6 short concept sections with code. Each section has an **Ember → React** side-by-side and a flag (below). |
 | Hands-on | ~35 min | `npm test -- dayNN` → make the failing tests pass in `exercises/dayNN/`. |
-| Interview drill | ~10 min | 4–6 questions. Model answer hidden behind a reveal. Learner answers out loud first. |
+| Check yourself | ~10 min | 4–6 questions. Model answer hidden behind a reveal. Learner answers out loud first. |
 
 **Ember flags.** Every concept gets exactly one:
 - 🟢 **Direct translation**: same idea, new syntax.
@@ -114,10 +114,10 @@ Also `freshIssues()`, which returns a `structuredClone` of the seed.
   - a "60-minute plan" strip
   - concept sections, each with its Ember flag badge and an Ember ↔ React side-by-side code block (two columns on desktop, stacked on mobile)
   - an exercise brief: the files to open, the command to run, the acceptance criteria in plain words, and a stretch goal
-  - the interview drill: each question in a `<details>` that hides the model answer
+  - the self-check: each question in a `<details>` that hides the model answer
   - a "Mark day complete" button
 - **Progress:** stored in `localStorage` with every read and write wrapped in try/catch. The page must work without it.
-- **Day 15:** a mock interview of 30 questions across all concerns, each with a hidden model answer, plus a printable "React for Ember devs" cheat sheet (the full Ember → React mapping table, §9).
+- **Day 15:** a final review of 30 questions across all concerns, each with a hidden model answer, plus a printable "React for Ember devs" cheat sheet (the full Ember → React mapping table, §9).
 - **Quality bar:**
   - Syntax-highlighted code (Prism or highlight.js from cdnjs is fine).
   - Light and dark themes via `prefers-color-scheme`.
@@ -127,7 +127,7 @@ Also `freshIssues()`, which returns a `structuredClone` of the seed.
 
 ## 8. Day-by-day spec
 
-Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the tests MUST check), and **Interview drill** (questions + key points the model answer must hit). Days 1–4 are already built and verified. Treat them as the reference for style and granularity.
+Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the tests MUST check), and **Check yourself** (questions + key points the model answer must hit). Days 1–4 are already built and verified. Treat them as the reference for style and granularity.
 
 ---
 
@@ -149,7 +149,7 @@ Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the 
 - labels line only when there are labels, with **no stray `0`**
 - `<time dateTime>` formatted `Oct 1, 2026` (UTC)
 
-**Drill**
+**Check yourself**
 - What triggers a re-render? Key points: state change, parent render, context change. Props changing is not itself the trigger.
 - Render vs commit.
 - Why `className`?
@@ -169,7 +169,7 @@ Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the 
 
 **Exercise:** `Card` (`children` plus `actions`/`footer` slots), `IssueList` (`renderItem`, `emptyState`, default "No issues"), and an `IssueNotes` **bug hunt** (the stub uses `key={index}`; the test types a note, reorders the list, and asserts the note stays with its issue).
 
-**Drill**
+**Check yourself**
 - Why not index keys?
 - How do you reset a component's state? (`key`)
 - Render props vs children vs hooks: when would you use each?
@@ -189,7 +189,7 @@ Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the 
 2. fix `toggleDone`, which mutates;
 3. fix "+2 points", which calls a non-updater setter twice and only adds 1.
 
-**Drill**
+**Check yourself**
 - Why must state be immutable?
 - What does `console.log(count)` after `setCount(count+1)` print?
 - What is batching?
@@ -217,7 +217,7 @@ Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the 
   - `FormData` read on submit; Enter submits
   - Escape clears the input via a ref
 
-**Drill**
+**Check yourself**
 - Controlled vs uncontrolled: trade-offs, and when to use each.
 - What is a synthetic event?
 - `useRef` vs `useState`.
@@ -246,7 +246,7 @@ Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the 
 - `IssueStats({issues})`: the stub computes counts with `useState` + `useEffect`.
   - Test with `<Profiler onRender>`: exactly 1 commit on mount. Solution: derive during render.
 
-**Drill**
+**Check yourself**
 - When do effects run?
 - What is the dependency array really for?
 - Why does Strict Mode run effects twice?
@@ -276,7 +276,7 @@ Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the 
 
 **Stretch:** enable `babel-plugin-react-compiler` and remove the manual memoization.
 
-**Drill**
+**Check yourself**
 - Does a re-render mean a DOM update?
 - When does `memo` fail? (New object/function props.)
 - `useMemo` vs `useCallback`.
@@ -297,7 +297,7 @@ Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the 
 - `createStore<T>()` (`getState`/`setState`/`subscribe`) + `useStore(store, selector)`.
   - Test: two consumers of different slices; updating slice A does not re-render consumer B (render counters).
 
-**Drill**
+**Check yourself**
 - Context vs an Ember service.
 - Why can context cause performance problems?
 - `useReducer` vs `useState`.
@@ -317,7 +317,7 @@ Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the 
 - `useLocalStorage(key, initial)`: lazy initial read, JSON, falls back on bad JSON, writes on set.
 - `useIssueSearch(issues)` composing the above → `{query, setQuery, results}`. Results are debounced at 200 ms.
 
-**Drill**
+**Check yourself**
 - Why can't hooks be called conditionally?
 - Do two components using the same hook share state?
 - Hooks vs HOCs vs render props.
@@ -343,7 +343,7 @@ Each day lists: **Concepts** (with flags), **Exercise** (files + behaviours the 
 - `IssueDetailBoundary({id})`: Suspense fallback "Loading issue…", detail via `useSuspenseQuery`, "Something went wrong" + reset for id `999`.
 - Tests use a fresh `QueryClient({defaultOptions:{queries:{retry:false}}})` per test.
 
-**Drill**
+**Check yourself**
 - Server state vs client state.
 - What is stale-while-revalidate?
 - How do query keys work?
@@ -378,7 +378,7 @@ Tests use `createMemoryRouter` + `RouterProvider`. They check:
 - the 404 route
 - changing the select updates the list
 
-**Drill**
+**Check yourself**
 - Loaders vs fetching in components.
 - How do nested routes and outlets work?
 - Where should filter state live, and why the URL?
@@ -407,7 +407,7 @@ Tests use `createMemoryRouter` + `RouterProvider`. They check:
   - "Status: Done" shows immediately on click, before the request resolves (use `setLatency(30)`)
   - with `failNextRequest()`, it reverts to "Status: To do" and shows "Could not update status"
 
-**Drill**
+**Check yourself**
 - What is a transition?
 - What problem do Actions solve?
 - `useActionState` vs `useState` + `onSubmit`.
@@ -440,7 +440,7 @@ Tests:
 
 **Stretch:** `npx create-next-app` and drop the folder in.
 
-**Drill**
+**Check yourself**
 - RSC vs SSR.
 - What does `'use client'` actually mean?
 - Why can't you pass a function from a server to a client component?
@@ -476,7 +476,7 @@ The learner writes `exercises/day13/tabs.checks.tsx` exporting `checks: {name, r
 
 The meta-test calls `cleanup()` between runs. The stub exports `checks = []`.
 
-**Drill**
+**Check yourself**
 - Why prefer `getByRole`?
 - What's wrong with testing implementation details?
 - `waitFor` vs `findBy`.
@@ -507,14 +507,14 @@ The meta-test calls `cleanup()` between runs. The stub exports `checks = []`.
 - `TextField({label, ref, ...inputProps})`: the parent's ref receives the `<input>`. The stub drops the ref.
 - `KeepAliveTabs`: a typed draft survives switching tabs away and back via `<Activity mode>`, and the hidden tab is not visible. The stub conditionally renders and loses state.
 
-**Drill**
+**Check yourself**
 - What are compound components and how do you build them?
 - Why portals, and how do events bubble through them? (Through the React tree, not the DOM tree.)
 - What changed with refs in 19?
 - `<Activity>` vs conditional rendering.
 - How do you type a generic component?
 
-#### Day 15 — Capstone + mock interview
+#### Day 15 — Capstone + final review
 **Exercise:** `exercises/day15/App.tsx` exports `AppRoot({initialEntries?})`:
 - memory router when entries are given, browser router otherwise
 - a `QueryClient` held in `useState`
@@ -535,7 +535,7 @@ The integration test drives:
 
 `npm run dev:solutions` shows a decent-looking running app with `styles.css` and the API latency at 300 ms.
 
-**Mock interview:** 30 questions on the course page, 2 per day's concern plus cross-cutting ones:
+**Final review:** 30 questions on the course page, 2 per day's concern plus cross-cutting ones:
 - "How would you structure state in a large app?"
 - "Walk me through what happens when setState is called."
 - "How would you migrate an Ember app to React incrementally?"

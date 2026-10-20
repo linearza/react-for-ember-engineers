@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>React for Ember Engineers</title>
-<meta name="description" content="A 15-day React 19 course for experienced Ember engineers: concepts, exercises and interview drills.">
+<meta name="description" content="A 15-day React 19 course for experienced Ember engineers: concepts, hands-on exercises and self-checks.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%20role%3D%22img%22%20aria-labelledby%3D%22t%22%3E%3Ctitle%20id%3D%22t%22%3EReact%20for%20Ember%20Engineers%3C%2Ftitle%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%2322232a%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%230e0f12%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22orbit%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%220%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23fb923c%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fbbf24%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22flame%22%20x1%3D%220%22%20y1%3D%221%22%20x2%3D%220%22%20y2%3D%220%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ea580c%22%2F%3E%3Cstop%20offset%3D%220.55%22%20stop-color%3D%22%23f97316%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fbbf24%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22glow%22%20cx%3D%220.5%22%20cy%3D%220.55%22%20r%3D%220.5%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23f97316%22%20stop-opacity%3D%220.55%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23f97316%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22112%22%20fill%3D%22url(%23bg)%22%2F%3E%3Ccircle%20cx%3D%22256%22%20cy%3D%22262%22%20r%3D%22150%22%20fill%3D%22url(%23glow)%22%2F%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22url(%23orbit)%22%20stroke-width%3D%2218%22%20stroke-linecap%3D%22round%22%3E%3Cellipse%20cx%3D%22256%22%20cy%3D%22256%22%20rx%3D%22176%22%20ry%3D%2266%22%2F%3E%3Cellipse%20cx%3D%22256%22%20cy%3D%22256%22%20rx%3D%22176%22%20ry%3D%2266%22%20transform%3D%22rotate(60%20256%20256)%22%2F%3E%3Cellipse%20cx%3D%22256%22%20cy%3D%22256%22%20rx%3D%22176%22%20ry%3D%2266%22%20transform%3D%22rotate(120%20256%20256)%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%22256%22%20cy%3D%22262%22%20r%3D%2264%22%20fill%3D%22%23141519%22%2F%3E%3Cpath%20fill%3D%22url(%23flame)%22%20transform%3D%22translate(256%20262)%20scale(1.12)%20translate(-256%20-262)%22%20d%3D%22M256%20186c10%2030%2046%2052%2046%2092a46%2046%200%200%201-92%200c0-22%2012-36%2022-46%202%2014%208%2022%2016%2026-4-26%200-50%208-72z%22%2F%3E%3Cpath%20fill%3D%22%23fde68a%22%20transform%3D%22translate(256%20262)%20scale(1.12)%20translate(-256%20-262)%22%20d%3D%22M258%20250c4%2014%2020%2022%2020%2040a22%2022%200%200%201-44%200c0-12%208-20%2014-26%200%208%204%2012%208%2014-2-10-1-20%202-28z%22%2F%3E%3C%2Fsvg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #f7f7f5; --surface: #ffffff; --surface-2: #f0f0ec; --text: #17181c; --muted: #5f636d;
@@ -167,8 +167,80 @@ noscript p { background: var(--yellow-bg); padding: 0.75rem 1rem; border-radius:
   .qa__a { padding-left: 0.9rem; }
 }
 
+/* Live mode (served by pnpm start) */
+.live-only { display: none !important; }
+body.is-live .live-only { display: revert !important; }
+body.is-live .file-only { display: none !important; }
+.live-note { margin: 0; padding: 0.6rem 0.8rem; border-radius: 8px; background: var(--accent-soft); font-size: 0.9rem; }
+.live-status { display: flex; align-items: center; gap: 0.45rem; margin: -0.5rem 0 1.25rem; font-size: 0.8rem; color: var(--muted); }
+.live-status__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px var(--green-bg); }
+.live-status.is-running .live-status__dot { background: var(--yellow); box-shadow: 0 0 0 3px var(--yellow-bg); animation: pulse 1s ease-in-out infinite; }
+.live-status.is-offline .live-status__dot { background: var(--muted); box-shadow: none; }
+@keyframes pulse { 50% { opacity: 0.35; } }
+.button--cert { width: 100%; margin: 0 0 1.25rem; border-color: var(--accent); }
+.button--cert[hidden] { display: none; }
+.button--primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.button--primary:hover { filter: brightness(1.08); }
+.live-tests { margin-top: 1.25rem; border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; background: var(--bg); }
+.live-tests__head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; font-weight: 600; }
+.live-tests__count { font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 600; }
+.live-tests__bar { flex: 1 1 120px; height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.live-tests__bar span { display: block; height: 100%; background: var(--focus); transition: width 300ms ease; }
+.live-tests.is-green { border-color: var(--green); background: var(--green-bg); }
+.live-tests.is-green .live-tests__bar span { background: var(--green); }
+.live-tests__fails { list-style: none; margin: 0.75rem 0 0; padding: 0; display: grid; gap: 0.4rem; font-size: 0.875rem; }
+.live-tests__fails li { padding-left: 1.4rem; position: relative; }
+.live-tests__fails li::before { content: '○'; position: absolute; left: 0.2rem; color: var(--muted); }
+.live-tests__fails small { display: block; color: var(--muted); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.75rem; overflow-wrap: anywhere; }
+.live-tests__more { color: var(--muted); font-size: 0.8rem; }
+.day-status { margin: 0; font-weight: 600; color: var(--muted); }
+.day-status.is-done { color: var(--green); }
+
+/* Celebration */
+dialog { color: var(--text); }
+dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px); }
+.celebrate { width: min(440px, calc(100vw - 32px)); border: 1px solid var(--border); border-radius: 18px; background: var(--surface); padding: 2rem 1.5rem 1.5rem; text-align: center; }
+.celebrate[open] { animation: pop 380ms cubic-bezier(0.2, 1.4, 0.4, 1); }
+@keyframes pop { from { transform: scale(0.85); opacity: 0; } }
+.celebrate__emoji { font-size: 3.25rem; line-height: 1; margin: 0 0 0.75rem; }
+.celebrate h2 { font-size: 1.45rem; letter-spacing: -0.02em; }
+.celebrate__text { color: var(--muted); margin: 0.5rem 0 1.25rem; }
+.celebrate__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; }
+.pips { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.pips li { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 0.62rem; font-weight: 700; background: var(--surface-2); color: var(--muted); }
+.pips li.is-done { background: var(--accent); color: #fff; }
+.pips li.is-new { animation: pip 700ms ease 200ms both; }
+@keyframes pip { 0% { transform: scale(0.4); } 60% { transform: scale(1.35); } }
+.confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; pointer-events: none; z-index: 1000; overflow: visible; }
+
+/* Certificate: always on paper, whatever the theme */
+.cert-dialog { width: min(900px, calc(100vw - 32px)); max-height: calc(100vh - 32px); border: 0; border-radius: 16px; padding: 1rem; background: var(--surface); }
+.cert-dialog__controls { display: flex; flex-wrap: wrap; align-items: end; gap: 0.6rem; margin-top: 1rem; }
+.field { display: grid; gap: 0.25rem; font-size: 0.8rem; font-weight: 600; color: var(--muted); flex: 1 1 220px; }
+.field input { font: inherit; font-size: 1rem; font-weight: 400; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 9px; padding: 0.5rem 0.7rem; }
+.certificate { container-type: inline-size; aspect-ratio: 297 / 210; background: #fffaf2; color: #1c1917; padding: 3.2cqi; border-radius: 6px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+.certificate__inner { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 0.35cqi solid #c2410c; outline: 0.12cqi solid #c2410c; outline-offset: -1.1cqi; background: radial-gradient(ellipse at 50% 0%, #fff1e3 0%, transparent 60%), radial-gradient(ellipse at 50% 100%, #fdf2e4 0%, transparent 55%); }
+.certificate__inner::before, .certificate__inner::after { content: ''; position: absolute; width: 7cqi; height: 7cqi; border: 0.35cqi solid #f59e0b; }
+.certificate__inner::before { top: 2cqi; left: 2cqi; border-right: 0; border-bottom: 0; }
+.certificate__inner::after { bottom: 2cqi; right: 2cqi; border-left: 0; border-top: 0; }
+.certificate__logo svg { display: block; width: 8.5cqi; height: 8.5cqi; margin: 0 auto 1.6cqi; }
+.certificate p { margin: 0; }
+.certificate__kicker { font-size: 1.45cqi; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: #c2410c; }
+.certificate__lead { font-size: 1.6cqi; color: #57534e; margin-top: 1.6cqi !important; }
+.certificate__name { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 500; font-size: 6.2cqi; line-height: 1.15; color: #1c1917; margin-top: 0.8cqi !important; padding: 0 4cqi 0.6cqi; border-bottom: 0.12cqi solid #d6d3d1; min-width: 45cqi; overflow-wrap: anywhere; }
+.certificate__course { font-size: 3.6cqi; font-weight: 800; letter-spacing: -0.02em; margin-top: 0.6cqi !important; }
+.certificate__meta { font-size: 1.55cqi; color: #57534e; margin-top: 0.8cqi !important; }
+.certificate__foot { display: flex; gap: 5cqi; margin-top: 3.4cqi; }
+.certificate__foot p { display: grid; gap: 0.3cqi; min-width: 16cqi; padding-top: 0.8cqi; border-top: 0.12cqi solid #d6d3d1; font-size: 1.6cqi; font-weight: 600; font-variant-numeric: tabular-nums; }
+.certificate__foot small { font-size: 1.1cqi; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #78716c; }
+.cert-print { display: none; }
+
 /* Print */
 @media print {
+  body.print-certificate > :not(.cert-print) { display: none !important; }
+  body.print-certificate .cert-print { display: block; }
+  .cert-print .certificate { width: 100%; border-radius: 0; }
+  dialog { display: none !important; }
   .sidebar, .topbar, .day__foot, .skip, [data-print-cheatsheet] { display: none !important; }
   .shell { display: block; }
   main { padding: 0; max-width: none; }
@@ -199,8 +271,11 @@ noscript p { background: var(--yellow-bg); padding: 0.75rem 1rem; border-radius:
   <div class="progress__label"><span>Progress</span><span data-progress-text>0 / 15 complete</span></div>
   <div class="progress__bar" role="progressbar" aria-label="Days complete" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0"><div class="progress__fill"></div></div>
 </div>
-    <nav aria-label="Course days"><ol class="nav"><li class="nav__week"><h2 class="nav__heading">Week 1 · Core mental model</h2><ol><li><a href="#day-1" data-nav="1"><span class="nav__n">1</span><span class="nav__t">JSX, components, rendering</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-2" data-nav="2"><span class="nav__n">2</span><span class="nav__t">Props, children, composition, lists &amp; keys</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-3" data-nav="3"><span class="nav__n">3</span><span class="nav__t">State: useState, immutability, derived state</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-4" data-nav="4"><span class="nav__n">4</span><span class="nav__t">Events &amp; forms: controlled vs uncontrolled, refs</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-5" data-nav="5"><span class="nav__n">5</span><span class="nav__t">Effects: synchronising with external systems</span><span class="nav__done" aria-hidden="true">✓</span></a></li></ol></li><li class="nav__week"><h2 class="nav__heading">Week 2 · Architecture</h2><ol><li><a href="#day-6" data-nav="6"><span class="nav__n">6</span><span class="nav__t">Rendering performance: reconciliation, memoization, React Compiler</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-7" data-nav="7"><span class="nav__n">7</span><span class="nav__t">State architecture: Context, reducers, external stores</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-8" data-nav="8"><span class="nav__n">8</span><span class="nav__t">Custom hooks</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-9" data-nav="9"><span class="nav__n">9</span><span class="nav__t">Data fetching: TanStack Query, Suspense, error boundaries</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-10" data-nav="10"><span class="nav__n">10</span><span class="nav__t">Routing with React Router 8 (data mode)</span><span class="nav__done" aria-hidden="true">✓</span></a></li></ol></li><li class="nav__week"><h2 class="nav__heading">Week 3 · Modern &amp; advanced</h2><ol><li><a href="#day-11" data-nav="11"><span class="nav__n">11</span><span class="nav__t">React 19 Actions &amp; concurrent features</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-12" data-nav="12"><span class="nav__n">12</span><span class="nav__t">Server Components &amp; the Next.js App Router</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-13" data-nav="13"><span class="nav__n">13</span><span class="nav__t">Testing React well</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-14" data-nav="14"><span class="nav__n">14</span><span class="nav__t">Patterns, TypeScript &amp; modern APIs</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-15" data-nav="15"><span class="nav__n">15</span><span class="nav__t">Capstone + mock interview</span><span class="nav__done" aria-hidden="true">✓</span></a></li></ol></li></ol></nav>
+    <p class="live-status live-only" data-live-status><span class="live-status__dot"></span><span data-live-status-text>Connecting…</span></p>
+    <button type="button" class="button button--cert" data-open-certificate hidden>🎓 Your certificate</button>
+    <nav aria-label="Course days"><ol class="nav"><li class="nav__week"><h2 class="nav__heading">Week 1 · Core mental model</h2><ol><li><a href="#day-1" data-nav="1"><span class="nav__n">1</span><span class="nav__t">JSX, components, rendering</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-2" data-nav="2"><span class="nav__n">2</span><span class="nav__t">Props, children, composition, lists &amp; keys</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-3" data-nav="3"><span class="nav__n">3</span><span class="nav__t">State: useState, immutability, derived state</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-4" data-nav="4"><span class="nav__n">4</span><span class="nav__t">Events &amp; forms: controlled vs uncontrolled, refs</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-5" data-nav="5"><span class="nav__n">5</span><span class="nav__t">Effects: synchronising with external systems</span><span class="nav__done" aria-hidden="true">✓</span></a></li></ol></li><li class="nav__week"><h2 class="nav__heading">Week 2 · Architecture</h2><ol><li><a href="#day-6" data-nav="6"><span class="nav__n">6</span><span class="nav__t">Rendering performance: reconciliation, memoization, React Compiler</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-7" data-nav="7"><span class="nav__n">7</span><span class="nav__t">State architecture: Context, reducers, external stores</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-8" data-nav="8"><span class="nav__n">8</span><span class="nav__t">Custom hooks</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-9" data-nav="9"><span class="nav__n">9</span><span class="nav__t">Data fetching: TanStack Query, Suspense, error boundaries</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-10" data-nav="10"><span class="nav__n">10</span><span class="nav__t">Routing with React Router 8 (data mode)</span><span class="nav__done" aria-hidden="true">✓</span></a></li></ol></li><li class="nav__week"><h2 class="nav__heading">Week 3 · Modern &amp; advanced</h2><ol><li><a href="#day-11" data-nav="11"><span class="nav__n">11</span><span class="nav__t">React 19 Actions &amp; concurrent features</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-12" data-nav="12"><span class="nav__n">12</span><span class="nav__t">Server Components &amp; the Next.js App Router</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-13" data-nav="13"><span class="nav__n">13</span><span class="nav__t">Testing React well</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-14" data-nav="14"><span class="nav__n">14</span><span class="nav__t">Patterns, TypeScript &amp; modern APIs</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-15" data-nav="15"><span class="nav__n">15</span><span class="nav__t">Capstone + final review</span><span class="nav__done" aria-hidden="true">✓</span></a></li></ol></li></ol></nav>
     <div class="sidebar__foot">
+      <p class="file-only">Tip: run <code>pnpm start</code> in the repo and open <a href="http://localhost:1515/">localhost:1515</a>. Days then complete by themselves as your tests pass.</p>
       <p>Exercises, tests and solutions: <a href="https://github.com/linearza/react-for-ember-engineers">github.com/linearza/react-for-ember-engineers</a></p>
       <p><span class="flag flag--green">🟢 translate</span> <span class="flag flag--yellow">🟡 re-learn</span> <span class="flag flag--red">🔴 unlearn</span></p>
     </div>
@@ -213,7 +288,7 @@ noscript p { background: var(--yellow-bg); padding: 0.75rem 1rem; border-radius:
     <p class="eyebrow">Week 1 · Core mental model · Day 1</p>
     <h1 id="day-1-title" tabindex="-1">JSX, components, rendering</h1>
     <p class="tagline">There is no autotracking. A component is a function that React calls again whenever anything upstream might have changed.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d1-concepts"><h2 id="d1-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d1-c0">
@@ -355,10 +430,14 @@ export const formatDate = (iso: string) =&gt; fmt.format(new Date(iso));
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day01</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day01</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day01/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="1" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>StatusBadge</code> renders the status label in a <code>&lt;span&gt;</code> with classes <code>badge badge--{status}</code>.</li><li><code>IssueCard</code> is an <code>&lt;article&gt;</code> labelled by its <code>&lt;h3&gt;</code> title (<code>aria-labelledby</code>).</li><li>Urgent issues show <code>🔥 Urgent</code>; other priorities show just the label.</li><li>The assignee name is shown, or <code>Unassigned</code> when there is none.</li><li>A <code>Labels: bug, auth</code> line appears only when there are labels, with <strong>no stray 0</strong>.</li><li>Dates render as <code>&lt;time dateTime="…"&gt;Oct 1, 2026&lt;/time&gt;</code> (UTC).</li></ul>
   <h3>Stretch</h3>
@@ -366,7 +445,7 @@ export const formatDate = (iso: string) =&gt; fmt.format(new Date(iso));
 </section>
   
 <section class="panel" aria-labelledby="d1-drill">
-  <h2 id="d1-drill">Interview drill</h2>
+  <h2 id="d1-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -392,7 +471,8 @@ export const formatDate = (iso: string) =&gt; fmt.format(new Date(iso));
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="1" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="1" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="1"></p>
     <nav class="pager" aria-label="Day navigation"><span></span><a class="pager__link" href="#day-2">Day 2 →</a></nav>
   </footer>
 </article>
@@ -401,7 +481,7 @@ export const formatDate = (iso: string) =&gt; fmt.format(new Date(iso));
     <p class="eyebrow">Week 1 · Core mental model · Day 2</p>
     <h1 id="day-2-title" tabindex="-1">Props, children, composition, lists &amp; keys</h1>
     <p class="tagline">Args become props and blocks become children. Keys are where Ember instincts quietly fail.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d2-concepts"><h2 id="d2-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d2-c0">
@@ -533,10 +613,14 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day02</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day02</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day02/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="2" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>Card</code> renders a <code>&lt;section&gt;</code> labelled by its title, with <code>children</code> in the body.</li><li><code>actions</code> and <code>footer</code> slots render in their wrappers <strong>only</strong> when given.</li><li><code>IssueList</code> renders titles by default, or <code>renderItem(issue, index)</code> when given.</li><li>An empty list shows <code>emptyState</code>, or the default "No issues".</li><li><strong>Bug hunt:</strong> in <code>IssueNotes</code>, a note typed for one issue must stay with that issue after the list is reordered.</li></ul>
   <h3>Stretch</h3>
@@ -544,7 +628,7 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
 </section>
   
 <section class="panel" aria-labelledby="d2-drill">
-  <h2 id="d2-drill">Interview drill</h2>
+  <h2 id="d2-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -566,7 +650,8 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="2" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="2" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="2"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-1">← Day 1</a><a class="pager__link" href="#day-3">Day 3 →</a></nav>
   </footer>
 </article>
@@ -575,7 +660,7 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
     <p class="eyebrow">Week 1 · Core mental model · Day 3</p>
     <h1 id="day-3-title" tabindex="-1">State: useState, immutability, derived state</h1>
     <p class="tagline">Mutation is invisible to React. State is a snapshot, setters schedule a new render, and derived values belong in render.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d3-concepts"><h2 id="d3-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d3-c0">
@@ -714,10 +799,14 @@ const [draft, setDraft] = useState(() =&gt; JSON.parse(localStorage.draft ?? &#x
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day03</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day03</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day03/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="3" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li>Status filter buttons (<code>aria-pressed</code>) and a case-insensitive search filter the list together, <strong>derived during render</strong> with no extra state.</li><li>"Showing X of Y" reflects the derived list.</li><li><code>toggleDone</code> works on deep-frozen data: an immutable update, no mutation.</li><li>"+2 points" adds 2. Fix it inside <code>addPoint</code> without changing the <code>onClick</code>.</li></ul>
   <h3>Stretch</h3>
@@ -725,7 +814,7 @@ const [draft, setDraft] = useState(() =&gt; JSON.parse(localStorage.draft ?? &#x
 </section>
   
 <section class="panel" aria-labelledby="d3-drill">
-  <h2 id="d3-drill">Interview drill</h2>
+  <h2 id="d3-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -755,7 +844,8 @@ const [draft, setDraft] = useState(() =&gt; JSON.parse(localStorage.draft ?? &#x
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="3" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="3" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="3"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-2">← Day 2</a><a class="pager__link" href="#day-4">Day 4 →</a></nav>
   </footer>
 </article>
@@ -764,7 +854,7 @@ const [draft, setDraft] = useState(() =&gt; JSON.parse(localStorage.draft ?? &#x
     <p class="eyebrow">Week 1 · Core mental model · Day 4</p>
     <h1 id="day-4-title" tabindex="-1">Events &amp; forms: controlled vs uncontrolled, refs</h1>
     <p class="tagline">Two ways to own an input's value: React owns it, or the DOM does. Choose deliberately.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d4-concepts"><h2 id="d4-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d4-c0">
@@ -870,10 +960,14 @@ inputRef.current?.focus();</code></pre></figure>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day04</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day04</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day04/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="4" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>NewIssueForm</code> is fully controlled: a live <code>n/80</code> counter, Priority defaults to Medium, and Assignee offers "Unassigned" (<code>""</code>) plus each user.</li><li>A title under 3 characters (trimmed) shows <code>role="alert"</code> "Title must be at least 3 characters" and does not submit.</li><li>Valid submit calls <code>onCreate</code> with a normalised <code>NewIssue</code> (trimmed title, <code>assigneeId: null</code> when unassigned, labels split, trimmed and filtered), then resets every field.</li><li><code>QuickSearch</code> is uncontrolled: a <code>role="search"</code> form read with <code>FormData</code>, Enter submits, Escape clears the input through a ref.</li></ul>
   <h3>Stretch</h3>
@@ -881,7 +975,7 @@ inputRef.current?.focus();</code></pre></figure>
 </section>
   
 <section class="panel" aria-labelledby="d4-drill">
-  <h2 id="d4-drill">Interview drill</h2>
+  <h2 id="d4-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -903,7 +997,8 @@ inputRef.current?.focus();</code></pre></figure>
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="4" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="4" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="4"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-3">← Day 3</a><a class="pager__link" href="#day-5">Day 5 →</a></nav>
   </footer>
 </article>
@@ -912,7 +1007,7 @@ inputRef.current?.focus();</code></pre></figure>
     <p class="eyebrow">Week 1 · Core mental model · Day 5</p>
     <h1 id="day-5-title" tabindex="-1">Effects: synchronising with external systems</h1>
     <p class="tagline"><code>useEffect</code> is not <code>didInsert</code>. It keeps something outside React in sync with your props and state, and most code that reaches for it shouldn't.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d5-concepts"><h2 id="d5-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d5-c0">
@@ -1045,10 +1140,14 @@ useEffect(() =&gt; {
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day05</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day05</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day05/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="5" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>IssueDetail</code>: a slow response for the previous id never overwrites the current one; a missing issue shows <code>role="alert"</code> "Could not load issue".</li><li><code>RelativeTime</code>: re-renders every 60 s, and leaves <strong>zero</strong> timers behind after unmount.</li><li><code>LiveIssueFeed</code>: toggling <code>muted</code> or passing a new <code>onNotify</code> does <strong>not</strong> resubscribe; changing <code>channel</code> does; the latest <code>onNotify</code> is always called.</li><li><code>IssueStats</code>: exactly <strong>one</strong> commit on mount (measured with <code>&lt;Profiler&gt;</code>), meaning no effect at all.</li></ul>
   <h3>Stretch</h3>
@@ -1056,7 +1155,7 @@ useEffect(() =&gt; {
 </section>
   
 <section class="panel" aria-labelledby="d5-drill">
-  <h2 id="d5-drill">Interview drill</h2>
+  <h2 id="d5-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -1090,7 +1189,8 @@ useEffect(() =&gt; {
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="5" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="5" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="5"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-4">← Day 4</a><a class="pager__link" href="#day-6">Day 6 →</a></nav>
   </footer>
 </article>
@@ -1099,7 +1199,7 @@ useEffect(() =&gt; {
     <p class="eyebrow">Week 2 · Architecture · Day 6</p>
     <h1 id="day-6-title" tabindex="-1">Rendering performance: reconciliation, memoization, React Compiler</h1>
     <p class="tagline">Glimmer updates what changed. React re-runs what <em>might</em> have changed, and lets you (or the Compiler) prove it didn't.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d6-concepts"><h2 id="d6-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d6-c0">
@@ -1239,10 +1339,14 @@ export default defineConfig({
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day06</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day06</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day06/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="6" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li>Typing three characters in "Draft note" causes <strong>zero</strong> <code>IssueRow</code> renders (watch <code>renderLog</code>).</li><li>Selecting row 2 re-renders only <code>['2']</code>. Then selecting row 4 re-renders only <code>['2', '4']</code>.</li><li>When one issue object changes, only that row re-renders.</li></ul>
   <h3>Stretch</h3>
@@ -1250,7 +1354,7 @@ export default defineConfig({
 </section>
   
 <section class="panel" aria-labelledby="d6-drill">
-  <h2 id="d6-drill">Interview drill</h2>
+  <h2 id="d6-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -1276,7 +1380,8 @@ export default defineConfig({
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="6" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="6" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="6"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-5">← Day 5</a><a class="pager__link" href="#day-7">Day 7 →</a></nav>
   </footer>
 </article>
@@ -1285,7 +1390,7 @@ export default defineConfig({
     <p class="eyebrow">Week 2 · Architecture · Day 7</p>
     <h1 id="day-7-title" tabindex="-1">State architecture: Context, reducers, external stores</h1>
     <p class="tagline">There is no container. "Services" are values placed in the tree, and a context is a transport, not a store.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d7-concepts"><h2 id="d7-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d7-c0">
@@ -1404,10 +1509,14 @@ const status = useStore(filterStore, (s) =&gt; s.status);
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day07</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day07</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day07/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="7" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>issuesReducer</code> handles <code>added</code>, <code>updated</code>, <code>removed</code> and <code>statusChanged</code> <strong>immutably</strong> (state is frozen), keeps untouched items' identity, and throws on unknown actions.</li><li><code>useIssues()</code> throws "useIssues must be used inside &lt;IssuesProvider&gt;" with no provider.</li><li>The context value is memoized: an unrelated provider re-render doesn't re-render a <code>memo</code>'d consumer.</li><li><code>createStore</code> notifies subscribers. <code>useStore(store, selector)</code> re-renders a consumer only when its slice changes.</li></ul>
   <h3>Stretch</h3>
@@ -1415,7 +1524,7 @@ const status = useStore(filterStore, (s) =&gt; s.status);
 </section>
   
 <section class="panel" aria-labelledby="d7-drill">
-  <h2 id="d7-drill">Interview drill</h2>
+  <h2 id="d7-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -1441,7 +1550,8 @@ const status = useStore(filterStore, (s) =&gt; s.status);
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="7" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="7" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="7"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-6">← Day 6</a><a class="pager__link" href="#day-8">Day 8 →</a></nav>
   </footer>
 </article>
@@ -1450,7 +1560,7 @@ const status = useStore(filterStore, (s) =&gt; s.status);
     <p class="eyebrow">Week 2 · Architecture · Day 8</p>
     <h1 id="day-8-title" tabindex="-1">Custom hooks</h1>
     <p class="tagline">A hook is just a function that calls hooks. That makes it the unit of reuse for stateful logic.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d8-concepts"><h2 id="d8-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d8-c0">
@@ -1549,10 +1659,14 @@ expect(result.current).toBe(&#x27;ab&#x27;);</code></pre></figure>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day08</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day08</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day08/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="8" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>useToggle(initial)</code> returns <code>[on, toggle, set]</code>, and <code>toggle</code> keeps the same identity across renders.</li><li><code>useDebouncedValue(value, ms)</code> only updates after the value has stopped changing for <code>ms</code> (fake timers).</li><li><code>useLocalStorage(key, initial)</code> reads lazily (once), falls back on bad JSON, and writes JSON on set (including updater functions).</li><li><code>useIssueSearch(issues)</code> composes both: results debounced by 200 ms, query persisted and restored on mount.</li></ul>
   <h3>Stretch</h3>
@@ -1560,7 +1674,7 @@ expect(result.current).toBe(&#x27;ab&#x27;);</code></pre></figure>
 </section>
   
 <section class="panel" aria-labelledby="d8-drill">
-  <h2 id="d8-drill">Interview drill</h2>
+  <h2 id="d8-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -1582,7 +1696,8 @@ expect(result.current).toBe(&#x27;ab&#x27;);</code></pre></figure>
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="8" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="8" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="8"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-7">← Day 7</a><a class="pager__link" href="#day-9">Day 9 →</a></nav>
   </footer>
 </article>
@@ -1591,7 +1706,7 @@ expect(result.current).toBe(&#x27;ab&#x27;);</code></pre></figure>
     <p class="eyebrow">Week 2 · Architecture · Day 9</p>
     <h1 id="day-9-title" tabindex="-1">Data fetching: TanStack Query, Suspense, error boundaries</h1>
     <p class="tagline">Server state is a cache you don't own. Stop putting it in useState.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d9-concepts"><h2 id="d9-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d9-c0">
@@ -1714,10 +1829,14 @@ function IssueDetail({ id }: { id: string }) {
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day09</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day09</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day09/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="9" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>issueKeys</code> is a hierarchical factory, and every filter gets its own cache entry.</li><li><code>IssueListScreen</code> shows "Loading issues…", then the list. On error it shows a <code>role="alert"</code> with a "Retry" button that refetches.</li><li>Changing an issue's status (<code>Status for {title}</code>) mutates, invalidates <code>issueKeys.all</code>, and the issue drops out of a filtered list.</li><li><code>ErrorBoundary</code> renders <code>fallback({ error, reset })</code>, and <code>reset</code> re-renders the children.</li><li><code>IssueDetailBoundary</code> suspends ("Loading issue…"), shows "Something went wrong" for id 999, and "Try again" resets the boundary <strong>and</strong> the query.</li></ul>
   <h3>Stretch</h3>
@@ -1725,7 +1844,7 @@ function IssueDetail({ id }: { id: string }) {
 </section>
   
 <section class="panel" aria-labelledby="d9-drill">
-  <h2 id="d9-drill">Interview drill</h2>
+  <h2 id="d9-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -1759,7 +1878,8 @@ function IssueDetail({ id }: { id: string }) {
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="9" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="9" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="9"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-8">← Day 8</a><a class="pager__link" href="#day-10">Day 10 →</a></nav>
   </footer>
 </article>
@@ -1768,7 +1888,7 @@ function IssueDetail({ id }: { id: string }) {
     <p class="eyebrow">Week 2 · Architecture · Day 10</p>
     <h1 id="day-10-title" tabindex="-1">Routing with React Router 8 (data mode)</h1>
     <p class="tagline">Closest to home. Route objects, loaders and outlets map almost 1:1 to the Ember router.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d10-concepts"><h2 id="d10-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d10-c0">
@@ -1905,10 +2025,14 @@ navigate(&#x27;/issues&#x27;);</code></pre></figure>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day10</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day10</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day10/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="10" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>/</code> redirects to <code>/issues</code> (an index route with a <code>redirect()</code> loader).</li><li>The issues loader reads <code>?status=</code>. The "Status filter" select updates the search param, and the list follows.</li><li>Clicking an issue shows its detail <strong>nested</strong> inside the layout, next to the still-visible list, and keeps the filter in the URL.</li><li><code>/issues/999</code> shows a nested "Issue not found" (thrown as <code>data(…, { status: 404 })</code>) while the list stays visible.</li><li>Unknown URLs render "Page not found" inside the layout.</li></ul>
   <h3>Stretch</h3>
@@ -1916,7 +2040,7 @@ navigate(&#x27;/issues&#x27;);</code></pre></figure>
 </section>
   
 <section class="panel" aria-labelledby="d10-drill">
-  <h2 id="d10-drill">Interview drill</h2>
+  <h2 id="d10-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -1942,7 +2066,8 @@ navigate(&#x27;/issues&#x27;);</code></pre></figure>
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="10" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="10" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="10"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-9">← Day 9</a><a class="pager__link" href="#day-11">Day 11 →</a></nav>
   </footer>
 </article>
@@ -1951,7 +2076,7 @@ navigate(&#x27;/issues&#x27;);</code></pre></figure>
     <p class="eyebrow">Week 3 · Modern &amp; advanced · Day 11</p>
     <h1 id="day-11-title" tabindex="-1">React 19 Actions &amp; concurrent features</h1>
     <p class="tagline">Transitions mark updates as interruptible, and Actions are async transitions with pending, error and optimistic state built in. This is the closest React gets to ember-concurrency.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d11-concepts"><h2 id="d11-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d11-c0">
@@ -2090,10 +2215,14 @@ startTransition(() =&gt; setId(nextId)); // animates</code></pre></figure>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day11</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day11</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day11/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="11" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>EditTitle</code> uses <code>useActionState</code> + <code>&lt;form action&gt;</code>. While saving, the button reads "Saving…" and is disabled (<code>useFormStatus</code> in <code>SaveButton</code>).</li><li>On success the heading shows the new title. On a 422, <code>role="alert"</code> shows the server message and the old title stays.</li><li>A successful save after a failed one clears the error.</li><li><code>StatusToggle</code> shows "Status: Done" <strong>immediately</strong> on click, before the server answers (<code>useOptimistic</code>).</li><li>With <code>failNextRequest()</code> it reverts to "Status: To do" and shows "Could not update status".</li></ul>
   <h3>Stretch</h3>
@@ -2101,7 +2230,7 @@ startTransition(() =&gt; setId(nextId)); // animates</code></pre></figure>
 </section>
   
 <section class="panel" aria-labelledby="d11-drill">
-  <h2 id="d11-drill">Interview drill</h2>
+  <h2 id="d11-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -2127,7 +2256,8 @@ startTransition(() =&gt; setId(nextId)); // animates</code></pre></figure>
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="11" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="11" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="11"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-10">← Day 10</a><a class="pager__link" href="#day-12">Day 12 →</a></nav>
   </footer>
 </article>
@@ -2136,7 +2266,7 @@ startTransition(() =&gt; setId(nextId)); // animates</code></pre></figure>
     <p class="eyebrow">Week 3 · Modern &amp; advanced · Day 12</p>
     <h1 id="day-12-title" tabindex="-1">Server Components &amp; the Next.js App Router</h1>
     <p class="tagline">The biggest model shift in the course. Components can run only on the server, and the boundary between server and client is something you design.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d12-concepts"><h2 id="d12-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d12-c0">
@@ -2262,10 +2392,14 @@ app/issues/actions.ts     &#x27;use server&#x27;</code></pre></figure>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day12</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day12</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day12/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="12" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li>Every file that uses hooks or <code>on*</code> handlers starts with <code>'use client'</code> (the filter bar), and nothing else does.</li><li><code>page.tsx</code> has no <code>'use client'</code>, is an <code>async</code> default export, and has no <code>useState</code> or <code>useEffect</code>.</li><li><code>actions.ts</code> starts with <code>'use server'</code>.</li><li><code>render(await IssuesPage({ searchParams: Promise.resolve({ status: 'todo' }) }))</code> shows only to-do issues and the filter bar. An invalid status shows everything.</li><li><code>updateStatusAction(formData)</code> updates the db, and rejects an invalid status.</li></ul>
   <h3>Stretch</h3>
@@ -2273,7 +2407,7 @@ app/issues/actions.ts     &#x27;use server&#x27;</code></pre></figure>
 </section>
   
 <section class="panel" aria-labelledby="d12-drill">
-  <h2 id="d12-drill">Interview drill</h2>
+  <h2 id="d12-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -2299,7 +2433,8 @@ app/issues/actions.ts     &#x27;use server&#x27;</code></pre></figure>
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="12" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="12" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="12"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-11">← Day 11</a><a class="pager__link" href="#day-13">Day 13 →</a></nav>
   </footer>
 </article>
@@ -2308,7 +2443,7 @@ app/issues/actions.ts     &#x27;use server&#x27;</code></pre></figure>
     <p class="eyebrow">Week 3 · Modern &amp; advanced · Day 13</p>
     <h1 id="day-13-title" tabindex="-1">Testing React well</h1>
     <p class="tagline">Same philosophy as @ember/test-helpers: test what the user sees. The difference is that nothing waits for "settled". You wait for the outcome.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d13-concepts"><h2 id="d13-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d13-c0">
@@ -2411,10 +2546,14 @@ expect(screen.getByRole(&#x27;tab&#x27;, { name: &#x27;Closed&#x27; })).toHaveFo
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day13</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day13</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day13/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="13" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li>Export at least <strong>4</strong> checks, each <code>{ name, run(Tabs) }</code>, that render the component and assert behaviour.</li><li>Every check <strong>passes</strong> against the real <code>Tabs</code>.</li><li>Every one of the 5 mutants in <code>src/day13/mutants/</code> <strong>fails</strong> at least one check. Don't peek at the mutants until you've written your checks.</li></ul>
   <h3>Stretch</h3>
@@ -2422,7 +2561,7 @@ expect(screen.getByRole(&#x27;tab&#x27;, { name: &#x27;Closed&#x27; })).toHaveFo
 </section>
   
 <section class="panel" aria-labelledby="d13-drill">
-  <h2 id="d13-drill">Interview drill</h2>
+  <h2 id="d13-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -2452,7 +2591,8 @@ expect(screen.getByRole(&#x27;tab&#x27;, { name: &#x27;Closed&#x27; })).toHaveFo
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="13" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="13" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="13"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-12">← Day 12</a><a class="pager__link" href="#day-14">Day 14 →</a></nav>
   </footer>
 </article>
@@ -2461,7 +2601,7 @@ expect(screen.getByRole(&#x27;tab&#x27;, { name: &#x27;Closed&#x27; })).toHaveFo
     <p class="eyebrow">Week 3 · Modern &amp; advanced · Day 14</p>
     <h1 id="day-14-title" tabindex="-1">Patterns, TypeScript &amp; modern APIs</h1>
     <p class="tagline">Patterns you already know from Ember, in React's vocabulary, plus the APIs React 19 added.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Interview drill</span></li></ol>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">15 min</span><span class="plan__label">Concepts</span></li><li><span class="plan__min">35 min</span><span class="plan__label">Hands-on</span></li><li><span class="plan__min">10 min</span><span class="plan__label">Check yourself</span></li></ol>
   </header>
   <section aria-labelledby="d14-concepts"><h2 id="d14-concepts">Concepts</h2>
 <section class="concept" aria-labelledby="d14-c0">
@@ -2607,10 +2747,14 @@ useEffect(() =&gt; {
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day14</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day14</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day14/</code> and watch your results below.</p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="14" aria-live="polite"></div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>Accordion</code> (+ <code>.Item</code>, <code>.Trigger</code>, <code>.Panel</code>): one item open at a time, <code>aria-expanded</code>, closed panels <code>hidden</code>, panels labelled by their trigger, <code>defaultValue</code>. The parts throw outside <code>&lt;Accordion&gt;</code>.</li><li><code>Modal</code> portals to <code>document.body</code> (not inside the render container), with <code>role="dialog"</code>, <code>aria-modal</code>, and a label from the title.</li><li>Escape calls <code>onClose</code>. Focus moves into the dialog on open and returns to the opener on close. Clicks inside still bubble to React ancestors.</li><li><code>TextField</code> passes <code>ref</code> (a plain prop) to its <code>&lt;input&gt;</code>.</li><li><code>KeepAliveTabs</code>: a typed draft survives switching tabs away and back (<code>&lt;Activity&gt;</code>), and the hidden tab isn't visible.</li></ul>
   <h3>Stretch</h3>
@@ -2618,7 +2762,7 @@ useEffect(() =&gt; {
 </section>
   
 <section class="panel" aria-labelledby="d14-drill">
-  <h2 id="d14-drill">Interview drill</h2>
+  <h2 id="d14-drill">Check yourself</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
   <div class="qas">
 <details class="qa">
@@ -2644,16 +2788,17 @@ useEffect(() =&gt; {
 </section>
   
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="14" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="14" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="14"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-13">← Day 13</a><a class="pager__link" href="#day-15">Day 15 →</a></nav>
   </footer>
 </article>
 <article class="day" id="day-15" data-day="15" hidden aria-labelledby="day-15-title">
   <header class="day__head">
     <p class="eyebrow">Week 3 · Modern &amp; advanced · Day 15</p>
-    <h1 id="day-15-title" tabindex="-1">Capstone + mock interview</h1>
-    <p class="tagline">Assemble the app from your own parts, then run the full mock interview out loud.</p>
-    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">35 min</span><span class="plan__label">Capstone</span></li><li><span class="plan__min">20 min</span><span class="plan__label">Mock interview</span></li><li><span class="plan__min">5 min</span><span class="plan__label">Cheat sheet</span></li></ol>
+    <h1 id="day-15-title" tabindex="-1">Capstone + final review</h1>
+    <p class="tagline">Assemble the app from your own parts, then work through the final review out loud.</p>
+    <ol class="plan" aria-label="60-minute plan"><li><span class="plan__min">35 min</span><span class="plan__label">Capstone</span></li><li><span class="plan__min">20 min</span><span class="plan__label">Final review</span></li><li><span class="plan__min">5 min</span><span class="plan__label">Cheat sheet</span></li></ol>
   </header>
   
   
@@ -2667,20 +2812,24 @@ useEffect(() =&gt; {
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>pnpm test day15</code></pre>
-      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
+      <div class="file-only">
+        <pre class="cmd"><code>pnpm test day15</code></pre>
+        <p class="muted small">Or run <code>pnpm start</code> and this page tracks your tests live.</p>
+      </div>
+      <p class="live-only live-note">Already running in your <code>pnpm start</code> terminal. Save a file in <code>exercises/day15/</code> and watch your results below. <a href="/app/">Open your app →</a></p>
     </div>
   </div>
+  <div class="live-tests live-only" data-live-tests="15" aria-live="polite"></div>
   <h3>Done when</h3>
-  <ul class="checklist"><li><code>AppRoot({ initialEntries? })</code> uses a memory router when entries are given and a browser router otherwise. The <code>QueryClient</code> and the router are each held in <code>useState</code>.</li><li>It composes earlier days through <code>@ex/…</code>: Day 10's route structure, Day 9's hooks, Day 4's <code>NewIssueForm</code>, Day 14's <code>Modal</code>, and Day 1's <code>IssueCard</code> / <code>StatusBadge</code>.</li><li>Flow: the list shows 4 issues → "Status filter" To do shows 2 → clicking an issue shows its detail → setting the detail's "Status" to Done drops it from the filtered list → "New issue" opens the modal, submitting "Write capstone" closes it, and the new issue appears under All.</li><li>Deep links (<code>/issues/3</code>) work, the modal validates and closes on Escape, and unknown routes show "Page not found" inside the layout.</li><li>Then <code>pnpm dev</code> to use <em>your</em> app at 300 ms latency (<code>pnpm dev:solutions</code> for the reference).</li></ul>
+  <ul class="checklist"><li><code>AppRoot({ initialEntries? })</code> uses a memory router when entries are given and a browser router otherwise. The <code>QueryClient</code> and the router are each held in <code>useState</code>.</li><li>It composes earlier days through <code>@ex/…</code>: Day 10's route structure, Day 9's hooks, Day 4's <code>NewIssueForm</code>, Day 14's <code>Modal</code>, and Day 1's <code>IssueCard</code> / <code>StatusBadge</code>.</li><li>Flow: the list shows 4 issues → "Status filter" To do shows 2 → clicking an issue shows its detail → setting the detail's "Status" to Done drops it from the filtered list → "New issue" opens the modal, submitting "Write capstone" closes it, and the new issue appears under All.</li><li>Deep links (<code>/issues/3</code>) work, the modal validates and closes on Escape, and unknown routes show "Page not found" inside the layout.</li><li>Then open <a href="http://localhost:1515/app/">localhost:1515/app/</a> (served by <code>pnpm start</code>) to use <em>your</em> app at 300 ms latency. <code>pnpm dev:solutions</code> runs the reference.</li></ul>
   <h3>Stretch</h3>
   <p>Add the Day 11 <code>EditTitle</code> to the detail pane and the Day 5 <code>LiveIssueFeed</code> to the layout, and wrap navigations in <code>&lt;ViewTransition&gt;</code>.</p>
 </section>
   
   
-<section class="panel" aria-labelledby="mock">
-  <h2 id="mock">Mock interview: 30 questions</h2>
-  <p class="muted">Set a timer: about 40 seconds per answer, out loud, before you reveal. Two per concern, plus the cross-cutting ones interviewers love.</p>
+<section class="panel" aria-labelledby="review">
+  <h2 id="review">Final review: 30 questions</h2>
+  <p class="muted">Set a timer: about 40 seconds per answer, out loud, before you reveal. Two per concern, plus a few that cut across the whole course.</p>
   <div class="qas">
 <details class="qa">
   <summary><span class="qa__n">1</span><span class="qa__q">Walk me through what happens when <code>setState</code> is called.</span><span class="qa__meta">Rendering</span></summary>
@@ -2817,12 +2966,80 @@ useEffect(() =&gt; {
   </div>
 </section>
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="15" aria-pressed="false">Mark day complete</button>
+    <button type="button" class="button button--complete file-only" data-complete="15" aria-pressed="false">Mark day complete</button>
+    <p class="day-status live-only" data-day-status="15"></p>
     <nav class="pager" aria-label="Day navigation"><a class="pager__link" href="#day-14">← Day 14</a><span></span></nav>
   </footer>
 </article>
   </main>
 </div>
+<dialog class="celebrate" data-celebrate aria-labelledby="celebrate-title">
+  <p class="celebrate__emoji" data-celebrate-emoji aria-hidden="true">🎉</p>
+  <h2 id="celebrate-title" data-celebrate-title></h2>
+  <p class="celebrate__text" data-celebrate-text></p>
+  <ol class="pips" data-pips aria-hidden="true"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li></ol>
+  <div class="celebrate__actions">
+    <button type="button" class="button button--primary" data-celebrate-next></button>
+    <button type="button" class="button" data-celebrate-close>Stay here</button>
+  </div>
+</dialog>
+<dialog class="cert-dialog" data-cert-dialog aria-label="Your certificate">
+  <div class="certificate" data-certificate>
+    <div class="certificate__inner">
+      <div class="certificate__logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+  
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22232a"/>
+      <stop offset="1" stop-color="#0e0f12"/>
+    </linearGradient>
+    <linearGradient id="orbit" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fb923c"/>
+      <stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#ea580c"/>
+      <stop offset="0.55" stop-color="#f97316"/>
+      <stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.55" r="0.5">
+      <stop offset="0" stop-color="#f97316" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#f97316" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="256" cy="262" r="150" fill="url(#glow)"/>
+  <g fill="none" stroke="url(#orbit)" stroke-width="18" stroke-linecap="round">
+    <ellipse cx="256" cy="256" rx="176" ry="66"/>
+    <ellipse cx="256" cy="256" rx="176" ry="66" transform="rotate(60 256 256)"/>
+    <ellipse cx="256" cy="256" rx="176" ry="66" transform="rotate(120 256 256)"/>
+  </g>
+  <circle cx="256" cy="262" r="64" fill="#141519"/>
+  <path fill="url(#flame)" transform="translate(256 262) scale(1.12) translate(-256 -262)" d="M256 186c10 30 46 52 46 92a46 46 0 0 1-92 0c0-22 12-36 22-46 2 14 8 22 16 26-4-26 0-50 8-72z"/>
+  <path fill="#fde68a" transform="translate(256 262) scale(1.12) translate(-256 -262)" d="M258 250c4 14 20 22 20 40a22 22 0 0 1-44 0c0-12 8-20 14-26 0 8 4 12 8 14-2-10-1-20 2-28z"/>
+</svg>
+</div>
+      <p class="certificate__kicker">Certificate of completion</p>
+      <p class="certificate__lead">This certifies that</p>
+      <p class="certificate__name" data-cert-name>Your name</p>
+      <p class="certificate__lead">has completed</p>
+      <p class="certificate__course">React for Ember Engineers</p>
+      <p class="certificate__meta" data-cert-meta></p>
+      <div class="certificate__foot">
+        <p><span data-cert-date></span><small>Completed</small></p>
+        <p><span data-cert-span></span><small>Duration</small></p>
+        <p><span data-cert-id></span><small>Certificate no.</small></p>
+      </div>
+    </div>
+  </div>
+  <div class="cert-dialog__controls">
+    <label class="field">Name on the certificate <input type="text" data-cert-input name="name" autocomplete="name" placeholder="Your name"></label>
+    <button type="button" class="button button--primary" data-cert-print>Print or save as PDF</button>
+    <button type="button" class="button" data-cert-close>Close</button>
+  </div>
+</dialog>
+<div class="cert-print" data-cert-print-root></div>
+<script>window.COURSE = {"days":{"1":"JSX, components, rendering","2":"Props, children, composition, lists & keys","3":"State: useState, immutability, derived state","4":"Events & forms: controlled vs uncontrolled, refs","5":"Effects: synchronising with external systems","6":"Rendering performance: reconciliation, memoization, React Compiler","7":"State architecture: Context, reducers, external stores","8":"Custom hooks","9":"Data fetching: TanStack Query, Suspense, error boundaries","10":"Routing with React Router 8 (data mode)","11":"React 19 Actions & concurrent features","12":"Server Components & the Next.js App Router","13":"Testing React well","14":"Patterns, TypeScript & modern APIs","15":"Capstone + final review"},"concepts":79};</script>
 <script>
 (function () {
   var KEY = 'react-for-ember:completed';
@@ -2889,8 +3106,9 @@ useEffect(() =&gt; {
     if (btn) {
       var n = Number(btn.dataset.complete);
       if (completed.has(n)) completed.delete(n); else completed.add(n);
-      store.set(KEY, JSON.stringify(Array.from(completed).sort(function (a, b) { return a - b; })));
+      saveCompleted();
       renderProgress();
+      if (completed.has(n) && !celebrated.has(n)) celebrate([n]);
       return;
     }
     if (event.target.closest('[data-print-cheatsheet]')) {
@@ -2914,6 +3132,271 @@ useEffect(() =&gt; {
     }
   });
 
+  // ---------------------------------------------------------------- celebrations
+  var COURSE = window.COURSE || { days: {}, concepts: 0 };
+  var CELEBRATED = 'react-for-ember:celebrated';
+  var NAME = 'react-for-ember:name';
+  var DONE_AT = 'react-for-ember:completed-at';
+  var celebrated = new Set(readList(CELEBRATED));
+  var completedAt = {};
+  try { completedAt = JSON.parse(store.get(DONE_AT) || '{}') || {}; } catch (e) { completedAt = {}; }
+  var live = null; // state from pnpm start, when connected
+
+  function readList(key) {
+    try { var v = JSON.parse(store.get(key) || '[]'); return Array.isArray(v) ? v.map(Number) : []; } catch (e) { return []; }
+  }
+  function sorted(set) { return Array.from(set).sort(function (a, b) { return a - b; }); }
+  function saveCompleted() {
+    store.set(KEY, JSON.stringify(sorted(completed)));
+    completed.forEach(function (n) { if (!completedAt[n]) completedAt[n] = new Date().toISOString(); });
+    store.set(DONE_AT, JSON.stringify(completedAt));
+  }
+  function listDays(ns) {
+    if (ns.length === 1) return 'Day ' + ns[0];
+    return 'Days ' + ns.slice(0, -1).join(', ') + ' and ' + ns[ns.length - 1];
+  }
+
+  var celebrateDialog = document.querySelector('[data-celebrate]');
+  var nextAction = null;
+
+  function celebrate(ns) {
+    ns = ns.slice().sort(function (a, b) { return a - b; });
+    ns.forEach(function (n) { celebrated.add(n); });
+    store.set(CELEBRATED, JSON.stringify(sorted(celebrated)));
+    var last = ns[ns.length - 1];
+    var count = completed.size;
+    var finished = count === TOTAL;
+    var q = function (sel) { return celebrateDialog.querySelector(sel); };
+    var emoji = '🎉', title, text, next;
+    if (finished) {
+      emoji = '🎓';
+      title = 'You finished the course!';
+      text = 'All 15 days, done. You can now build with React and explain why it works the way it does, not just how. Your certificate is ready.';
+      next = { label: 'See your certificate', run: openCertificate };
+    } else {
+      title = listDays(ns) + ' complete';
+      text = ns.length === 1 ? (COURSE.days[last] || '') + ': nailed it.' : 'Nice streak.';
+      if (count === 5 && ns.indexOf(5) !== -1) { emoji = '🔥'; text = 'Week 1 is done: you have the core mental model. Next week: architecture.'; }
+      else if (count === 10 && ns.indexOf(10) !== -1) { emoji = '🚀'; text = 'Week 2 is done: two thirds of the way. Next week: modern and advanced React.'; }
+      else text += ' ' + count + ' of 15 done, ' + (TOTAL - count) + ' to go.';
+      var upcoming = 0;
+      for (var d = 1; d <= TOTAL; d++) { if (!completed.has(d)) { upcoming = d; break; } }
+      next = upcoming
+        ? { label: 'On to Day ' + upcoming + ' →', run: function () { window.location.hash = '#day-' + upcoming; } }
+        : { label: 'Keep going', run: function () {} };
+    }
+    q('[data-celebrate-emoji]').textContent = emoji;
+    q('[data-celebrate-title]').textContent = title;
+    q('[data-celebrate-text]').textContent = text;
+    q('[data-celebrate-next]').textContent = next.label;
+    nextAction = next.run;
+    celebrateDialog.querySelectorAll('[data-pips] li').forEach(function (li, i) {
+      li.classList.toggle('is-done', completed.has(i + 1));
+      li.classList.toggle('is-new', ns.indexOf(i + 1) !== -1);
+    });
+    if (celebrateDialog.open) celebrateDialog.close();
+    celebrateDialog.showModal();
+    confetti(finished);
+    renderCertificateButton();
+  }
+
+  celebrateDialog.addEventListener('click', function (event) {
+    if (event.target.closest('[data-celebrate-next]')) { celebrateDialog.close(); if (nextAction) nextAction(); }
+    else if (event.target.closest('[data-celebrate-close]') || event.target === celebrateDialog) celebrateDialog.close();
+  });
+
+  function confetti(big) {
+    try { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) { /* old browser: animate */ }
+    var canvas = document.createElement('canvas');
+    canvas.className = 'confetti';
+    canvas.setAttribute('aria-hidden', 'true');
+    var popover = typeof canvas.showPopover === 'function';
+    if (popover) canvas.setAttribute('popover', 'manual');
+    document.body.appendChild(canvas);
+    if (popover) canvas.showPopover(); // above the dialog's top layer
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var W = window.innerWidth, H = window.innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr; ctx.scale(dpr, dpr);
+    var colors = ['#fb923c', '#fbbf24', '#f97316', '#60a5fa', '#4ade80', '#f472b6', '#c084fc'];
+    var parts = [];
+    var n = big ? 320 : 160;
+    for (var i = 0; i < n; i++) {
+      var left = i % 2 === 0;
+      parts.push({
+        x: left ? -10 : W + 10, y: H * (0.75 + Math.random() * 0.2),
+        vx: (left ? 1 : -1) * (4 + Math.random() * (W / 90)), vy: -(9 + Math.random() * (H / 45)),
+        s: 6 + Math.random() * 7, r: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.35,
+        c: colors[i % colors.length], round: i % 4 === 0, delay: big ? Math.random() * 900 : Math.random() * 250,
+      });
+    }
+    var life = big ? 4800 : 3200;
+    var start = performance.now();
+    function frame(t) {
+      var el = t - start;
+      ctx.clearRect(0, 0, W, H);
+      parts.forEach(function (p) {
+        if (el < p.delay) return;
+        p.vy += 0.32; p.vx *= 0.985; p.vy *= 0.992;
+        p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, 1 - el / life);
+        ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+        if (p.round) { ctx.beginPath(); ctx.arc(0, 0, p.s / 2.6, 0, 6.283); ctx.fill(); }
+        else ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2 * (0.6 + 0.4 * Math.abs(Math.cos(p.r * 2))));
+        ctx.restore();
+      });
+      if (el < life) window.requestAnimationFrame(frame);
+      else canvas.remove();
+    }
+    window.requestAnimationFrame(frame);
+  }
+
+  // ---------------------------------------------------------------- certificate
+  var certDialog = document.querySelector('[data-cert-dialog]');
+  var certButton = document.querySelector('[data-open-certificate]');
+  var certInput = certDialog.querySelector('[data-cert-input]');
+
+  function doneDates() {
+    var source = live ? live.completed : completedAt;
+    return Object.keys(source).map(function (k) { return new Date(source[k]); }).filter(function (d) { return !isNaN(d); });
+  }
+  function hash(s) {
+    var h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0).toString(36).toUpperCase().padStart(7, '0').slice(0, 7);
+  }
+  function fillCertificate() {
+    var name = (store.get(NAME) || '').trim();
+    var dates = doneDates().sort(function (a, b) { return a - b; });
+    var end = dates.length ? dates[dates.length - 1] : new Date();
+    var begin = dates.length ? dates[0] : end;
+    var spanDays = Math.max(1, Math.round((end - begin) / 86400000) + 1);
+    var tests = 0;
+    if (live) Object.keys(live.days).forEach(function (k) { tests += live.days[k].passed; });
+    var meta = ['15 days', COURSE.concepts + ' concepts', tests ? tests + ' tests passing' : '30-question final review'];
+    var q = function (sel) { return certDialog.querySelector(sel); };
+    q('[data-cert-name]').textContent = name || 'Your name';
+    q('[data-cert-name]').style.opacity = name ? '1' : '0.35';
+    q('[data-cert-meta]').textContent = meta.join(' · ');
+    q('[data-cert-date]').textContent = end.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    q('[data-cert-span]').textContent = spanDays + (spanDays === 1 ? ' day' : ' days');
+    q('[data-cert-id]').textContent = 'RFE-' + hash(name + '|' + end.toISOString().slice(0, 10));
+  }
+  function openCertificate() {
+    certInput.value = store.get(NAME) || '';
+    fillCertificate();
+    certDialog.showModal();
+    if (!certInput.value) certInput.focus();
+  }
+  function renderCertificateButton() { certButton.hidden = completed.size !== TOTAL; }
+
+  certButton.addEventListener('click', openCertificate);
+  certInput.addEventListener('input', function () { store.set(NAME, certInput.value); fillCertificate(); });
+  certDialog.addEventListener('click', function (event) {
+    if (event.target.closest('[data-cert-close]') || event.target === certDialog) certDialog.close();
+    if (event.target.closest('[data-cert-print]')) {
+      var root = document.querySelector('[data-cert-print-root]');
+      root.innerHTML = certDialog.querySelector('[data-certificate]').outerHTML;
+      var page = document.createElement('style');
+      page.textContent = '@page { size: A4 landscape; margin: 10mm; }';
+      document.head.appendChild(page);
+      document.body.classList.add('print-certificate');
+      certDialog.close();
+      window.print();
+      window.setTimeout(function () {
+        document.body.classList.remove('print-certificate');
+        page.remove();
+        root.innerHTML = '';
+      }, 500);
+    }
+  });
+
+  // ---------------------------------------------------------------- live mode (pnpm start)
+  var liveStatus = document.querySelector('[data-live-status]');
+  var liveText = document.querySelector('[data-live-status-text]');
+
+  function el(tag, cls, text) {
+    var node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+  function shortName(name) { var parts = name.split(' > '); return parts.length > 1 ? parts.slice(1).join(' › ') : name; }
+  function fmtDate(iso) { return new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }); }
+
+  function renderLive() {
+    var running = live.running;
+    liveStatus.classList.toggle('is-running', running);
+    liveStatus.classList.remove('is-offline');
+    liveText.textContent = running ? 'Checking your tests…' : 'Watching your tests';
+    for (var n = 1; n <= TOTAL; n++) {
+      var d = live.days[n];
+      var doneAt = live.completed[n];
+      var status = document.querySelector('[data-day-status="' + n + '"]');
+      status.classList.toggle('is-done', !!doneAt);
+      status.textContent = doneAt ? '✓ Completed ' + fmtDate(doneAt) : 'Completes by itself when all of today\'s tests pass.';
+      var box = document.querySelector('[data-live-tests="' + n + '"]');
+      box.textContent = '';
+      if (!d) { box.appendChild(el('p', 'muted small', 'Waiting for the first test run…')); continue; }
+      var green = d.total > 0 && d.passed === d.total && !d.loadError;
+      box.classList.toggle('is-green', green);
+      var head = el('div', 'live-tests__head');
+      head.appendChild(el('span', null, green ? '✓ All tests passing' : 'Your tests'));
+      head.appendChild(el('span', 'live-tests__count', d.passed + ' / ' + d.total));
+      var bar = el('span', 'live-tests__bar');
+      var fill = el('span');
+      fill.style.width = (d.total ? d.passed / d.total * 100 : 0) + '%';
+      bar.appendChild(fill);
+      head.appendChild(bar);
+      box.appendChild(head);
+      if (d.loadError) {
+        var err = el('ul', 'live-tests__fails');
+        var li = el('li', null, "The test file couldn't load your code");
+        li.appendChild(el('small', null, d.loadError));
+        err.appendChild(li);
+        box.appendChild(err);
+      } else if (!green) {
+        var list = el('ul', 'live-tests__fails');
+        d.failures.slice(0, 6).forEach(function (f) {
+          var item = el('li', null, shortName(f.name));
+          if (f.message) item.appendChild(el('small', null, f.message));
+          list.appendChild(item);
+        });
+        box.appendChild(list);
+        if (d.failures.length > 6) box.appendChild(el('p', 'live-tests__more', '+ ' + (d.failures.length - 6) + ' more. Full output: pnpm test day' + String(n).padStart(2, '0')));
+      }
+    }
+  }
+
+  function applyLive(state) {
+    var first = !live;
+    live = state;
+    if (first) document.body.classList.add('is-live');
+    completed = new Set(Object.keys(state.completed).map(Number).filter(function (n) { return n >= 1 && n <= TOTAL; }));
+    Object.keys(state.completed).forEach(function (k) { completedAt[k] = state.completed[k]; });
+    saveCompleted();
+    renderProgress();
+    renderLive();
+    renderCertificateButton();
+    var fresh = sorted(completed).filter(function (n) { return !celebrated.has(n); });
+    if (fresh.length) celebrate(fresh);
+  }
+
+  if (/^https?:$/.test(window.location.protocol) && typeof window.EventSource === 'function') {
+    var events = new window.EventSource('/__course/events');
+    events.onmessage = function (message) {
+      try { applyLive(JSON.parse(message.data)); } catch (e) { /* ignore a bad frame */ }
+    };
+    events.onerror = function () {
+      if (!live) { events.close(); return; } // not served by pnpm start: stay in manual mode
+      liveStatus.classList.add('is-offline');
+      liveStatus.classList.remove('is-running');
+      liveText.textContent = 'pnpm start stopped: reconnecting…';
+    };
+  }
+
+  renderCertificateButton();
   renderProgress();
   var initial = fromHash() || Number(store.get(LAST)) || 1;
   show(initial, false);

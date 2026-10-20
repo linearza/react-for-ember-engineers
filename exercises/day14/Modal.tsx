@@ -12,7 +12,7 @@ import { createPortal } from 'react-dom';
 //   - on open, move focus into the dialog (a ref + an effect; tabIndex={-1} on the dialog), and
 //     hand focus back to the previously focused element on close
 //   - when !open, render nothing
-// Interview question: a click inside the portal bubbles to... which ancestors?
+// Think about it: a click inside the portal bubbles to... which ancestors?
 
 interface ModalProps {
   open: boolean;

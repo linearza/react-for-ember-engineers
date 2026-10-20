@@ -49,6 +49,6 @@ export function C(flag, title, body, ember, react, { emberLang = 'handlebars', r
 }
 
 /** A day. drill is a list of [question, answerMarkdown]. */
-export function Day({ plan = ['Concepts', 'Hands-on', 'Interview drill'], exercise, ...rest }) {
+export function Day({ plan = ['Concepts', 'Hands-on', 'Check yourself'], exercise, ...rest }) {
   return { ...rest, plan, exercise: { intro: '', ...exercise } };
 }

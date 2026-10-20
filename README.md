@@ -4,62 +4,39 @@
 
 A 15-day course, at most an hour a day, for engineers who know Octane/Polaris Ember well and are new to React. It skips the basics of components, routes and tests. It covers how React's model differs from Ember's, and spends most of its time where Ember instincts will mislead you.
 
-- **Course page:** open [`course/index.html`](course/index.html) in a browser. It's one self-contained file and works offline (fonts and syntax highlighting load from CDNs). It holds every day's concepts, exercise briefs and interview drills, plus a 30-question mock interview and a cheat sheet.
-- **This repo:** the exercises, the failing tests that define them, and reference solutions.
-
 Every exercise builds part of one small issue tracker. On Day 15 you put the parts together into a running app.
 
-## Setup
+## Quick start
 
-Requires **Node ≥ 22.22** (React Router 8 needs it) and **pnpm**. `corepack enable` gives you the version pinned in `package.json`.
+You need **Node 22.22 or newer** and **pnpm** (`corepack enable` sets up the pinned version).
 
 ```sh
 git clone https://github.com/linearza/react-for-ember-engineers.git
 cd react-for-ember-engineers
 pnpm install
-pnpm test:solutions   # sanity check: everything should be green
+pnpm start
 ```
 
-Stack: React 19.3, React Router 8 (data mode), TanStack Query 5, Vite 8, Vitest 5 + Testing Library, TypeScript 5.9. TypeScript 7 (the native Go port) exists. This repo stays on 5.9 for editor and tooling stability, and nothing here depends on the difference.
+Your browser opens the course at **http://localhost:1515**. Leave that terminal running for the 15 days, and come back to the same tab each day.
 
-## The daily loop (60 minutes)
+## How it works
 
-| Block | Time | What you do |
-|---|---|---|
-| Concepts | ~15 min | Read the day on the course page. Each concept has an Ember ↔ React side-by-side and a flag: 🟢 direct translation · 🟡 same goal, different mechanics · 🔴 new mental model. |
-| Hands-on | ~35 min | `pnpm test day05` (watch mode), then edit `exercises/day05/` until it's green. Each stub has TODO comments naming the behaviour and the Ember equivalent. |
-| Interview drill | ~10 min | Answer each question **out loud** before you reveal the model answer. |
+Each day takes about an hour:
 
-## Your work vs. the solutions
+1. **Concepts (~15 min).** Read the day on the course page. Each concept puts Ember and React side by side and is flagged 🟢 direct translation · 🟡 same goal, different mechanics · 🔴 new mental model.
+2. **Hands-on (~35 min).** Open the day's files in `exercises/dayNN/` and follow the TODO comments. Every time you save, the tests run and the course page shows which ones still fail.
+3. **Check yourself (~10 min).** Answer each question **out loud** before you reveal the model answer.
 
-Tests import `@ex/dayNN/...`. One switch in `vite.config.ts` decides what `@ex` points at:
+When all of a day's tests pass, the day is marked complete and the page celebrates. When you finish all 15 days, you get a certificate with your name on it. You can print it or save it as a PDF.
 
-| Command | `@ex` resolves to | Use |
-|---|---|---|
-| `pnpm test day05` | `exercises/` | your daily loop (watch mode) |
-| `pnpm exec vitest run` | `exercises/` | check everything you've done so far |
-| `pnpm test:solutions` | `solutions/` | reference run: 109/109 pass |
-| `pnpm dev` | `exercises/` | run *your* Day 15 app |
-| `pnpm dev:solutions` | `solutions/` | run the reference app |
-| `pnpm typecheck` | — | `tsc --noEmit`: passes for both trees |
+On Day 15 your assembled app runs at **http://localhost:1515/app/**.
 
-The stubs fail on purpose. Against an untouched `exercises/`, every day's tests fail except for at most one or two trivial ones. Cross-day imports (for example, Day 15 importing Day 9's hooks) also go through `@ex`. So `pnpm dev` runs the app on *your* earlier days, which makes it a good integration check.
+Good to know:
 
-Read a solution only after your tests pass, or after you've been stuck for 10 minutes. `git diff --no-index exercises/day05 solutions/day05` is a quick way to compare.
-
-## Layout
-
-```
-src/domain/       shared issue-tracker domain: types, seed data, fake async API (like Mirage), pub/sub, test helpers
-src/day13/        the Tabs component + 5 mutants for the testing exercise
-exercises/dayNN/  your files: stubs with TODOs
-solutions/dayNN/  reference implementations
-tests/dayNN.test.tsx  one test file per day
-course/index.html the course
-index.html, src/main.tsx, src/styles.css   the dev app (= Day 15 capstone)
-```
-
-The fake API (`@domain/api`) has test controls: `setLatency(ms)` (300 in dev, 0 in tests), `setIssueLatency(id, ms)` for race conditions, `failNextRequest(msg)`, `resetDb()`, `getDbSnapshot()`.
+- Port 1515 is busy? Run `PORT=1516 pnpm start`.
+- Progress lives in `.progress.json` (it's gitignored). Delete it to start over.
+- You can also open `course/index.html` straight from disk and tick days off by hand. It works offline.
+- Stuck for 10 minutes? Each day has a reference solution in `solutions/dayNN/`. `git diff --no-index exercises/day05 solutions/day05` compares it with yours.
 
 ## The 15 days
 
@@ -79,7 +56,7 @@ The fake API (`@domain/api`) has test controls: `setLatency(ms)` (300 in dev, 0 
 | | 12 | Server Components & the Next.js App Router |
 | | 13 | Testing React well (mutation testing) |
 | | 14 | Patterns, TypeScript & modern APIs |
-| | 15 | Capstone + mock interview |
+| | 15 | Capstone + final review |
 
 ## Stretch goals
 
@@ -128,3 +105,40 @@ The fake API (`@domain/api`) has test controls: `setLatency(ms)` (300 in dev, 0 
 | FastBoot | SSR / RSC | 🔴 |
 | `@ember/test-helpers` + `await settled()` | Testing Library + `findBy` / `waitFor` | 🟡 |
 | autotracking (fine-grained) | re-render + reconcile (+ Compiler) | 🔴 |
+
+## Under the hood
+
+Stack: React 19.3, React Router 8 (data mode), TanStack Query 5, Vite 8, Vitest 5 + Testing Library, TypeScript 5.9. TypeScript 7 (the native Go port) exists. This repo stays on 5.9 for editor and tooling stability, and nothing here depends on the difference.
+
+`pnpm start` runs one Vite server: the course page at `/`, your Day 15 app at `/app/`, and Vitest in watch mode in the same process. A small reporter streams results to the page.
+
+### Your work vs. the solutions
+
+Tests import `@ex/dayNN/...`. One switch in `vite.config.ts` decides what `@ex` points at:
+
+| Command | `@ex` resolves to | Use |
+|---|---|---|
+| `pnpm start` | `exercises/` | the course, live progress and your app |
+| `pnpm test day05` | `exercises/` | one day's tests in watch mode |
+| `pnpm exec vitest run` | `exercises/` | check everything you've done so far |
+| `pnpm test:solutions` | `solutions/` | reference run: 109/109 pass |
+| `pnpm dev` | `exercises/` | run *your* Day 15 app |
+| `pnpm dev:solutions` | `solutions/` | run the reference app |
+| `pnpm typecheck` | — | `tsc --noEmit`: passes for both trees |
+
+The stubs fail on purpose. Against an untouched `exercises/`, every day's tests fail except for at most one or two trivial ones. Cross-day imports (for example, Day 15 importing Day 9's hooks) also go through `@ex`. So `pnpm dev` runs the app on *your* earlier days, which makes it a good integration check.
+
+### Layout
+
+```
+src/domain/       shared issue-tracker domain: types, seed data, fake async API (like Mirage), pub/sub, test helpers
+src/day13/        the Tabs component + 5 mutants for the testing exercise
+exercises/dayNN/  your files: stubs with TODOs
+solutions/dayNN/  reference implementations
+tests/dayNN.test.tsx  one test file per day
+scripts/start.mjs `pnpm start`: course server + test watcher
+course/index.html the course page (generated from course/source/)
+index.html, src/main.tsx, src/styles.css   the dev app (= Day 15 capstone)
+```
+
+The fake API (`@domain/api`) has test controls: `setLatency(ms)` (300 in dev, 0 in tests), `setIssueLatency(id, ms)` for race conditions, `failNextRequest(msg)`, `resetDb()`, `getDbSnapshot()`.

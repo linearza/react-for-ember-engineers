@@ -640,8 +640,8 @@ Declare the type parameter on the function and use it in the props: \`function L
 
 export const DAY15 = Day({
   n: 15, week: 3,
-  title: 'Capstone + mock interview',
-  tagline: 'Assemble the app from your own parts, then run the full mock interview out loud.',
+  title: 'Capstone + final review',
+  tagline: 'Assemble the app from your own parts, then work through the final review out loud.',
   concepts: [],
   exercise: {
     files: [
@@ -653,18 +653,18 @@ export const DAY15 = Day({
       'It composes earlier days through `@ex/…`: Day 10\'s route structure, Day 9\'s hooks, Day 4\'s `NewIssueForm`, Day 14\'s `Modal`, and Day 1\'s `IssueCard` / `StatusBadge`.',
       'Flow: the list shows 4 issues → "Status filter" To do shows 2 → clicking an issue shows its detail → setting the detail\'s "Status" to Done drops it from the filtered list → "New issue" opens the modal, submitting "Write capstone" closes it, and the new issue appears under All.',
       'Deep links (`/issues/3`) work, the modal validates and closes on Escape, and unknown routes show "Page not found" inside the layout.',
-      'Then `pnpm dev` to use *your* app at 300 ms latency (`pnpm dev:solutions` for the reference).',
+      'Then open [localhost:1515/app/](http://localhost:1515/app/) (served by `pnpm start`) to use *your* app at 300 ms latency. `pnpm dev:solutions` runs the reference.',
     ],
     stretch: 'Add the Day 11 `EditTitle` to the detail pane and the Day 5 `LiveIssueFeed` to the layout, and wrap navigations in `<ViewTransition>`.',
   },
   drill: [],
-  plan: ['Capstone', 'Mock interview', 'Cheat sheet'],
+  plan: ['Capstone', 'Final review', 'Cheat sheet'],
 });
 
 export const WEEK3 = [DAY11, DAY12, DAY13, DAY14, DAY15];
 
 // [concern, question, answer]
-export const MOCK_INTERVIEW = [
+export const FINAL_REVIEW = [
   ['Rendering', 'Walk me through what happens when `setState` is called.',
     `
 The setter enqueues an update on that component's fiber with a priority (lane). In an event it's batched with others, and it's lower priority inside a transition. React schedules a render. During **render** it walks down from the root, re-running the updated component and (by default) its descendants. Memoized subtrees bail out when their props are \`Object.is\`-equal. The new state is computed by applying the queued updates in order. React reconciles the new elements against the current fiber tree (type + key) and collects DOM mutations. Concurrent renders can be interrupted. Then **commit**: apply the DOM changes synchronously, attach refs, run layout effects, paint, then run passive effects (\`useEffect\`). If the new state is \`Object.is\`-equal to the old, React can bail out early.
