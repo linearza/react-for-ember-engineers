@@ -137,7 +137,7 @@ React DevTools → **Profiler**: record an interaction and see which components 
       'exercises/day06/IssueRow.tsx',
       'exercises/day06/IssueTable.tsx',
     ],
-    command: 'npm test -- day06',
+    command: 'pnpm test day06',
     criteria: [
       'Typing three characters in "Draft note" causes **zero** `IssueRow` renders (watch `renderLog`).',
       'Selecting row 2 re-renders only `[\'2\']`. Then selecting row 4 re-renders only `[\'2\', \'4\']`.',
@@ -291,7 +291,7 @@ Escalate only as needed:
       'exercises/day07/IssuesContext.tsx',
       'exercises/day07/store.ts',
     ],
-    command: 'npm test -- day07',
+    command: 'pnpm test day07',
     criteria: [
       '`issuesReducer` handles `added`, `updated`, `removed` and `statusChanged` **immutably** (state is frozen), keeps untouched items\' identity, and throws on unknown actions.',
       '`useIssues()` throws "useIssues must be used inside <IssuesProvider>" with no provider.',
@@ -420,7 +420,7 @@ expect(result.current).toBe('ab');
       'exercises/day08/useLocalStorage.ts',
       'exercises/day08/useIssueSearch.ts',
     ],
-    command: 'npm test -- day08',
+    command: 'pnpm test day08',
     criteria: [
       '`useToggle(initial)` returns `[on, toggle, set]`, and `toggle` keeps the same identity across renders.',
       '`useDebouncedValue(value, ms)` only updates after the value has stopped changing for `ms` (fake timers).',
@@ -567,7 +567,7 @@ class ErrorBoundary extends Component<Props, { error: Error | null }> {
       'exercises/day09/ErrorBoundary.tsx',
       'exercises/day09/IssueDetailBoundary.tsx',
     ],
-    command: 'npm test -- day09',
+    command: 'pnpm test day09',
     criteria: [
       '`issueKeys` is a hierarchical factory, and every filter gets its own cache entry.',
       '`IssueListScreen` shows "Loading issues…", then the list. On error it shows a `role="alert"` with a "Retry" button that refetches.',
@@ -737,7 +737,7 @@ navigate('/issues');
     files: [
       'exercises/day10/routes.tsx',
     ],
-    command: 'npm test -- day10',
+    command: 'pnpm test day10',
     criteria: [
       '`/` redirects to `/issues` (an index route with a `redirect()` loader).',
       'The issues loader reads `?status=`. The "Status filter" select updates the search param, and the list follows.',

@@ -3,7 +3,7 @@
 // TODO: export AppRoot({ initialEntries? }) that renders the whole issue tracker:
 //   - a QueryClient held in useState(() => new QueryClient(…)) and a <QueryClientProvider>
 //   - a router held in useState too: createMemoryRouter(routes, { initialEntries }) when
-//     initialEntries is given (tests), createBrowserRouter(routes) otherwise (npm run dev)
+//     initialEntries is given (tests), createBrowserRouter(routes) otherwise (pnpm dev)
 //   - Day 10's route structure: '/' Layout (+ RootError) → index redirect to /issues →
 //     'issues' (list + <Outlet/>) → ':issueId' (detail), and '*' NotFound
 //   - data through Day 9's hooks (useIssuesQuery, useIssueQuery, useUpdateIssueStatus), not loaders

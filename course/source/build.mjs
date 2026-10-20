@@ -5,7 +5,7 @@ import { WEEK1 } from './week1.mjs';
 import { WEEK2 } from './week2.mjs';
 import { WEEK3, MOCK_INTERVIEW, CHEATSHEET } from './week3.mjs';
 
-const REPO = 'https://github.com/linearza/learnreact';
+const REPO = 'https://github.com/linearza/react-for-ember-engineers';
 const DAYS = [...WEEK1, ...WEEK2, ...WEEK3];
 const WEEKS = { 1: 'Core mental model', 2: 'Architecture', 3: 'Modern & advanced' };
 const PRISM = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components';
@@ -70,7 +70,7 @@ function exercise(day) {
     <div>
       <h3>Run</h3>
       <pre class="cmd"><code>${e(ex.command)}</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -475,7 +475,7 @@ ${prism}
     ${progress}
     <nav aria-label="Course days"><ol class="nav">${nav()}</ol></nav>
     <div class="sidebar__foot">
-      <p>Exercises, tests and solutions: <a href="${REPO}">github.com/linearza/learnreact</a></p>
+      <p>Exercises, tests and solutions: <a href="${REPO}">github.com/linearza/react-for-ember-engineers</a></p>
       <p><span class="flag flag--green">🟢 translate</span> <span class="flag flag--yellow">🟡 re-learn</span> <span class="flag flag--red">🔴 unlearn</span></p>
     </div>
   </aside>

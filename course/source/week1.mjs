@@ -143,7 +143,7 @@ function Entry({ term, definition }: Props) {
       'exercises/day01/IssueCard.tsx',
       'exercises/day01/formatDate.ts',
     ],
-    command: 'npm test -- day01',
+    command: 'pnpm test day01',
     criteria: [
       '`StatusBadge` renders the status label in a `<span>` with classes `badge badge--{status}`.',
       '`IssueCard` is an `<article>` labelled by its `<h3>` title (`aria-labelledby`).',
@@ -304,7 +304,7 @@ Prefer composition to configuration: rather than \`<Card showHeader headerTitle 
       'exercises/day02/IssueList.tsx',
       'exercises/day02/IssueNotes.tsx',
     ],
-    command: 'npm test -- day02',
+    command: 'pnpm test day02',
     criteria: [
       '`Card` renders a `<section>` labelled by its title, with `children` in the body.',
       '`actions` and `footer` slots render in their wrappers **only** when given.',
@@ -464,7 +464,7 @@ const [draft, setDraft] = useState(() => JSON.parse(localStorage.draft ?? '""'))
     files: [
       'exercises/day03/IssueBoard.tsx',
     ],
-    command: 'npm test -- day03',
+    command: 'pnpm test day03',
     criteria: [
       'Status filter buttons (`aria-pressed`) and a case-insensitive search filter the list together, **derived during render** with no extra state.',
       '"Showing X of Y" reflects the derived list.',
@@ -602,7 +602,7 @@ const id = useId();
       'exercises/day04/NewIssueForm.tsx',
       'exercises/day04/QuickSearch.tsx',
     ],
-    command: 'npm test -- day04',
+    command: 'pnpm test day04',
     criteria: [
       '`NewIssueForm` is fully controlled: a live `n/80` counter, Priority defaults to Medium, and Assignee offers "Unassigned" (`""`) plus each user.',
       'A title under 3 characters (trimmed) shows `role="alert"` "Title must be at least 3 characters" and does not submit.',
@@ -764,7 +764,7 @@ useEffect(() => {
       'exercises/day05/LiveIssueFeed.tsx',
       'exercises/day05/IssueStats.tsx',
     ],
-    command: 'npm test -- day05',
+    command: 'pnpm test day05',
     criteria: [
       '`IssueDetail`: a slow response for the previous id never overwrites the current one; a missing issue shows `role="alert"` "Could not load issue".',
       '`RelativeTime`: re-renders every 60 s, and leaves **zero** timers behind after unmount.',

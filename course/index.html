@@ -201,7 +201,7 @@ noscript p { background: var(--yellow-bg); padding: 0.75rem 1rem; border-radius:
 </div>
     <nav aria-label="Course days"><ol class="nav"><li class="nav__week"><h2 class="nav__heading">Week 1 · Core mental model</h2><ol><li><a href="#day-1" data-nav="1"><span class="nav__n">1</span><span class="nav__t">JSX, components, rendering</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-2" data-nav="2"><span class="nav__n">2</span><span class="nav__t">Props, children, composition, lists &amp; keys</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-3" data-nav="3"><span class="nav__n">3</span><span class="nav__t">State: useState, immutability, derived state</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-4" data-nav="4"><span class="nav__n">4</span><span class="nav__t">Events &amp; forms: controlled vs uncontrolled, refs</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-5" data-nav="5"><span class="nav__n">5</span><span class="nav__t">Effects: synchronising with external systems</span><span class="nav__done" aria-hidden="true">✓</span></a></li></ol></li><li class="nav__week"><h2 class="nav__heading">Week 2 · Architecture</h2><ol><li><a href="#day-6" data-nav="6"><span class="nav__n">6</span><span class="nav__t">Rendering performance: reconciliation, memoization, React Compiler</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-7" data-nav="7"><span class="nav__n">7</span><span class="nav__t">State architecture: Context, reducers, external stores</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-8" data-nav="8"><span class="nav__n">8</span><span class="nav__t">Custom hooks</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-9" data-nav="9"><span class="nav__n">9</span><span class="nav__t">Data fetching: TanStack Query, Suspense, error boundaries</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-10" data-nav="10"><span class="nav__n">10</span><span class="nav__t">Routing with React Router 8 (data mode)</span><span class="nav__done" aria-hidden="true">✓</span></a></li></ol></li><li class="nav__week"><h2 class="nav__heading">Week 3 · Modern &amp; advanced</h2><ol><li><a href="#day-11" data-nav="11"><span class="nav__n">11</span><span class="nav__t">React 19 Actions &amp; concurrent features</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-12" data-nav="12"><span class="nav__n">12</span><span class="nav__t">Server Components &amp; the Next.js App Router</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-13" data-nav="13"><span class="nav__n">13</span><span class="nav__t">Testing React well</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-14" data-nav="14"><span class="nav__n">14</span><span class="nav__t">Patterns, TypeScript &amp; modern APIs</span><span class="nav__done" aria-hidden="true">✓</span></a></li><li><a href="#day-15" data-nav="15"><span class="nav__n">15</span><span class="nav__t">Capstone + mock interview</span><span class="nav__done" aria-hidden="true">✓</span></a></li></ol></li></ol></nav>
     <div class="sidebar__foot">
-      <p>Exercises, tests and solutions: <a href="https://github.com/linearza/learnreact">github.com/linearza/learnreact</a></p>
+      <p>Exercises, tests and solutions: <a href="https://github.com/linearza/react-for-ember-engineers">github.com/linearza/react-for-ember-engineers</a></p>
       <p><span class="flag flag--green">🟢 translate</span> <span class="flag flag--yellow">🟡 re-learn</span> <span class="flag flag--red">🔴 unlearn</span></p>
     </div>
   </aside>
@@ -351,12 +351,12 @@ export const formatDate = (iso: string) =&gt; fmt.format(new Date(iso));
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day01/StatusBadge.tsx"><code>exercises/day01/StatusBadge.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day01/IssueCard.tsx"><code>exercises/day01/IssueCard.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day01/formatDate.ts"><code>exercises/day01/formatDate.ts</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day01/StatusBadge.tsx"><code>exercises/day01/StatusBadge.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day01/IssueCard.tsx"><code>exercises/day01/IssueCard.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day01/formatDate.ts"><code>exercises/day01/formatDate.ts</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day01</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day01</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -529,12 +529,12 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day02/Card.tsx"><code>exercises/day02/Card.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day02/IssueList.tsx"><code>exercises/day02/IssueList.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day02/IssueNotes.tsx"><code>exercises/day02/IssueNotes.tsx</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day02/Card.tsx"><code>exercises/day02/Card.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day02/IssueList.tsx"><code>exercises/day02/IssueList.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day02/IssueNotes.tsx"><code>exercises/day02/IssueNotes.tsx</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day02</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day02</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -710,12 +710,12 @@ const [draft, setDraft] = useState(() =&gt; JSON.parse(localStorage.draft ?? &#x
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day03/IssueBoard.tsx"><code>exercises/day03/IssueBoard.tsx</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day03/IssueBoard.tsx"><code>exercises/day03/IssueBoard.tsx</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day03</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day03</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -866,12 +866,12 @@ inputRef.current?.focus();</code></pre></figure>
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day04/NewIssueForm.tsx"><code>exercises/day04/NewIssueForm.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day04/QuickSearch.tsx"><code>exercises/day04/QuickSearch.tsx</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day04/NewIssueForm.tsx"><code>exercises/day04/NewIssueForm.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day04/QuickSearch.tsx"><code>exercises/day04/QuickSearch.tsx</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day04</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day04</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -1041,12 +1041,12 @@ useEffect(() =&gt; {
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day05/IssueDetail.tsx"><code>exercises/day05/IssueDetail.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day05/RelativeTime.tsx"><code>exercises/day05/RelativeTime.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day05/LiveIssueFeed.tsx"><code>exercises/day05/LiveIssueFeed.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day05/IssueStats.tsx"><code>exercises/day05/IssueStats.tsx</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day05/IssueDetail.tsx"><code>exercises/day05/IssueDetail.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day05/RelativeTime.tsx"><code>exercises/day05/RelativeTime.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day05/LiveIssueFeed.tsx"><code>exercises/day05/LiveIssueFeed.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day05/IssueStats.tsx"><code>exercises/day05/IssueStats.tsx</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day05</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day05</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -1235,12 +1235,12 @@ export default defineConfig({
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day06/IssueRow.tsx"><code>exercises/day06/IssueRow.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day06/IssueTable.tsx"><code>exercises/day06/IssueTable.tsx</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day06/IssueRow.tsx"><code>exercises/day06/IssueRow.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day06/IssueTable.tsx"><code>exercises/day06/IssueTable.tsx</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day06</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day06</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -1400,12 +1400,12 @@ const status = useStore(filterStore, (s) =&gt; s.status);
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day07/issuesReducer.ts"><code>exercises/day07/issuesReducer.ts</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day07/IssuesContext.tsx"><code>exercises/day07/IssuesContext.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day07/store.ts"><code>exercises/day07/store.ts</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day07/issuesReducer.ts"><code>exercises/day07/issuesReducer.ts</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day07/IssuesContext.tsx"><code>exercises/day07/IssuesContext.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day07/store.ts"><code>exercises/day07/store.ts</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day07</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day07</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -1545,12 +1545,12 @@ expect(result.current).toBe(&#x27;ab&#x27;);</code></pre></figure>
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day08/useToggle.ts"><code>exercises/day08/useToggle.ts</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day08/useDebouncedValue.ts"><code>exercises/day08/useDebouncedValue.ts</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day08/useLocalStorage.ts"><code>exercises/day08/useLocalStorage.ts</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day08/useIssueSearch.ts"><code>exercises/day08/useIssueSearch.ts</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day08/useToggle.ts"><code>exercises/day08/useToggle.ts</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day08/useDebouncedValue.ts"><code>exercises/day08/useDebouncedValue.ts</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day08/useLocalStorage.ts"><code>exercises/day08/useLocalStorage.ts</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day08/useIssueSearch.ts"><code>exercises/day08/useIssueSearch.ts</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day08</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day08</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -1710,12 +1710,12 @@ function IssueDetail({ id }: { id: string }) {
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day09/queries.ts"><code>exercises/day09/queries.ts</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day09/IssueListScreen.tsx"><code>exercises/day09/IssueListScreen.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day09/ErrorBoundary.tsx"><code>exercises/day09/ErrorBoundary.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day09/IssueDetailBoundary.tsx"><code>exercises/day09/IssueDetailBoundary.tsx</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day09/queries.ts"><code>exercises/day09/queries.ts</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day09/IssueListScreen.tsx"><code>exercises/day09/IssueListScreen.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day09/ErrorBoundary.tsx"><code>exercises/day09/ErrorBoundary.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day09/IssueDetailBoundary.tsx"><code>exercises/day09/IssueDetailBoundary.tsx</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day09</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day09</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -1901,12 +1901,12 @@ navigate(&#x27;/issues&#x27;);</code></pre></figure>
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day10/routes.tsx"><code>exercises/day10/routes.tsx</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day10/routes.tsx"><code>exercises/day10/routes.tsx</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day10</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day10</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -2086,12 +2086,12 @@ startTransition(() =&gt; setId(nextId)); // animates</code></pre></figure>
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day11/EditTitle.tsx"><code>exercises/day11/EditTitle.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day11/StatusToggle.tsx"><code>exercises/day11/StatusToggle.tsx</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day11/EditTitle.tsx"><code>exercises/day11/EditTitle.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day11/StatusToggle.tsx"><code>exercises/day11/StatusToggle.tsx</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day11</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day11</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -2258,18 +2258,18 @@ app/issues/actions.ts     &#x27;use server&#x27;</code></pre></figure>
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day12/app/issues/page.tsx"><code>exercises/day12/app/issues/page.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day12/app/issues/IssueFilterBar.tsx"><code>exercises/day12/app/issues/IssueFilterBar.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day12/app/issues/IssueList.tsx"><code>exercises/day12/app/issues/IssueList.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day12/app/issues/actions.ts"><code>exercises/day12/app/issues/actions.ts</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day12/app/issues/page.tsx"><code>exercises/day12/app/issues/page.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day12/app/issues/IssueFilterBar.tsx"><code>exercises/day12/app/issues/IssueFilterBar.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day12/app/issues/IssueList.tsx"><code>exercises/day12/app/issues/IssueList.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day12/app/issues/actions.ts"><code>exercises/day12/app/issues/actions.ts</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day12</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day12</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
   <ul class="checklist"><li>Every file that uses hooks or <code>on*</code> handlers starts with <code>'use client'</code> (the filter bar), and nothing else does.</li><li><code>page.tsx</code> has no <code>'use client'</code>, is an <code>async</code> default export, and has no <code>useState</code> or <code>useEffect</code>.</li><li><code>actions.ts</code> starts with <code>'use server'</code>.</li><li><code>render(await IssuesPage({ searchParams: Promise.resolve({ status: 'todo' }) }))</code> shows only to-do issues and the filter bar. An invalid status shows everything.</li><li><code>updateStatusAction(formData)</code> updates the db, and rejects an invalid status.</li></ul>
   <h3>Stretch</h3>
-  <p><code>npx create-next-app@latest</code>, copy <code>exercises/day12/app/issues</code> into <code>app/</code>, point <code>@domain</code> at the course's <code>src/domain</code>, and add <code>revalidatePath('/issues')</code> to the action. Then disable JavaScript and confirm that filtering and "Mark done" still work.</p>
+  <p><code>pnpm create next-app@latest</code>, copy <code>exercises/day12/app/issues</code> into <code>app/</code>, point <code>@domain</code> at the course's <code>src/domain</code>, and add <code>revalidatePath('/issues')</code> to the action. Then disable JavaScript and confirm that filtering and "Mark done" still work.</p>
 </section>
   
 <section class="panel" aria-labelledby="d12-drill">
@@ -2407,12 +2407,12 @@ expect(screen.getByRole(&#x27;tab&#x27;, { name: &#x27;Closed&#x27; })).toHaveFo
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day13/tabs.checks.tsx"><code>exercises/day13/tabs.checks.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/src/day13/Tabs.tsx"><code>src/day13/Tabs.tsx (read only)</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day13/tabs.checks.tsx"><code>exercises/day13/tabs.checks.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/src/day13/Tabs.tsx"><code>src/day13/Tabs.tsx (read only)</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day13</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day13</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -2603,12 +2603,12 @@ useEffect(() =&gt; {
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day14/Accordion.tsx"><code>exercises/day14/Accordion.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day14/Modal.tsx"><code>exercises/day14/Modal.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day14/TextField.tsx"><code>exercises/day14/TextField.tsx</code></a></li><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day14/KeepAliveTabs.tsx"><code>exercises/day14/KeepAliveTabs.tsx</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day14/Accordion.tsx"><code>exercises/day14/Accordion.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day14/Modal.tsx"><code>exercises/day14/Modal.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day14/TextField.tsx"><code>exercises/day14/TextField.tsx</code></a></li><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day14/KeepAliveTabs.tsx"><code>exercises/day14/KeepAliveTabs.tsx</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day14</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day14</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
@@ -2663,16 +2663,16 @@ useEffect(() =&gt; {
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files"><li><a href="https://github.com/linearza/learnreact/blob/main/exercises/day15/App.tsx"><code>exercises/day15/App.tsx</code></a></li></ul>
+      <ul class="files"><li><a href="https://github.com/linearza/react-for-ember-engineers/blob/main/exercises/day15/App.tsx"><code>exercises/day15/App.tsx</code></a></li></ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>npm test -- day15</code></pre>
-      <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
+      <pre class="cmd"><code>pnpm test day15</code></pre>
+      <p class="muted small">Against the reference: <code>pnpm test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
-  <ul class="checklist"><li><code>AppRoot({ initialEntries? })</code> uses a memory router when entries are given and a browser router otherwise. The <code>QueryClient</code> and the router are each held in <code>useState</code>.</li><li>It composes earlier days through <code>@ex/…</code>: Day 10's route structure, Day 9's hooks, Day 4's <code>NewIssueForm</code>, Day 14's <code>Modal</code>, and Day 1's <code>IssueCard</code> / <code>StatusBadge</code>.</li><li>Flow: the list shows 4 issues → "Status filter" To do shows 2 → clicking an issue shows its detail → setting the detail's "Status" to Done drops it from the filtered list → "New issue" opens the modal, submitting "Write capstone" closes it, and the new issue appears under All.</li><li>Deep links (<code>/issues/3</code>) work, the modal validates and closes on Escape, and unknown routes show "Page not found" inside the layout.</li><li>Then <code>npm run dev</code> to use <em>your</em> app at 300 ms latency (<code>npm run dev:solutions</code> for the reference).</li></ul>
+  <ul class="checklist"><li><code>AppRoot({ initialEntries? })</code> uses a memory router when entries are given and a browser router otherwise. The <code>QueryClient</code> and the router are each held in <code>useState</code>.</li><li>It composes earlier days through <code>@ex/…</code>: Day 10's route structure, Day 9's hooks, Day 4's <code>NewIssueForm</code>, Day 14's <code>Modal</code>, and Day 1's <code>IssueCard</code> / <code>StatusBadge</code>.</li><li>Flow: the list shows 4 issues → "Status filter" To do shows 2 → clicking an issue shows its detail → setting the detail's "Status" to Done drops it from the filtered list → "New issue" opens the modal, submitting "Write capstone" closes it, and the new issue appears under All.</li><li>Deep links (<code>/issues/3</code>) work, the modal validates and closes on Escape, and unknown routes show "Page not found" inside the layout.</li><li>Then <code>pnpm dev</code> to use <em>your</em> app at 300 ms latency (<code>pnpm dev:solutions</code> for the reference).</li></ul>
   <h3>Stretch</h3>
   <p>Add the Day 11 <code>EditTitle</code> to the detail pane and the Day 5 <code>LiveIssueFeed</code> to the layout, and wrap navigations in <code>&lt;ViewTransition&gt;</code>.</p>
 </section>

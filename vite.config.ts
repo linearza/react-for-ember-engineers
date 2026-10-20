@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 
 // `@ex/dayNN/...` points at YOUR work in exercises/ by default.
-// Run with SOLUTIONS=1 (npm run test:solutions / dev:solutions) to point it at solutions/ instead.
+// Run with SOLUTIONS=1 (pnpm test:solutions / dev:solutions) to point it at solutions/ instead.
 const useSolutions = process.env.SOLUTIONS === '1';
 const exDir = useSolutions ? 'solutions' : 'exercises';
 

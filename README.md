@@ -9,13 +9,13 @@ Every exercise builds part of one small issue tracker. On Day 15 you put the par
 
 ## Setup
 
-Requires **Node ≥ 22.22** (React Router 8 needs it).
+Requires **Node ≥ 22.22** (React Router 8 needs it) and **pnpm**. `corepack enable` gives you the version pinned in `package.json`.
 
 ```sh
-git clone https://github.com/linearza/learnreact.git react-for-ember-devs
-cd react-for-ember-devs
-npm install
-npm run test:solutions   # sanity check: everything should be green
+git clone https://github.com/linearza/react-for-ember-engineers.git
+cd react-for-ember-engineers
+pnpm install
+pnpm test:solutions   # sanity check: everything should be green
 ```
 
 Stack: React 19.3, React Router 8 (data mode), TanStack Query 5, Vite 8, Vitest 5 + Testing Library, TypeScript 5.9. TypeScript 7 (the native Go port) exists. This repo stays on 5.9 for editor and tooling stability, and nothing here depends on the difference.
@@ -25,7 +25,7 @@ Stack: React 19.3, React Router 8 (data mode), TanStack Query 5, Vite 8, Vitest 
 | Block | Time | What you do |
 |---|---|---|
 | Concepts | ~15 min | Read the day on the course page. Each concept has an Ember ↔ React side-by-side and a flag: 🟢 direct translation · 🟡 same goal, different mechanics · 🔴 new mental model. |
-| Hands-on | ~35 min | `npm test -- day05` (watch mode), then edit `exercises/day05/` until it's green. Each stub has TODO comments naming the behaviour and the Ember equivalent. |
+| Hands-on | ~35 min | `pnpm test day05` (watch mode), then edit `exercises/day05/` until it's green. Each stub has TODO comments naming the behaviour and the Ember equivalent. |
 | Interview drill | ~10 min | Answer each question **out loud** before you reveal the model answer. |
 
 ## Your work vs. the solutions
@@ -34,14 +34,14 @@ Tests import `@ex/dayNN/...`. One switch in `vite.config.ts` decides what `@ex` 
 
 | Command | `@ex` resolves to | Use |
 |---|---|---|
-| `npm test -- day05` | `exercises/` | your daily loop (watch mode) |
-| `npx vitest run` | `exercises/` | check everything you've done so far |
-| `npm run test:solutions` | `solutions/` | reference run: 109/109 pass |
-| `npm run dev` | `exercises/` | run *your* Day 15 app |
-| `npm run dev:solutions` | `solutions/` | run the reference app |
-| `npm run typecheck` | — | `tsc --noEmit`: passes for both trees |
+| `pnpm test day05` | `exercises/` | your daily loop (watch mode) |
+| `pnpm exec vitest run` | `exercises/` | check everything you've done so far |
+| `pnpm test:solutions` | `solutions/` | reference run: 109/109 pass |
+| `pnpm dev` | `exercises/` | run *your* Day 15 app |
+| `pnpm dev:solutions` | `solutions/` | run the reference app |
+| `pnpm typecheck` | — | `tsc --noEmit`: passes for both trees |
 
-The stubs fail on purpose. Against an untouched `exercises/`, every day's tests fail except for at most one or two trivial ones. Cross-day imports (for example, Day 15 importing Day 9's hooks) also go through `@ex`. So `npm run dev` runs the app on *your* earlier days, which makes it a good integration check.
+The stubs fail on purpose. Against an untouched `exercises/`, every day's tests fail except for at most one or two trivial ones. Cross-day imports (for example, Day 15 importing Day 9's hooks) also go through `@ex`. So `pnpm dev` runs the app on *your* earlier days, which makes it a good integration check.
 
 Read a solution only after your tests pass, or after you've been stuck for 10 minutes. `git diff --no-index exercises/day05 solutions/day05` is a quick way to compare.
 
@@ -83,7 +83,7 @@ The fake API (`@domain/api`) has test controls: `setLatency(ms)` (300 in dev, 0 
 
 - **Day 6: React Compiler.** Remove the `memo`/`useCallback` from your `IssueTable` and let the compiler do it:
   ```sh
-  npm install -D @rolldown/plugin-babel @babel/core babel-plugin-react-compiler
+  pnpm add -D @rolldown/plugin-babel @babel/core babel-plugin-react-compiler
   ```
   ```ts
   // vite.config.ts
@@ -96,7 +96,7 @@ The fake API (`@domain/api`) has test controls: `setLatency(ms)` (300 in dev, 0 
 - **Day 8:** make `useLocalStorage` sync across tabs (the `storage` event, ideally via `useSyncExternalStore`).
 - **Day 9:** make the status change optimistic with `onMutate` / `onError` rollback / `onSettled` invalidate.
 - **Day 10:** add `<ViewTransition>` or a pending UI with `useNavigation()`; try the same routes in TanStack Router for type-safe params.
-- **Day 12:** `npx create-next-app@latest`, drop `exercises/day12/app/issues` into `app/`, and watch the boundaries work for real (add `revalidatePath` to the action).
+- **Day 12:** `pnpm create next-app@latest`, drop `exercises/day12/app/issues` into `app/`, and watch the boundaries work for real (add `revalidatePath` to the action).
 - **Day 13:** write a sixth mutant your checks *don't* catch, then add a check for it.
 - **Day 15:** add the Day 11 `EditTitle` to the detail pane, and the Day 5 `LiveIssueFeed`.
 

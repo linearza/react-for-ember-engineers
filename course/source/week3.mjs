@@ -138,7 +138,7 @@ startTransition(() => setId(nextId)); // animates
       'exercises/day11/EditTitle.tsx',
       'exercises/day11/StatusToggle.tsx',
     ],
-    command: 'npm test -- day11',
+    command: 'pnpm test day11',
     criteria: [
       '`EditTitle` uses `useActionState` + `<form action>`. While saving, the button reads "Saving…" and is disabled (`useFormStatus` in `SaveButton`).',
       'On success the heading shows the new title. On a 422, `role="alert"` shows the server message and the old title stays.',
@@ -295,7 +295,7 @@ app/issues/actions.ts     'use server'
       'exercises/day12/app/issues/IssueList.tsx',
       'exercises/day12/app/issues/actions.ts',
     ],
-    command: 'npm test -- day12',
+    command: 'pnpm test day12',
     criteria: [
       'Every file that uses hooks or `on*` handlers starts with `\'use client\'` (the filter bar), and nothing else does.',
       '`page.tsx` has no `\'use client\'`, is an `async` default export, and has no `useState` or `useEffect`.',
@@ -303,7 +303,7 @@ app/issues/actions.ts     'use server'
       '`render(await IssuesPage({ searchParams: Promise.resolve({ status: \'todo\' }) }))` shows only to-do issues and the filter bar. An invalid status shows everything.',
       '`updateStatusAction(formData)` updates the db, and rejects an invalid status.',
     ],
-    stretch: '`npx create-next-app@latest`, copy `exercises/day12/app/issues` into `app/`, point `@domain` at the course\'s `src/domain`, and add `revalidatePath(\'/issues\')` to the action. Then disable JavaScript and confirm that filtering and "Mark done" still work.',
+    stretch: '`pnpm create next-app@latest`, copy `exercises/day12/app/issues` into `app/`, point `@domain` at the course\'s `src/domain`, and add `revalidatePath(\'/issues\')` to the action. Then disable JavaScript and confirm that filtering and "Mark done" still work.',
   },
   drill: [
     ['RSC vs SSR?',
@@ -425,7 +425,7 @@ expect(screen.getByRole('tab', { name: 'Closed' })).toHaveFocus();
       'exercises/day13/tabs.checks.tsx',
       'src/day13/Tabs.tsx (read only)',
     ],
-    command: 'npm test -- day13',
+    command: 'pnpm test day13',
     criteria: [
       'Export at least **4** checks, each `{ name, run(Tabs) }`, that render the component and assert behaviour.',
       'Every check **passes** against the real `Tabs`.',
@@ -604,7 +604,7 @@ useEffect(() => {
       'exercises/day14/TextField.tsx',
       'exercises/day14/KeepAliveTabs.tsx',
     ],
-    command: 'npm test -- day14',
+    command: 'pnpm test day14',
     criteria: [
       '`Accordion` (+ `.Item`, `.Trigger`, `.Panel`): one item open at a time, `aria-expanded`, closed panels `hidden`, panels labelled by their trigger, `defaultValue`. The parts throw outside `<Accordion>`.',
       '`Modal` portals to `document.body` (not inside the render container), with `role="dialog"`, `aria-modal`, and a label from the title.',
@@ -647,13 +647,13 @@ export const DAY15 = Day({
     files: [
       'exercises/day15/App.tsx',
     ],
-    command: 'npm test -- day15',
+    command: 'pnpm test day15',
     criteria: [
       '`AppRoot({ initialEntries? })` uses a memory router when entries are given and a browser router otherwise. The `QueryClient` and the router are each held in `useState`.',
       'It composes earlier days through `@ex/…`: Day 10\'s route structure, Day 9\'s hooks, Day 4\'s `NewIssueForm`, Day 14\'s `Modal`, and Day 1\'s `IssueCard` / `StatusBadge`.',
       'Flow: the list shows 4 issues → "Status filter" To do shows 2 → clicking an issue shows its detail → setting the detail\'s "Status" to Done drops it from the filtered list → "New issue" opens the modal, submitting "Write capstone" closes it, and the new issue appears under All.',
       'Deep links (`/issues/3`) work, the modal validates and closes on Escape, and unknown routes show "Page not found" inside the layout.',
-      'Then `npm run dev` to use *your* app at 300 ms latency (`npm run dev:solutions` for the reference).',
+      'Then `pnpm dev` to use *your* app at 300 ms latency (`pnpm dev:solutions` for the reference).',
     ],
     stretch: 'Add the Day 11 `EditTitle` to the detail pane and the Day 5 `LiveIssueFeed` to the layout, and wrap navigations in `<ViewTransition>`.',
   },
