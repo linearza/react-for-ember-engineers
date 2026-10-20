@@ -9,7 +9,8 @@
     "dev:solutions": "SOLUTIONS=1 vite",
     "test": "vitest",
     "test:solutions": "SOLUTIONS=1 vitest run",
-    "typecheck": "tsc --noEmit -p ."
+    "typecheck": "tsc --noEmit -p .",
+    "build:course": "node course/source/build.mjs course/index.html"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.5",

@@ -1,177 +1,170 @@
-import html
-import sys
-from model import FLAGS, dedent, inline, md
-from week1 import WEEK1
-from week2 import WEEK2
-from week3 import WEEK3, MOCK_INTERVIEW, CHEATSHEET
+// Generates course/index.html: node course/source/build.mjs course/index.html
+import { writeFileSync } from 'node:fs';
+import { FLAGS, dedent, escape as e, inline, md } from './model.mjs';
+import { WEEK1 } from './week1.mjs';
+import { WEEK2 } from './week2.mjs';
+import { WEEK3, MOCK_INTERVIEW, CHEATSHEET } from './week3.mjs';
 
-REPO = 'https://github.com/linearza/learnreact'
-DAYS = WEEK1 + WEEK2 + WEEK3
-WEEKS = {1: 'Core mental model', 2: 'Architecture', 3: 'Modern & advanced'}
-PRISM = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components'
-PRISM_COMPONENTS = ['core', 'markup', 'clike', 'javascript', 'typescript', 'jsx', 'tsx', 'markup-templating', 'handlebars', 'bash']
+const REPO = 'https://github.com/linearza/learnreact';
+const DAYS = [...WEEK1, ...WEEK2, ...WEEK3];
+const WEEKS = { 1: 'Core mental model', 2: 'Architecture', 3: 'Modern & advanced' };
+const PRISM = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components';
+const PRISM_COMPONENTS = ['core', 'markup', 'clike', 'javascript', 'typescript', 'jsx', 'tsx', 'markup-templating', 'handlebars', 'bash'];
 
-assert len(DAYS) == 15
-assert len(MOCK_INTERVIEW) == 30, len(MOCK_INTERVIEW)
+if (DAYS.length !== 15) throw new Error(`expected 15 days, got ${DAYS.length}`);
+if (MOCK_INTERVIEW.length !== 30) throw new Error(`expected 30 mock questions, got ${MOCK_INTERVIEW.length}`);
 
-e = lambda s: html.escape(s, quote=True)
+function flagBadge(code) {
+  const [emoji, label, cls] = FLAGS[code];
+  return `<span class="flag flag--${cls}"><span aria-hidden="true">${emoji}</span> ${label}</span>`;
+}
 
+function codeBlock(code, lang, label) {
+  const langCls = lang === 'text' ? 'none' : lang;
+  return (
+    `<figure class="code"><figcaption>${e(label)}</figcaption>` +
+    `<pre class="language-${langCls}" tabindex="0"><code class="language-${langCls}">${e(dedent(code))}</code></pre></figure>`
+  );
+}
 
-def flag_badge(code: str) -> str:
-    emoji, label, cls = FLAGS[code]
-    return f'<span class="flag flag--{cls}"><span aria-hidden="true">{emoji}</span> {label}</span>'
+function planStrip(day) {
+  const minutes = day.n === 15 ? [35, 20, 5] : [15, 35, 10];
+  const items = day.plan
+    .map((label, i) => `<li><span class="plan__min">${minutes[i]} min</span><span class="plan__label">${e(label)}</span></li>`)
+    .join('');
+  return `<ol class="plan" aria-label="60-minute plan">${items}</ol>`;
+}
 
-
-def code_block(code: str, lang: str, label: str) -> str:
-    lang_cls = 'none' if lang == 'text' else lang
-    return (
-        f'<figure class="code"><figcaption>{e(label)}</figcaption>'
-        f'<pre class="language-{lang_cls}" tabindex="0"><code class="language-{lang_cls}">{e(dedent(code))}</code></pre></figure>'
-    )
-
-
-def plan_strip(day) -> str:
-    minutes = (35, 20, 5) if day.n == 15 else (15, 35, 10)
-    items = ''.join(
-        f'<li><span class="plan__min">{m} min</span><span class="plan__label">{e(label)}</span></li>'
-        for m, label in zip(minutes, day.plan)
-    )
-    return f'<ol class="plan" aria-label="60-minute plan">{items}</ol>'
-
-
-def concept(day, i, c) -> str:
-    cid = f'd{day.n}-c{i}'
-    return f'''
-<section class="concept" aria-labelledby="{cid}">
+function concept(day, i, c) {
+  const cid = `d${day.n}-c${i}`;
+  return `
+<section class="concept" aria-labelledby="${cid}">
   <header class="concept__head">
-    <h3 id="{cid}">{inline(c.title)}</h3>
-    {flag_badge(c.flag)}
+    <h3 id="${cid}">${inline(c.title)}</h3>
+    ${flagBadge(c.flag)}
   </header>
-  <div class="prose">{md(c.body)}</div>
+  <div class="prose">${md(c.body)}</div>
   <div class="compare">
-    {code_block(c.ember, c.ember_lang, c.ember_label)}
-    {code_block(c.react, c.react_lang, c.react_label)}
+    ${codeBlock(c.ember, c.emberLang, c.emberLabel)}
+    ${codeBlock(c.react, c.reactLang, c.reactLabel)}
   </div>
-</section>'''
+</section>`;
+}
 
-
-def exercise(day) -> str:
-    ex = day.exercise
-    files = ''.join(
-        f'<li><a href="{REPO}/blob/main/{e(f.split(" ")[0])}"><code>{e(f)}</code></a></li>' for f in ex.files
-    )
-    criteria = ''.join(f'<li>{inline(c)}</li>' for c in ex.criteria)
-    intro = f'<p>{inline(ex.intro)}</p>' if ex.intro else ''
-    return f'''
-<section class="panel exercise" aria-labelledby="d{day.n}-ex">
-  <h2 id="d{day.n}-ex">Hands-on</h2>
-  {intro}
+function exercise(day) {
+  const ex = day.exercise;
+  const files = ex.files
+    .map((f) => `<li><a href="${REPO}/blob/main/${e(f.split(' ')[0])}"><code>${e(f)}</code></a></li>`)
+    .join('');
+  const criteria = ex.criteria.map((c) => `<li>${inline(c)}</li>`).join('');
+  const intro = ex.intro ? `<p>${inline(ex.intro)}</p>` : '';
+  return `
+<section class="panel exercise" aria-labelledby="d${day.n}-ex">
+  <h2 id="d${day.n}-ex">Hands-on</h2>
+  ${intro}
   <div class="exercise__grid">
     <div>
       <h3>Open</h3>
-      <ul class="files">{files}</ul>
+      <ul class="files">${files}</ul>
     </div>
     <div>
       <h3>Run</h3>
-      <pre class="cmd"><code>{e(ex.command)}</code></pre>
+      <pre class="cmd"><code>${e(ex.command)}</code></pre>
       <p class="muted small">Against the reference: <code>npm run test:solutions</code></p>
     </div>
   </div>
   <h3>Done when</h3>
-  <ul class="checklist">{criteria}</ul>
+  <ul class="checklist">${criteria}</ul>
   <h3>Stretch</h3>
-  <p>{inline(ex.stretch)}</p>
-</section>'''
+  <p>${inline(ex.stretch)}</p>
+</section>`;
+}
 
-
-def qa(prefix, i, q, a, meta='') -> str:
-    meta_html = f'<span class="qa__meta">{e(meta)}</span>' if meta else ''
-    return f'''
+function qa(i, q, a, meta = '') {
+  const metaHtml = meta ? `<span class="qa__meta">${e(meta)}</span>` : '';
+  return `
 <details class="qa">
-  <summary><span class="qa__n">{i}</span><span class="qa__q">{inline(q)}</span>{meta_html}</summary>
-  <div class="qa__a prose">{md(a)}</div>
-</details>'''
+  <summary><span class="qa__n">${i}</span><span class="qa__q">${inline(q)}</span>${metaHtml}</summary>
+  <div class="qa__a prose">${md(a)}</div>
+</details>`;
+}
 
-
-def drill(day) -> str:
-    items = ''.join(qa(f'd{day.n}', i + 1, q, a) for i, (q, a) in enumerate(day.drill))
-    return f'''
-<section class="panel" aria-labelledby="d{day.n}-drill">
-  <h2 id="d{day.n}-drill">Interview drill</h2>
+function drill(day) {
+  const items = day.drill.map(([q, a], i) => qa(i + 1, q, a)).join('');
+  return `
+<section class="panel" aria-labelledby="d${day.n}-drill">
+  <h2 id="d${day.n}-drill">Interview drill</h2>
   <p class="muted">Answer out loud first, then open the model answer.</p>
-  <div class="qas">{items}</div>
-</section>'''
+  <div class="qas">${items}</div>
+</section>`;
+}
 
-
-def day15_extra() -> str:
-    mock = ''.join(qa('mock', i + 1, q, a, meta=concern) for i, (concern, q, a) in enumerate(MOCK_INTERVIEW))
-    rows = ''.join(
-        f'<tr><td>{inline(ember)}</td><td>{inline(react)}</td><td class="nowrap">{" / ".join(FLAGS[c][0] for c in flag)}</td></tr>'
-        for ember, react, flag in CHEATSHEET
-    )
-    return f'''
+function day15Extra() {
+  const mock = MOCK_INTERVIEW.map(([concern, q, a], i) => qa(i + 1, q, a, concern)).join('');
+  const rows = CHEATSHEET
+    .map(([ember, react, flag]) => `<tr><td>${inline(ember)}</td><td>${inline(react)}</td><td class="nowrap">${[...flag].map((c) => FLAGS[c][0]).join(' / ')}</td></tr>`)
+    .join('');
+  return `
 <section class="panel" aria-labelledby="mock">
   <h2 id="mock">Mock interview: 30 questions</h2>
   <p class="muted">Set a timer: about 40 seconds per answer, out loud, before you reveal. Two per concern, plus the cross-cutting ones interviewers love.</p>
-  <div class="qas">{mock}</div>
+  <div class="qas">${mock}</div>
 </section>
 <section class="panel cheatsheet" id="cheatsheet" aria-labelledby="cheatsheet-title">
   <div class="cheatsheet__head">
     <h2 id="cheatsheet-title">React for Ember devs: cheat sheet</h2>
     <button type="button" class="button" data-print-cheatsheet>Print cheat sheet</button>
   </div>
-  <p class="legend">{flag_badge('g')} {flag_badge('y')} {flag_badge('r')}</p>
+  <p class="legend">${flagBadge('g')} ${flagBadge('y')} ${flagBadge('r')}</p>
   <div class="table-wrap" tabindex="0" role="region" aria-label="Ember to React mapping">
     <table>
       <thead><tr><th scope="col">Ember</th><th scope="col">React</th><th scope="col">Flag</th></tr></thead>
-      <tbody>{rows}</tbody>
+      <tbody>${rows}</tbody>
     </table>
   </div>
-</section>'''
+</section>`;
+}
 
-
-def day_view(day) -> str:
-    concepts = ''.join(concept(day, i, c) for i, c in enumerate(day.concepts))
-    concepts_html = (
-        f'<section aria-labelledby="d{day.n}-concepts"><h2 id="d{day.n}-concepts">Concepts</h2>{concepts}</section>'
-        if day.concepts else ''
-    )
-    prev_link = f'<a class="pager__link" href="#day-{day.n - 1}">← Day {day.n - 1}</a>' if day.n > 1 else '<span></span>'
-    next_link = f'<a class="pager__link" href="#day-{day.n + 1}">Day {day.n + 1} →</a>' if day.n < 15 else '<span></span>'
-    extra = day15_extra() if day.n == 15 else ''
-    drill_html = drill(day) if day.drill else ''
-    return f'''
-<article class="day" id="day-{day.n}" data-day="{day.n}" hidden aria-labelledby="day-{day.n}-title">
+function dayView(day) {
+  const concepts = day.concepts.map((c, i) => concept(day, i, c)).join('');
+  const conceptsHtml = day.concepts.length
+    ? `<section aria-labelledby="d${day.n}-concepts"><h2 id="d${day.n}-concepts">Concepts</h2>${concepts}</section>`
+    : '';
+  const prevLink = day.n > 1 ? `<a class="pager__link" href="#day-${day.n - 1}">← Day ${day.n - 1}</a>` : '<span></span>';
+  const nextLink = day.n < 15 ? `<a class="pager__link" href="#day-${day.n + 1}">Day ${day.n + 1} →</a>` : '<span></span>';
+  const extra = day.n === 15 ? day15Extra() : '';
+  const drillHtml = day.drill.length ? drill(day) : '';
+  return `
+<article class="day" id="day-${day.n}" data-day="${day.n}" hidden aria-labelledby="day-${day.n}-title">
   <header class="day__head">
-    <p class="eyebrow">Week {day.week} · {e(WEEKS[day.week])} · Day {day.n}</p>
-    <h1 id="day-{day.n}-title" tabindex="-1">{inline(day.title)}</h1>
-    <p class="tagline">{inline(day.tagline)}</p>
-    {plan_strip(day)}
+    <p class="eyebrow">Week ${day.week} · ${e(WEEKS[day.week])} · Day ${day.n}</p>
+    <h1 id="day-${day.n}-title" tabindex="-1">${inline(day.title)}</h1>
+    <p class="tagline">${inline(day.tagline)}</p>
+    ${planStrip(day)}
   </header>
-  {concepts_html}
-  {exercise(day)}
-  {drill_html}
-  {extra}
+  ${conceptsHtml}
+  ${exercise(day)}
+  ${drillHtml}
+  ${extra}
   <footer class="day__foot">
-    <button type="button" class="button button--complete" data-complete="{day.n}" aria-pressed="false">Mark day complete</button>
-    <nav class="pager" aria-label="Day navigation">{prev_link}{next_link}</nav>
+    <button type="button" class="button button--complete" data-complete="${day.n}" aria-pressed="false">Mark day complete</button>
+    <nav class="pager" aria-label="Day navigation">${prevLink}${nextLink}</nav>
   </footer>
-</article>'''
+</article>`;
+}
 
+function nav() {
+  return Object.entries(WEEKS).map(([week, name]) => {
+    const links = DAYS.filter((d) => d.week === Number(week))
+      .map((d) =>
+        `<li><a href="#day-${d.n}" data-nav="${d.n}"><span class="nav__n">${d.n}</span>` +
+        `<span class="nav__t">${inline(d.title)}</span><span class="nav__done" aria-hidden="true">✓</span></a></li>`)
+      .join('');
+    return `<li class="nav__week"><h2 class="nav__heading">Week ${week} · ${e(name)}</h2><ol>${links}</ol></li>`;
+  }).join('');
+}
 
-def nav() -> str:
-    groups = []
-    for week, name in WEEKS.items():
-        links = ''.join(
-            f'<li><a href="#day-{d.n}" data-nav="{d.n}"><span class="nav__n">{d.n}</span>'
-            f'<span class="nav__t">{inline(d.title)}</span><span class="nav__done" aria-hidden="true">✓</span></a></li>'
-            for d in DAYS if d.week == week
-        )
-        groups.append(f'<li class="nav__week"><h2 class="nav__heading">Week {week} · {e(name)}</h2><ol>{links}</ol></li>')
-    return ''.join(groups)
-
-
-CSS = r'''
+const CSS = String.raw`
 :root {
   --bg: #f7f7f5; --surface: #ffffff; --surface-2: #f0f0ec; --text: #17181c; --muted: #5f636d;
   --border: #e2e2dc; --accent: #c2410c; --accent-soft: #fff1e8; --link: #9a3412; --focus: #2563eb;
@@ -338,9 +331,9 @@ noscript p { background: var(--yellow-bg); padding: 0.75rem 1rem; border-radius:
   body.print-cheatsheet .cheatsheet { border: 0; margin: 0; padding: 0; }
   .code pre { white-space: pre-wrap; }
 }
-'''
+`;
 
-JS = r'''
+const JS = String.raw`
 (function () {
   var KEY = 'react-for-ember:completed';
   var LAST = 'react-for-ember:last-day';
@@ -440,18 +433,17 @@ JS = r'''
     show(fromHash() || initial, false);
   });
 })();
-'''
+`;
 
-
-def page() -> str:
-    days_html = ''.join(day_view(d) for d in DAYS)
-    prism = ''.join(f'<script src="{PRISM}/prism-{c}.min.js" defer></script>' for c in PRISM_COMPONENTS)
-    progress = '''
+function page() {
+  const daysHtml = DAYS.map(dayView).join('');
+  const prism = PRISM_COMPONENTS.map((c) => `<script src="${PRISM}/prism-${c}.min.js" defer></script>`).join('');
+  const progress = `
 <div class="progress">
   <div class="progress__label"><span>Progress</span><span data-progress-text>0 / 15 complete</span></div>
   <div class="progress__bar" role="progressbar" aria-label="Days complete" aria-valuemin="0" aria-valuemax="15" aria-valuenow="0"><div class="progress__fill"></div></div>
-</div>'''
-    return f'''<!doctype html>
+</div>`;
+  return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -463,9 +455,9 @@ def page() -> str:
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>{CSS}</style>
-<script>window.Prism = window.Prism || {{}}; window.Prism.manual = true;</script>
-{prism}
+<style>${CSS}</style>
+<script>window.Prism = window.Prism || {}; window.Prism.manual = true;</script>
+${prism}
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -480,26 +472,25 @@ def page() -> str:
   <aside class="sidebar" id="sidebar">
     <a class="brand" href="#day-1">React <span>for</span> Ember Engineers</a>
     <p class="sub">15 days · 60 minutes each · React 19.3</p>
-    {progress}
-    <nav aria-label="Course days"><ol class="nav">{nav()}</ol></nav>
+    ${progress}
+    <nav aria-label="Course days"><ol class="nav">${nav()}</ol></nav>
     <div class="sidebar__foot">
-      <p>Exercises, tests and solutions: <a href="{REPO}">github.com/linearza/learnreact</a></p>
+      <p>Exercises, tests and solutions: <a href="${REPO}">github.com/linearza/learnreact</a></p>
       <p><span class="flag flag--green">🟢 translate</span> <span class="flag flag--yellow">🟡 re-learn</span> <span class="flag flag--red">🔴 unlearn</span></p>
     </div>
   </aside>
   <main id="main">
-    <noscript><p>JavaScript is off: every day is shown below in order, and progress tracking is disabled.</p><style>.day[hidden]{{display:block}}</style></noscript>
-    {days_html}
+    <noscript><p>JavaScript is off: every day is shown below in order, and progress tracking is disabled.</p><style>.day[hidden]{display:block}</style></noscript>
+    ${daysHtml}
   </main>
 </div>
-<script>{JS}</script>
+<script>${JS}</script>
 </body>
 </html>
-'''
+`;
+}
 
-
-if __name__ == '__main__':
-    out = sys.argv[1]
-    with open(out, 'w') as f:
-        f.write(page())
-    print('wrote', out)
+const out = process.argv[2];
+if (!out) throw new Error('usage: node course/source/build.mjs <out.html>');
+writeFileSync(out, page());
+console.log('wrote', out);
