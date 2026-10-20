@@ -116,22 +116,27 @@ const coinSvg = (cls = 'pixel-coin') => pixelSvg(COIN, COIN_PAL, cls);
 const LOCK_PAL = { k: '#3a2a10', s: '#9aa3b8', y: '#f8b800', o: '#c87800' };
 const PADLOCK = ['..ssss..', '.s....s.', '.s....s.', 'kkkkkkkk', 'kyyyyyok', 'kyykkyok', 'kyykkyok', 'kyyyyyok', 'kkkkkkkk'];
 const padlockSvg = (cls) => pixelSvg(PADLOCK, LOCK_PAL, cls);
-// The reading track's goal flag, in the scenery's pennant orange
-const FLAG_PAL = { k: '#1a1c2c', o: '#e45c10', y: '#ffcd75', g: '#38b764', d: '#257179' };
-const FLAG = ['kooo...', 'kooyoo.', 'koooooo', 'kooo...', 'k......', 'k......', 'k......', 'k......', 'k......', 'kk.....', 'gggg...', 'dddd...'];
+// The reading track: a horse trotting towards an apple tree, with a carrot per concept on the way
+const HORSE_PAL = { b: '#9a6232', d: '#4a2c16', k: '#1a1c2c' };
+const HORSE_TOP = ['.........db...', '........ddbb..', '........dbkbbb', '........dbbbbk', 'd.bbbbbbbbb...', 'dbbbbbbbbbb...', 'd.bbbbbbbb....'];
+const HORSE_A = [...HORSE_TOP, '..b.b...b.b...', '..k.k...k.k...'];
+const HORSE_B = [...HORSE_TOP, '...bb...bb....', '...kk...kk....'];
+const TREE_PAL = { g: '#38b764', d: '#257179', r: '#e43b44', t: '#5a3a22' };
+const TREE = ['...ggggg...', '.ggggrgggg.', 'gggggggggrg', 'ggrggggdggg', 'gggggrgggdg', 'ggdgggggrgg', '.ggggdgggg.', '..ggggggg..', '....ttt....', '....ttt....', '....ttt....', '...ttttt...'];
+const CARROT_PAL = { g: '#38b764', o: '#ef7d57' };
+const CARROT = ['g.g', '.g.', 'ooo', 'ooo', '.o.', '.o.'];
 const twoFrames = (a, b, pal) => `<g class="f1">${sprite(a, pal)}</g><g class="f2">${sprite(b, pal)}</g>`;
 // The Konami-code parade: the scenery's fox chasing its hero along the bottom of the screen
 const PARADE = '<div class="parade__run">' +
   `<svg class="parade__fox" viewBox="0 0 10 5" shape-rendering="crispEdges">${twoFrames(FOX_A, FOX_B, FOX_PAL)}</svg>` +
   `<svg class="parade__hero" viewBox="0 0 9 11" shape-rendering="crispEdges">${twoFrames(HERO_A, HERO_B, HERO_PAL)}</svg></div>`;
-// The reading track: the hero walks it as you scroll through the day's concepts, a coin per concept
 const READBAR = `<div class="readbar" data-readbar hidden role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress">
   <div class="readbar__track" data-readbar-track>
-    <span class="readbar__runner" data-readbar-runner><svg class="readbar__hero" data-readbar-hero viewBox="0 0 9 11" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${twoFrames(HERO_A, HERO_B, HERO_PAL)}</svg></span>
-    ${pixelSvg(FLAG, FLAG_PAL, 'readbar__flag')}
+    <span class="readbar__runner" data-readbar-runner><svg class="readbar__horse" data-readbar-horse viewBox="0 0 14 9" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${twoFrames(HORSE_A, HORSE_B, HORSE_PAL)}</svg></span>
+    ${pixelSvg(TREE, TREE_PAL, 'readbar__tree')}
   </div>
-  <span class="readbar__label pixel" aria-hidden="true">${coinSvg()}<span data-readbar-label></span></span>
-  <template data-readbar-coin>${coinSvg('readbar__coin')}</template>
+  <span class="readbar__label pixel" aria-hidden="true">${pixelSvg(CARROT, CARROT_PAL, 'readbar__icon')}<span data-readbar-label></span></span>
+  <template data-readbar-carrot>${pixelSvg(CARROT, CARROT_PAL, 'readbar__carrot')}</template>
 </div>`;
 
 // A deterministic shuffle, so the correct choice isn't always first but the page builds the same every time
@@ -590,22 +595,22 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
 .readbar > * { opacity: 0.6; transition: opacity 300ms ease; }
 .readbar:hover > *, .readbar.is-walking > *, .readbar.is-clear > * { opacity: 1; }
 .readbar[hidden] { display: none; }
-.readbar__track { position: relative; flex: 1; height: 22px; margin: 0 20px 0 8px; }
-.readbar__track::before { content: ''; position: absolute; left: -8px; right: -20px; bottom: 0; height: 3px; background: linear-gradient(#38b764 0 1px, #5a3a22 1px); opacity: 0.55; }
+.readbar__track { position: relative; flex: 1; height: 28px; margin: 0 30px 0 14px; }
+.readbar__track::before { content: ''; position: absolute; left: -14px; right: -30px; bottom: 0; height: 3px; background: linear-gradient(#38b764 0 1px, #5a3a22 1px); opacity: 0.55; }
 .readbar__runner { position: absolute; bottom: 3px; left: 0; transform: translateX(0); transition: transform 600ms var(--ease); will-change: transform; }
-.readbar__hero { display: block; width: 13px; height: 16px; margin-left: -6.5px; }
-.readbar__hero.is-back { transform: scaleX(-1); }
-.readbar__flag { position: absolute; bottom: 0; right: -19px; width: 10px; height: 17px; transform-origin: 1px 100%; }
-.readbar__flag.is-raised { animation: flag-wave 900ms var(--ease); }
-@keyframes flag-wave { 30% { transform: translateY(-3px) rotate(-6deg); } 60% { transform: translateY(0) rotate(3deg); } }
-.readbar__coin { position: absolute; bottom: 7px; width: 7px; height: 7px; margin-left: -3.5px; opacity: 0.85; transition: opacity 500ms ease, transform 500ms var(--ease); }
-.readbar__coin.is-got { opacity: 0; transform: translateY(-6px); }
-.readbar__hero .f1, .readbar__hero .f2 { animation: none; }
-.readbar__hero .f2 { opacity: 0; }
-.readbar.is-walking .readbar__hero .f1 { animation: frame 0.36s steps(1) infinite reverse; }
-.readbar.is-walking .readbar__hero .f2 { opacity: 1; animation: frame 0.36s steps(1) infinite; }
+.readbar__horse { display: block; width: 28px; height: 18px; margin-left: -14px; }
+.readbar__horse.is-back { transform: scaleX(-1); }
+.readbar__tree { position: absolute; bottom: 0; right: -28px; width: 22px; height: 24px; transform-origin: 50% 100%; }
+.readbar__tree.is-shaken { animation: tree-shake 900ms var(--ease); }
+@keyframes tree-shake { 25% { transform: rotate(-4deg); } 55% { transform: rotate(3deg); } 80% { transform: rotate(-1deg); } }
+.readbar__carrot { position: absolute; bottom: 4px; width: 5px; height: 10px; margin-left: -2.5px; opacity: 0.85; transition: opacity 500ms ease, transform 500ms var(--ease); }
+.readbar__carrot.is-got { opacity: 0; transform: translateY(-6px); }
+.readbar__horse .f1, .readbar__horse .f2 { animation: none; }
+.readbar__horse .f2 { opacity: 0; }
+.readbar.is-walking .readbar__horse .f1 { animation: frame 0.36s steps(1) infinite reverse; }
+.readbar.is-walking .readbar__horse .f2 { opacity: 1; animation: frame 0.36s steps(1) infinite; }
 .readbar__label { flex: none; min-width: 5em; font-size: 0.48rem; color: var(--muted); text-align: right; white-space: nowrap; line-height: 1; padding-bottom: 1px; transition: color 400ms ease; }
-.readbar__label .pixel-coin { width: 8px; height: 8px; margin-right: 0.4em; vertical-align: -1px; }
+.readbar__icon { width: 5px; height: 10px; margin-right: 0.5em; vertical-align: -1px; }
 .readbar.is-clear .readbar__label { color: var(--accent); }
 @media (max-width: 900px) { .readbar { top: var(--topbar-h, 3.75rem); gap: 0.6rem; } }
 .confetti { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; pointer-events: none; z-index: 1000; overflow: visible; }
@@ -666,7 +671,7 @@ dialog::backdrop { background: rgb(10 10 12 / 0.55); backdrop-filter: blur(3px);
   .scene * { animation: none !important; }
   .scene__f2 { opacity: 0; }
   .quiz, .quiz *, .locked__padlock, .toast, .readbar * { animation: none !important; transition: none !important; }
-  .readbar .readbar__hero .f2 { opacity: 0; }
+  .readbar .readbar__horse .f2 { opacity: 0; }
   .coin-pop { display: none; }
 }
 
@@ -1397,24 +1402,24 @@ const JS = String.raw`
   }
 
   // ---------------------------------------------------------------- reading track
-  // The hero walks the track as the day's concepts scroll past, picking up a coin per concept.
-  // The furthest point you've read is kept per day, so coins stay collected when you come back
+  // The horse trots the track as the day's concepts scroll past, eating a carrot per concept on the way to the apple tree.
+  // The furthest point you've read is kept per day, so eaten carrots stay eaten when you come back
   var READ = 'react-for-ember:read';
   var readMax = {};
   try { readMax = JSON.parse(store.get(READ) || '{}') || {}; } catch (e) { readMax = {}; }
   var readbar = document.querySelector('[data-readbar]');
   var readTrack = readbar.querySelector('[data-readbar-track]');
-  var readHero = readbar.querySelector('[data-readbar-hero]');
+  var readHorse = readbar.querySelector('[data-readbar-horse]');
   var readRunner = readbar.querySelector('[data-readbar-runner]');
-  var readFlag = readbar.querySelector('.readbar__flag');
+  var readTree = readbar.querySelector('.readbar__tree');
   var readLabel = readbar.querySelector('[data-readbar-label]');
-  var readCoin = readbar.querySelector('[data-readbar-coin]');
-  var reading = { day: null, region: null, concepts: [], coins: [], got: 0, last: 0, raf: 0, walk: 0 };
+  var readCarrot = readbar.querySelector('[data-readbar-carrot]');
+  var reading = { day: null, region: null, concepts: [], carrots: [], got: 0, last: 0, raf: 0, walk: 0 };
 
   function readFraction(region) {
     var r = region.getBoundingClientRect();
-    // "Read" means the text has scrolled up past the lower part of the screen
-    var line = window.innerHeight * 0.8;
+    // "Read" means the text has scrolled up into the top third of the screen, not merely come into view
+    var line = window.innerHeight * 0.3;
     return Math.max(0, Math.min(1, (line - r.top) / Math.max(1, r.height)));
   }
   function coinStops(region, concepts) {
@@ -1430,10 +1435,10 @@ const JS = String.raw`
     var concepts = Array.prototype.slice.call(region.querySelectorAll('.concept'));
     var stops = coinStops(region, concepts);
     if (reading.day !== current) {
-      // A new day: lay out its coins. The last concept's coin is the flag
-      reading.coins.forEach(function (c) { c.remove(); });
-      reading.coins = stops.slice(0, -1).map(function () {
-        var c = readCoin.content.firstElementChild.cloneNode(true);
+      // A new day: lay out its carrots. The last concept ends at the apple tree
+      reading.carrots.forEach(function (c) { c.remove(); });
+      reading.carrots = stops.slice(0, -1).map(function () {
+        var c = readCarrot.content.firstElementChild.cloneNode(true);
         readTrack.appendChild(c);
         return c;
       });
@@ -1441,7 +1446,7 @@ const JS = String.raw`
       reading.region = region;
       reading.got = -1;
       reading.last = readFraction(region);
-      readFlag.classList.remove('is-raised');
+      readTree.classList.remove('is-shaken');
       moved = false;
     }
     var p = readFraction(region);
@@ -1452,15 +1457,15 @@ const JS = String.raw`
       readMax[current] = Math.round(max * 100) / 100;
       store.set(READ, JSON.stringify(readMax));
     }
-    reading.coins.forEach(function (c, i) { c.style.left = (stops[i] * 100) + '%'; });
+    reading.carrots.forEach(function (c, i) { c.style.left = (stops[i] * 100) + '%'; });
     var got = stops.filter(function (at) { return at <= max + 0.001; }).length;
     if (max === 1) got = stops.length;
-    reading.coins.forEach(function (c, i) { c.classList.toggle('is-got', stops[i] <= max + 0.001 || max === 1); });
+    reading.carrots.forEach(function (c, i) { c.classList.toggle('is-got', stops[i] <= max + 0.001 || max === 1); });
     if (moved && got > reading.got && reading.got >= 0) {
       if (got === stops.length) {
-        readFlag.classList.remove('is-raised');
-        void readFlag.offsetWidth;
-        readFlag.classList.add('is-raised');
+        readTree.classList.remove('is-shaken');
+        void readTree.offsetWidth;
+        readTree.classList.add('is-shaken');
         blip(SFX.combo);
       } else {
         blip(SFX.coin);
@@ -1468,7 +1473,7 @@ const JS = String.raw`
     }
     reading.got = got;
     readRunner.style.transform = 'translateX(' + (p * readTrack.clientWidth).toFixed(1) + 'px)';
-    if (Math.abs(p - reading.last) > 0.002) readHero.classList.toggle('is-back', p < reading.last);
+    if (Math.abs(p - reading.last) > 0.002) readHorse.classList.toggle('is-back', p < reading.last);
     reading.last = p;
     var clear = max === 1;
     readbar.classList.toggle('is-clear', clear);
@@ -1578,7 +1583,7 @@ ${prism}
   <div class="intro__head"><h2 id="intro-title">How this course works</h2></div>
   <p class="intro__lead">15 days, about an hour each. Every day follows the same four steps.</p>
   <ol class="intro__steps">
-    <li><span class="intro__n">1</span><div><h3>Read <small>15 min</small></h3><p>Today's ideas, with the Ember way and the React way side by side. As you scroll, a little hero walks the track at the top and picks up a coin for each concept.</p></div></li>
+    <li><span class="intro__n">1</span><div><h3>Read <small>15 min</small></h3><p>Today's ideas, with the Ember way and the React way side by side. As you scroll, a horse trots along the track at the top, eating a carrot for each concept on its way to the apple tree.</p></div></li>
     <li><span class="intro__n">2</span><div><h3>Build <small>35 min</small></h3>
       <p class="live-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Each time you save, the tests run and this page shows what's left.</p>
       <p class="file-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Run <code>pnpm start</code> in the repo and this page shows your tests passing as you go.</p></div></li>
