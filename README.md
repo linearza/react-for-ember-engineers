@@ -29,6 +29,24 @@ Each day you build the pieces the app needs, and each piece is tested on its own
 
 Days 1, 4, 9, 10 and 14 plug straight into the app. The other days teach the ideas around them: performance, state architecture, hooks, Actions, Server Components and testing. Run `pnpm dev:solutions` to see the reference version.
 
+## Built to remember
+
+Reading about a concept once is not the same as being able to use it two weeks later. So the course is built around a few well-studied learning techniques, aimed at keeping what you learn on Day 3 still there on Day 15:
+
+- **Retrieval practice.** Every day ends with a quiz that makes you recall each idea instead of reading it again. Recalling an answer is what makes it stick.
+- **Spaced repetition.** From Day 2, each quiz brings back three questions from earlier days, Leitner-style. If you miss one, it comes back the next day. If you get it right, it waits longer each time: 2 days, then 4, then 8.
+- **Interleaving.** The earlier questions are mixed in with the new ones, each tagged with the day it came from. You have to work out which idea applies, so you can't answer on autopilot.
+- **Wrong answers that tempt you.** The wrong choices are what an Ember engineer would reasonably guess, such as expecting a mutated property to re-render the way `@tracked` does. Catching your own instinct in the act is the point.
+- **Feedback that explains.** Every answer, right or wrong, shows why, so even a lucky guess teaches you something.
+- **A boss rush and a final review.** Day 15 has a 15-question boss rush drawn from the whole course and weighted towards the questions you've missed, then a 30-question final review.
+- **Small, frequent wins.** You earn coins, combos, a rank and a hi-score for each day. The reading bar drops a coin when you finish a day's concepts, and the page celebrates when a day's tests go green.
+
+## Your certificate
+
+<p align="center"><img src="course/icons/certificate.png" width="720" alt="A sample certificate of completion for React for Ember Engineers, made out to Ada Lovelace, listing 15 days, 79 concepts and a 30-question final review, with the completion date, duration and certificate number"></p>
+
+Finish all 15 days and you get a certificate of completion. It shows your name, what you covered (15 days, 79 concepts and the tests you passed), the date you finished, how long it took and a certificate number. You can print it or save it as a PDF to share.
+
 ## Quick start
 
 You need **Node 22.22 or newer** and **pnpm** (`corepack enable` sets up the pinned version).
@@ -48,9 +66,9 @@ Each day takes about an hour:
 
 1. **Concepts (~15 min).** Read the day on the course page. Each concept puts Ember and React side by side and is flagged 🟢 direct translation · 🟡 same goal, different mechanics · 🔴 new mental model. A pixel bar at the top of the page fills up as you read, and a coin pops in when you reach the end.
 2. **Hands-on (~35 min).** Open the day's files in `exercises/dayNN/` and follow the TODO comments. Every time you save, the tests run and the course page shows which ones still fail.
-3. **Check yourself (~10 min).** Press start for a short multiple-choice quiz. Each answer comes with the reasoning, and you earn coins, combos and a rank along the way. A few questions from earlier days are mixed in, spaced out Leitner-style so the ones you miss come back sooner, and Day 15 ends with a 15-question boss rush across the whole course.
+3. **Check yourself (~10 min).** Press start for a short multiple-choice quiz. Each answer comes with the reasoning, and you earn coins, combos and a rank along the way. A few questions from earlier days come back too, as described in [Built to remember](#built-to-remember).
 
-Days unlock one at a time: when all of a day's tests pass, the day is marked complete, the page celebrates and the next day opens. Finish all 15 and you get a certificate with your name on it, which you can print or save as a PDF.
+Days unlock one at a time: when all of a day's tests pass, the day is marked complete, the page celebrates and the next day opens. Finish all 15 and you get [your certificate](#your-certificate).
 
 The first time you open the page, a short "How this course works" guide pops up. Reopen it any time from the **?** button.
 
