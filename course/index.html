@@ -223,8 +223,9 @@ body.is-live .file-only { display: none !important; }
 .live-tests__fails { list-style: none; margin: 0.75rem 0 0; padding: 0; display: grid; gap: 0.4rem; font-size: 0.875rem; }
 .live-tests__fails li { padding-left: 1.4rem; position: relative; }
 .live-tests__fails li::before { content: '○'; position: absolute; left: 0.2rem; color: var(--muted); }
+.live-tests__fails li.is-passed { color: var(--muted); }
+.live-tests__fails li.is-passed::before { content: '✓'; color: var(--green); }
 .live-tests__fails small { display: block; color: var(--muted); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.75rem; overflow-wrap: anywhere; }
-.live-tests__more { color: var(--muted); font-size: 0.8rem; }
 .day-status { margin: 0; font-weight: 600; color: var(--muted); }
 .day-status.is-done { color: var(--green); }
 
@@ -4620,15 +4621,15 @@ useEffect(() =&gt; {
         li.appendChild(el('small', null, d.loadError));
         err.appendChild(li);
         box.appendChild(err);
-      } else if (!green) {
+      } else {
+        // Every test in file order, so a passing one stays put (ticked, greyed) instead of vanishing
         var list = el('ul', 'live-tests__fails');
-        d.failures.slice(0, 6).forEach(function (f) {
-          var item = el('li', null, shortName(f.name));
-          if (f.message) item.appendChild(el('small', null, f.message));
+        d.tests.forEach(function (t) {
+          var item = el('li', t.passed ? 'is-passed' : null, shortName(t.name));
+          if (!t.passed && t.message) item.appendChild(el('small', null, t.message));
           list.appendChild(item);
         });
         box.appendChild(list);
-        if (d.failures.length > 6) box.appendChild(el('p', 'live-tests__more', '+ ' + (d.failures.length - 6) + ' more. Full output: pnpm test day' + String(n).padStart(2, '0')));
       }
     }
   }

@@ -37,7 +37,7 @@ function loadCompleted() {
 const state = {
   running: true,
   completed: loadCompleted(), // { [day]: ISO date of the first all-green run }
-  days: {}, // { [day]: { total, passed, failures: [{ name, message }], loadError } }
+  days: {}, // { [day]: { total, passed, tests: [{ name, passed, message }], loadError } }
 };
 
 const clients = new Set();
@@ -59,19 +59,18 @@ function dayOf(moduleId) {
 
 function summarise(testModule) {
   const tests = [...testModule.children.allTests()];
-  const failures = [];
   let passed = 0;
-  for (const test of tests) {
+  const results = tests.map((test) => {
     const result = test.result();
-    if (result.state === 'passed') passed++;
-    else if (result.state === 'failed') failures.push({ name: test.fullName, message: firstLine(result.errors?.[0]?.message) });
-    else failures.push({ name: test.fullName, message: 'skipped' });
-  }
+    if (result.state === 'passed') { passed++; return { name: test.fullName, passed: true }; }
+    if (result.state === 'failed') return { name: test.fullName, passed: false, message: firstLine(result.errors?.[0]?.message) };
+    return { name: test.fullName, passed: false, message: 'skipped' };
+  });
   const errors = testModule.errors();
   return {
     total: tests.length,
     passed,
-    failures,
+    tests: results,
     loadError: errors.length ? firstLine(errors[0].message) : null,
   };
 }
