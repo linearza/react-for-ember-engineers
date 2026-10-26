@@ -55,10 +55,12 @@ describe('Day 8 — custom hooks', () => {
       expect(getItem).toHaveBeenCalledTimes(1);
     });
 
-    test('falls back to the initial value on bad JSON', () => {
+    test('falls back to the initial value on bad JSON, and the next set repairs it', () => {
       localStorage.setItem('prefs', '{not json');
       const { result } = renderHook(() => useLocalStorage('prefs', 'fallback'));
       expect(result.current[0]).toBe('fallback');
+      act(() => result.current[1]('compact'));
+      expect(localStorage.getItem('prefs')).toBe('"compact"');
     });
 
     test('writes JSON on set, including updater functions', () => {

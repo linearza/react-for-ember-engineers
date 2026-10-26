@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { render, renderHook, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, render, renderHook, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { issueKeys, useIssueQuery } from '@ex/day09/queries';
@@ -105,10 +105,10 @@ describe('Day 9 — data fetching', () => {
       renderWithClient(<IssueDetailBoundary id="2" />);
       expect(screen.getByText('Loading issue…')).toBeInTheDocument();
       expect(await screen.findByRole('heading', { name: 'Add dark mode' })).toBeInTheDocument();
-    });
-
-    test('IssueDetailBoundary shows "Something went wrong" for a missing issue', async () => {
+      cleanup();
+      // A missing issue throws past the Suspense boundary to the ErrorBoundary
       renderWithClient(<IssueDetailBoundary id="999" />);
+      expect(screen.getByText('Loading issue…')).toBeInTheDocument();
       expect(await screen.findByRole('alert')).toHaveTextContent('Something went wrong');
     });
 

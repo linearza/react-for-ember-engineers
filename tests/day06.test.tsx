@@ -13,15 +13,13 @@ function setup() {
 }
 
 describe('Day 6 — rendering performance', () => {
-  test('renders one row per issue', () => {
+  test('renders one row per issue, then typing in the unrelated Draft note input renders zero rows', async () => {
+    const user = userEvent.setup();
     resetRenderLog();
     render(<IssueTable issues={freshIssues()} />);
     expect(renderLog).toEqual(['1', '2', '3', '4']);
     expect(screen.getAllByRole('row')).toHaveLength(5); // header + 4
-  });
-
-  test('typing in the unrelated Draft note input renders zero rows', async () => {
-    const { user } = setup();
+    resetRenderLog();
     await user.type(screen.getByLabelText('Draft note'), 'abc');
     expect(screen.getByLabelText('Draft note')).toHaveValue('abc');
     expect(renderLog).toEqual([]);

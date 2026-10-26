@@ -21,6 +21,7 @@ describe('Day 13 — tests that catch bugs', () => {
   });
 
   test('every check passes against the real Tabs', async () => {
+    expect(checks.length, 'write a check first').toBeGreaterThan(0);
     const failing: string[] = [];
     for (const check of checks) {
       if (!(await passes(check, Tabs))) failing.push(check.name);

@@ -131,13 +131,19 @@ describe('Day 14 — patterns & modern APIs', () => {
       expect(screen.getByRole('button', { name: 'Open' })).toHaveFocus();
     });
 
-    test('renders nothing when closed', () => {
-      render(
+    test('renders nothing when closed, and the labelled dialog once opened', () => {
+      const { rerender } = render(
         <Modal open={false} onClose={() => {}} title="New issue">
           x
         </Modal>,
       );
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      rerender(
+        <Modal open onClose={() => {}} title="New issue">
+          x
+        </Modal>,
+      );
+      expect(screen.getByRole('dialog', { name: 'New issue' })).toBeInTheDocument();
     });
   });
 

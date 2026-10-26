@@ -26,6 +26,8 @@ describe('Day 2 — props, children, lists & keys', () => {
 
     test('omits slot wrappers when slots are not given', () => {
       const { container } = render(<Card title="Bugs">body</Card>);
+      expect(container.querySelector('.card__header')).toContainElement(screen.getByRole('heading', { name: 'Bugs' }));
+      expect(container.querySelector('.card__body')).toHaveTextContent('body');
       expect(container.querySelector('.card__actions')).toBeNull();
       expect(container.querySelector('footer')).toBeNull();
     });

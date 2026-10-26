@@ -12,15 +12,10 @@ const sleep = (ms: number) => act(() => new Promise<void>((resolve) => setTimeou
 
 describe('Day 5 — effects', () => {
   describe('IssueDetail (fetching + races)', () => {
-    test('shows Loading… then the issue', async () => {
-      render(<IssueDetail issueId="2" />);
-      expect(screen.getByText('Loading…')).toBeInTheDocument();
-      expect(await screen.findByRole('heading', { name: 'Add dark mode' })).toBeInTheDocument();
-    });
-
-    test('a slow stale response never overwrites a newer one', async () => {
+    test('shows Loading…, and a slow stale response never overwrites a newer one', async () => {
       setIssueLatency('1', 50);
       const { rerender } = render(<IssueDetail issueId="1" />);
+      expect(screen.getByText('Loading…')).toBeInTheDocument();
       rerender(<IssueDetail issueId="2" />);
       await sleep(80);
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Add dark mode');
@@ -63,7 +58,13 @@ describe('Day 5 — effects', () => {
       expect(subscribe).toHaveBeenCalledTimes(1);
 
       rerender(<LiveIssueFeed channel="team-a" muted onNotify={onNotify} />);
+      act(() => issueEvents.emit('team-a', msg('Issue 1 closed')));
+      expect(onNotify).not.toHaveBeenCalled();
+      expect(within(screen.getByRole('list')).getByText('Issue 1 closed')).toBeInTheDocument();
+
       rerender(<LiveIssueFeed channel="team-a" muted={false} onNotify={onNotify} />);
+      act(() => issueEvents.emit('team-a', msg('Issue 1 reopened')));
+      expect(onNotify).toHaveBeenCalledWith(msg('Issue 1 reopened'));
       expect(subscribe).toHaveBeenCalledTimes(1);
 
       rerender(<LiveIssueFeed channel="team-b" muted={false} onNotify={onNotify} />);
@@ -73,18 +74,6 @@ describe('Day 5 — effects', () => {
 
       unmount();
       expect(issueEvents.listenerCount('team-b')).toBe(0);
-    });
-
-    test('does not notify while muted, but still lists the message', () => {
-      const onNotify = vi.fn();
-      const { rerender } = render(<LiveIssueFeed channel="team-a" muted onNotify={onNotify} />);
-      act(() => issueEvents.emit('team-a', msg('Issue 1 closed')));
-      expect(onNotify).not.toHaveBeenCalled();
-      expect(within(screen.getByRole('list')).getByText('Issue 1 closed')).toBeInTheDocument();
-
-      rerender(<LiveIssueFeed channel="team-a" muted={false} onNotify={onNotify} />);
-      act(() => issueEvents.emit('team-a', msg('Issue 1 reopened')));
-      expect(onNotify).toHaveBeenCalledWith(msg('Issue 1 reopened'));
     });
 
     test('always calls the latest onNotify (no stale closure)', () => {

@@ -46,12 +46,10 @@ describe('Day 1 — JSX & components', () => {
     expect(screen.getByText('Unassigned')).toBeInTheDocument();
   });
 
-  test('shows labels when present', () => {
-    render(<IssueCard issue={login} />);
+  test('shows labels only when there are some — no stray "0" (the && trap)', () => {
+    const { unmount } = render(<IssueCard issue={login} />);
     expect(screen.getByText('Labels: bug, auth')).toBeInTheDocument();
-  });
-
-  test('renders nothing for empty labels — no stray "0" (the && trap)', () => {
+    unmount();
     const { container } = render(<IssueCard issue={migrate} />);
     expect(screen.queryByText(/Labels:/)).not.toBeInTheDocument();
     expect(container.innerHTML).not.toMatch(/>0</);
