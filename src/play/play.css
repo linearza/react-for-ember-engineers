@@ -1,0 +1,138 @@
+/* The playground shell around your components. Uses the app's tokens from styles.css */
+.play {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.play-top {
+  padding: 1.25rem 1.5rem 0;
+}
+.play-top p {
+  margin: 0.35rem 0 0;
+}
+.play-main {
+  flex: 1;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 1rem 1.5rem 1.5rem;
+}
+.play.is-embedded .play-main {
+  padding: 0.75rem;
+}
+.play-scenarios {
+  display: grid;
+  gap: 1rem;
+}
+.play-scenario h2 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.play-hint {
+  margin: -0.2rem 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.play-stage {
+  padding: 1rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.play-stage label:has(> input[type='checkbox']) {
+  flex-direction: row;
+  align-items: center;
+  font-size: inherit;
+  color: inherit;
+}
+.play-crash {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--urgent);
+  color: var(--urgent);
+}
+.play-crash pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+}
+.play-crash span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.play-console {
+  position: sticky;
+  bottom: 0;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+}
+.play-console header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.play-console h2 {
+  font-size: 0.75rem;
+}
+.play-console__note {
+  flex: 1;
+  color: var(--muted);
+}
+.play-console button {
+  font: inherit;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.play-console ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 11rem;
+  overflow: auto;
+}
+.play-console li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: 0.25rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.play-console li pre {
+  flex: 1;
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.play-console li.is-warn {
+  color: var(--progress);
+}
+.play-console li.is-error {
+  color: var(--urgent);
+}
+.play-console li.is-saved {
+  color: var(--muted);
+  font-style: italic;
+}
+.play-console__empty {
+  color: var(--muted);
+}
+.play-console__count {
+  padding: 0 0.4rem;
+  border-radius: 99px;
+  background: var(--border);
+}

@@ -1,5 +1,5 @@
 // Generates course/index.html: node course/source/build.mjs course/index.html
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { FLAGS, dedent, escape as e, inline, md } from './model.mjs';
 import { WEEK1 } from './week1.mjs';
 import { WEEK2 } from './week2.mjs';
@@ -90,11 +90,23 @@ function exercise(day) {
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="${day.n}" aria-live="polite"></div>
+  ${preview(day)}
   <h3>Done when</h3>
   <ul class="checklist">${criteria}</ul>
   <h3>Stretch</h3>
   <p>${inline(ex.stretch)}</p>
 </section>`;
+}
+
+// A day with src/play/dayNN.tsx gets its playground embedded under the tests. The iframe is only
+// added once pnpm start answers, since /app/ doesn't exist when the page is opened as a file
+function preview(day) {
+  const nn = String(day.n).padStart(2, '0');
+  if (!existsSync(new URL(`../../src/play/day${nn}.tsx`, import.meta.url))) return '';
+  const src = `/app/play.html?day=${day.n}`;
+  return `<div class="live-preview live-only" data-live-preview="${src}">
+    <div class="live-preview__head"><span>Your components, live</span><span class="muted small">Save a file and it updates in place</span><a href="${src}" target="_blank" rel="noopener">Open with devtools ↗</a></div>
+  </div>`;
 }
 
 function qa(i, q, a, meta = '') {
@@ -472,7 +484,23 @@ body.is-live .file-only { display: none !important; }
 .live-tests__fails li::before { content: '○'; position: absolute; left: 0.2rem; color: var(--muted); }
 .live-tests__fails li.is-passed { color: var(--muted); }
 .live-tests__fails li.is-passed::before { content: '✓'; color: var(--green); }
+.live-tests__fails summary { cursor: pointer; list-style: none; }
+.live-tests__fails summary::-webkit-details-marker { display: none; }
+.live-tests__fails summary > span::after { content: ' ▸'; color: var(--muted); }
+.live-tests__fails details[open] summary > span::after { content: ' ▾'; }
+.live-tests__logcount { margin-left: 0.5rem; padding: 0 0.4rem; border-radius: 99px; background: var(--surface-2); color: var(--muted); font-size: 0.7rem; font-weight: 600; }
+.live-tests__console, .live-tests__detail { margin: 0.5rem 0 0.25rem; border: 1px solid var(--border); border-radius: 8px; background: var(--code-bg); color: var(--text); font-size: 0.75rem; max-height: 22rem; overflow: auto; }
+.live-tests__console pre { margin: 0; padding: 0.3rem 0.6rem; white-space: pre-wrap; overflow-wrap: anywhere; border-bottom: 1px solid var(--border); }
+.live-tests__console pre:last-child { border-bottom: 0; }
+.live-tests__console pre::before { content: '› '; color: var(--muted); }
+.live-tests__console pre.is-err { color: var(--red); background: var(--red-bg); }
+.live-tests__detail { padding: 0.6rem; white-space: pre; }
 .live-tests__fails small { display: block; color: var(--muted); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.75rem; overflow-wrap: anywhere; }
+.live-preview { margin-top: 1rem; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.live-preview__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); font-weight: 600; }
+.live-preview__head .muted { flex: 1; font-weight: 400; }
+.live-preview__head a { font-size: 0.875rem; }
+.live-preview iframe { display: block; width: 100%; height: 520px; border: 0; }
 .day-status { margin: 0; font-weight: 600; color: var(--muted); }
 .day-status.is-done { color: var(--green); }
 
@@ -1395,6 +1423,9 @@ const JS = String.raw`
       status.classList.toggle('is-done', !!doneAt);
       status.textContent = doneAt ? '✓ Completed ' + fmtDate(doneAt) : 'Completes by itself when all of today\'s tests pass.';
       var box = document.querySelector('[data-live-tests="' + n + '"]');
+      // Re-runs rebuild the list, so remember which tests were expanded and reopen them
+      var open = {};
+      box.querySelectorAll('details[open]').forEach(function (det) { open[det.dataset.test] = true; });
       box.textContent = '';
       if (!d) { box.appendChild(el('p', 'muted small', 'Waiting for the first test run…')); continue; }
       var green = d.total > 0 && d.passed === d.total && !d.loadError;
@@ -1418,8 +1449,29 @@ const JS = String.raw`
         // Every test in file order, so a passing one stays put (ticked, greyed) instead of vanishing
         var list = el('ul', 'live-tests__fails');
         d.tests.forEach(function (t) {
-          var item = el('li', t.passed ? 'is-passed' : null, shortName(t.name));
-          if (!t.passed && t.message) item.appendChild(el('small', null, t.message));
+          var item = el('li', t.passed ? 'is-passed' : null);
+          var logs = t.logs || [];
+          var label = el('span', null, shortName(t.name));
+          if (logs.length) label.appendChild(el('span', 'live-tests__logcount', logs.length === 1 ? '1 log' : logs.length + ' logs'));
+          if (!t.detail && !logs.length) {
+            item.appendChild(label);
+            if (!t.passed && t.message) item.appendChild(el('small', null, t.message));
+          } else {
+            var det = el('details');
+            det.dataset.test = t.name;
+            det.open = !!open[t.name];
+            var summary = el('summary');
+            summary.appendChild(label);
+            if (!t.passed && t.message) summary.appendChild(el('small', null, t.message));
+            det.appendChild(summary);
+            if (logs.length) {
+              var con = el('div', 'live-tests__console');
+              logs.forEach(function (l) { con.appendChild(el('pre', l.stream === 'stderr' ? 'is-err' : null, l.text)); });
+              det.appendChild(con);
+            }
+            if (t.detail) det.appendChild(el('pre', 'live-tests__detail', t.detail));
+            item.appendChild(det);
+          }
           list.appendChild(item);
         });
         box.appendChild(list);
@@ -1430,7 +1482,16 @@ const JS = String.raw`
   function applyLive(state) {
     var first = !live;
     live = state;
-    if (first) document.body.classList.add('is-live');
+    if (first) {
+      document.body.classList.add('is-live');
+      document.querySelectorAll('[data-live-preview]').forEach(function (box) {
+        var frame = el('iframe');
+        frame.src = box.dataset.livePreview;
+        frame.title = 'Playground: your components';
+        frame.loading = 'lazy';
+        box.appendChild(frame);
+      });
+    }
     completed = new Set(Object.keys(state.completed).map(Number).filter(function (n) { return n >= 1 && n <= TOTAL; }));
     Object.keys(state.completed).forEach(function (k) { completedAt[k] = state.completed[k]; });
     saveCompleted();
@@ -1623,7 +1684,7 @@ ${prism}
   <ol class="intro__steps">
     <li><span class="intro__n">1</span><div><h3>Read <small>15 min</small></h3><p>Today's ideas, with the Ember way and the React way side by side. As you scroll, the bar at the top fills up, and a coin pops in when you reach the end.</p></div></li>
     <li><span class="intro__n">2</span><div><h3>Build <small>35 min</small></h3>
-      <p class="live-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Each time you save, the tests run and this page shows what's left.</p>
+      <p class="live-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Each time you save, the tests run and this page shows what's left. Open a failing test to see what your code rendered and what it logged.</p>
       <p class="file-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Run <code>pnpm start</code> in the repo and this page shows your tests passing as you go.</p></div></li>
     <li><span class="intro__n">3</span><div><h3>Check yourself <small>10 min</small></h3><p>Press start for a quick multiple-choice quiz. Every answer comes with the reasoning. A few questions from earlier days come back too, more often the ones you missed, so they stick.</p></div></li>
     <li><span class="intro__n">4</span><div><h3>Done</h3>

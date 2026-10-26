@@ -2,6 +2,7 @@
 //
 //   http://localhost:1515/      the course, with live progress
 //   http://localhost:1515/app/  your Day 15 app (exercises/day15/App.tsx)
+//   http://localhost:1515/app/play.html?day=1   a day's playground, also embedded on the course page
 //
 // Your exercise tests run in watch mode in the same process. When every test for a day
 // passes, the day is marked complete in .progress.json (gitignored) and the course page
@@ -37,7 +38,7 @@ function loadCompleted() {
 const state = {
   running: true,
   completed: loadCompleted(), // { [day]: ISO date of the first all-green run }
-  days: {}, // { [day]: { total, passed, tests: [{ name, passed, message }], loadError } }
+  days: {}, // { [day]: { total, passed, tests: [{ name, passed, message, detail, logs }], loadError } }
 };
 
 const clients = new Set();
@@ -51,6 +52,15 @@ const stripAnsi = (s) => s.replace(/\u001b\[[0-9;]*m/g, '');
 // Testing Library appends a long "This could be because..." hint and a DOM dump; keep the gist
 const firstLine = (s = '') =>
   stripAnsi(s).trim().split('\n')[0].replace(/\. This could be because.*/, '.').slice(0, 240);
+// The whole message, DOM dump included, for the expandable view: only worth sending if it adds something
+function fullMessage(s = '') {
+  const text = stripAnsi(s).trim();
+  return text.includes('\n') ? text.slice(0, 6000) : undefined;
+}
+
+// console.log/warn/error from inside each test, keyed by test id until its result is summarised
+const logsByTest = new Map();
+const MAX_LOGS = 40;
 
 function dayOf(moduleId) {
   const m = /tests\/day(\d\d)\.test\.tsx?$/.exec(moduleId);
@@ -62,8 +72,13 @@ function summarise(testModule) {
   let passed = 0;
   const results = tests.map((test) => {
     const result = test.result();
-    if (result.state === 'passed') { passed++; return { name: test.fullName, passed: true }; }
-    if (result.state === 'failed') return { name: test.fullName, passed: false, message: firstLine(result.errors?.[0]?.message) };
+    const logs = logsByTest.get(test.id);
+    logsByTest.delete(test.id);
+    if (result.state === 'passed') { passed++; return { name: test.fullName, passed: true, logs }; }
+    if (result.state === 'failed') {
+      const message = result.errors?.[0]?.message;
+      return { name: test.fullName, passed: false, message: firstLine(message), detail: fullMessage(message), logs };
+    }
     return { name: test.fullName, passed: false, message: 'skipped' };
   });
   const errors = testModule.errors();
@@ -76,6 +91,12 @@ function summarise(testModule) {
 }
 
 const progressReporter = {
+  onUserConsoleLog(log) {
+    if (!log.taskId) return; // logged while the test file loaded, not inside a test
+    const logs = logsByTest.get(log.taskId) ?? [];
+    if (logs.length < MAX_LOGS) logs.push({ stream: log.type, text: stripAnsi(log.content).replace(/\n$/, '').slice(0, 2000) });
+    logsByTest.set(log.taskId, logs);
+  },
   onWatcherRerun() {
     state.running = true;
     broadcast();

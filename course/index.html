@@ -225,7 +225,23 @@ body.is-live .file-only { display: none !important; }
 .live-tests__fails li::before { content: '○'; position: absolute; left: 0.2rem; color: var(--muted); }
 .live-tests__fails li.is-passed { color: var(--muted); }
 .live-tests__fails li.is-passed::before { content: '✓'; color: var(--green); }
+.live-tests__fails summary { cursor: pointer; list-style: none; }
+.live-tests__fails summary::-webkit-details-marker { display: none; }
+.live-tests__fails summary > span::after { content: ' ▸'; color: var(--muted); }
+.live-tests__fails details[open] summary > span::after { content: ' ▾'; }
+.live-tests__logcount { margin-left: 0.5rem; padding: 0 0.4rem; border-radius: 99px; background: var(--surface-2); color: var(--muted); font-size: 0.7rem; font-weight: 600; }
+.live-tests__console, .live-tests__detail { margin: 0.5rem 0 0.25rem; border: 1px solid var(--border); border-radius: 8px; background: var(--code-bg); color: var(--text); font-size: 0.75rem; max-height: 22rem; overflow: auto; }
+.live-tests__console pre { margin: 0; padding: 0.3rem 0.6rem; white-space: pre-wrap; overflow-wrap: anywhere; border-bottom: 1px solid var(--border); }
+.live-tests__console pre:last-child { border-bottom: 0; }
+.live-tests__console pre::before { content: '› '; color: var(--muted); }
+.live-tests__console pre.is-err { color: var(--red); background: var(--red-bg); }
+.live-tests__detail { padding: 0.6rem; white-space: pre; }
 .live-tests__fails small { display: block; color: var(--muted); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.75rem; overflow-wrap: anywhere; }
+.live-preview { margin-top: 1rem; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.live-preview__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); font-weight: 600; }
+.live-preview__head .muted { flex: 1; font-weight: 400; }
+.live-preview__head a { font-size: 0.875rem; }
+.live-preview iframe { display: block; width: 100%; height: 520px; border: 0; }
 .day-status { margin: 0; font-weight: 600; color: var(--muted); }
 .day-status.is-done { color: var(--green); }
 
@@ -684,6 +700,9 @@ export const formatDate = (iso: string) =&gt; fmt.format(new Date(iso));
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="1" aria-live="polite"></div>
+  <div class="live-preview live-only" data-live-preview="/app/play.html?day=1">
+    <div class="live-preview__head"><span>Your components, live</span><span class="muted small">Save a file and it updates in place</span><a href="/app/play.html?day=1" target="_blank" rel="noopener">Open with devtools ↗</a></div>
+  </div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>StatusBadge</code> renders the status label in a <code>&lt;span&gt;</code> with classes <code>badge badge--{status}</code>.</li><li><code>IssueCard</code> is an <code>&lt;article&gt;</code> labelled by its <code>&lt;h3&gt;</code> title (<code>aria-labelledby</code>).</li><li>Urgent issues show <code>🔥 Urgent</code>; other priorities show just the label.</li><li>The assignee name is shown, or <code>Unassigned</code> when there is none.</li><li>A <code>Labels: bug, auth</code> line appears only when there are labels, with <strong>no stray 0</strong>.</li><li>Dates render as <code>&lt;time dateTime="…"&gt;Oct 1, 2026&lt;/time&gt;</code> (UTC).</li></ul>
   <h3>Stretch</h3>
@@ -908,6 +927,9 @@ function Card({ title, children }: { title: string; children: ReactNode }) {
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="2" aria-live="polite"></div>
+  <div class="live-preview live-only" data-live-preview="/app/play.html?day=2">
+    <div class="live-preview__head"><span>Your components, live</span><span class="muted small">Save a file and it updates in place</span><a href="/app/play.html?day=2" target="_blank" rel="noopener">Open with devtools ↗</a></div>
+  </div>
   <h3>Done when</h3>
   <ul class="checklist"><li><code>Card</code> renders a <code>&lt;section&gt;</code> labelled by its title, with <code>children</code> in the body.</li><li><code>actions</code> and <code>footer</code> slots render in their wrappers <strong>only</strong> when given.</li><li><code>IssueList</code> renders titles by default, or <code>renderItem(issue, index)</code> when given.</li><li>An empty list shows <code>emptyState</code>, or the default "No issues".</li><li><strong>Bug hunt:</strong> in <code>IssueNotes</code>, a note typed for one issue must stay with that issue after the list is reordered.</li></ul>
   <h3>Stretch</h3>
@@ -1132,6 +1154,9 @@ const [draft, setDraft] = useState(() =&gt; JSON.parse(localStorage.draft ?? &#x
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="3" aria-live="polite"></div>
+  <div class="live-preview live-only" data-live-preview="/app/play.html?day=3">
+    <div class="live-preview__head"><span>Your components, live</span><span class="muted small">Save a file and it updates in place</span><a href="/app/play.html?day=3" target="_blank" rel="noopener">Open with devtools ↗</a></div>
+  </div>
   <h3>Done when</h3>
   <ul class="checklist"><li>Status filter buttons (<code>aria-pressed</code>) and a case-insensitive search filter the list together, <strong>derived during render</strong> with no extra state.</li><li>"Showing X of Y" reflects the derived list.</li><li><code>toggleDone</code> works on deep-frozen data: an immutable update, no mutation.</li><li>"+2 points" adds 2. Fix it inside <code>addPoint</code> without changing the <code>onClick</code>.</li></ul>
   <h3>Stretch</h3>
@@ -1337,6 +1362,7 @@ inputRef.current?.focus();</code></pre></figure>
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="4" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li><code>NewIssueForm</code> is fully controlled: a live <code>n/80</code> counter, Priority defaults to Medium, and Assignee offers "Unassigned" (<code>""</code>) plus each user.</li><li>A title under 3 characters (trimmed) shows <code>role="alert"</code> "Title must be at least 3 characters" and does not submit.</li><li>Valid submit calls <code>onCreate</code> with a normalised <code>NewIssue</code> (trimmed title, <code>assigneeId: null</code> when unassigned, labels split, trimmed and filtered), then resets every field.</li><li><code>QuickSearch</code> is uncontrolled: a <code>role="search"</code> form read with <code>FormData</code>, Enter submits, Escape clears the input through a ref.</li></ul>
   <h3>Stretch</h3>
@@ -1555,6 +1581,7 @@ useEffect(() =&gt; {
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="5" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li><code>IssueDetail</code>: a slow response for the previous id never overwrites the current one; a missing issue shows <code>role="alert"</code> "Could not load issue".</li><li><code>RelativeTime</code>: re-renders every 60 s, and leaves <strong>zero</strong> timers behind after unmount.</li><li><code>LiveIssueFeed</code>: toggling <code>muted</code> or passing a new <code>onNotify</code> does <strong>not</strong> resubscribe; changing <code>channel</code> does; the latest <code>onNotify</code> is always called.</li><li><code>IssueStats</code>: exactly <strong>one</strong> commit on mount (measured with <code>&lt;Profiler&gt;</code>), meaning no effect at all.</li></ul>
   <h3>Stretch</h3>
@@ -1805,6 +1832,7 @@ export default defineConfig({
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="6" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li>Typing three characters in "Draft note" causes <strong>zero</strong> <code>IssueRow</code> renders (watch <code>renderLog</code>).</li><li>Selecting row 2 re-renders only <code>['2']</code>. Then selecting row 4 re-renders only <code>['2', '4']</code>.</li><li>When one issue object changes, only that row re-renders.</li></ul>
   <h3>Stretch</h3>
@@ -2017,6 +2045,7 @@ const status = useStore(filterStore, (s) =&gt; s.status);
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="7" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li><code>issuesReducer</code> handles <code>added</code>, <code>updated</code>, <code>removed</code> and <code>statusChanged</code> <strong>immutably</strong> (state is frozen), keeps untouched items' identity, and throws on unknown actions.</li><li><code>useIssues()</code> throws "useIssues must be used inside &lt;IssuesProvider&gt;" with no provider.</li><li>The context value is memoized: an unrelated provider re-render doesn't re-render a <code>memo</code>'d consumer.</li><li><code>createStore</code> notifies subscribers. <code>useStore(store, selector)</code> re-renders a consumer only when its slice changes.</li></ul>
   <h3>Stretch</h3>
@@ -2208,6 +2237,7 @@ expect(result.current).toBe(&#x27;ab&#x27;);</code></pre></figure>
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="8" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li><code>useToggle(initial)</code> returns <code>[on, toggle, set]</code>, and <code>toggle</code> keeps the same identity across renders.</li><li><code>useDebouncedValue(value, ms)</code> only updates after the value has stopped changing for <code>ms</code> (fake timers).</li><li><code>useLocalStorage(key, initial)</code> reads lazily (once), falls back on bad JSON, and writes JSON on set (including updater functions).</li><li><code>useIssueSearch(issues)</code> composes both: results debounced by 200 ms, query persisted and restored on mount.</li></ul>
   <h3>Stretch</h3>
@@ -2419,6 +2449,7 @@ function IssueDetail({ id }: { id: string }) {
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="9" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li><code>issueKeys</code> is a hierarchical factory, and every filter gets its own cache entry.</li><li><code>IssueListScreen</code> shows "Loading issues…", then the list. On error it shows a <code>role="alert"</code> with a "Retry" button that refetches.</li><li>Changing an issue's status (<code>Status for {title}</code>) mutates, invalidates <code>issueKeys.all</code>, and the issue drops out of a filtered list.</li><li><code>ErrorBoundary</code> renders <code>fallback({ error, reset })</code>, and <code>reset</code> re-renders the children.</li><li><code>IssueDetailBoundary</code> suspends ("Loading issue…"), shows "Something went wrong" for id 999, and "Try again" resets the boundary <strong>and</strong> the query.</li></ul>
   <h3>Stretch</h3>
@@ -2663,6 +2694,7 @@ navigate(&#x27;/issues&#x27;);</code></pre></figure>
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="10" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li><code>/</code> redirects to <code>/issues</code> (an index route with a <code>redirect()</code> loader).</li><li>The issues loader reads <code>?status=</code>. The "Status filter" select updates the search param, and the list follows.</li><li>Clicking an issue shows its detail <strong>nested</strong> inside the layout, next to the still-visible list, and keeps the filter in the URL.</li><li><code>/issues/999</code> shows a nested "Issue not found" (thrown as <code>data(…, { status: 404 })</code>) while the list stays visible.</li><li>Unknown URLs render "Page not found" inside the layout.</li></ul>
   <h3>Stretch</h3>
@@ -2896,6 +2928,7 @@ startTransition(() =&gt; setId(nextId)); // animates</code></pre></figure>
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="11" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li><code>EditTitle</code> uses <code>useActionState</code> + <code>&lt;form action&gt;</code>. While saving, the button reads "Saving…" and is disabled (<code>useFormStatus</code> in <code>SaveButton</code>).</li><li>On success the heading shows the new title. On a 422, <code>role="alert"</code> shows the server message and the old title stays.</li><li>A successful save after a failed one clears the error.</li><li><code>StatusToggle</code> shows "Status: Done" <strong>immediately</strong> on click, before the server answers (<code>useOptimistic</code>).</li><li>With <code>failNextRequest()</code> it reverts to "Status: To do" and shows "Could not update status".</li></ul>
   <h3>Stretch</h3>
@@ -3115,6 +3148,7 @@ app/issues/actions.ts     &#x27;use server&#x27;</code></pre></figure>
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="12" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li>Every file that uses hooks or <code>on*</code> handlers starts with <code>'use client'</code> (the filter bar), and nothing else does.</li><li><code>page.tsx</code> has no <code>'use client'</code>, is an <code>async</code> default export, and has no <code>useState</code> or <code>useEffect</code>.</li><li><code>actions.ts</code> starts with <code>'use server'</code>.</li><li><code>render(await IssuesPage({ searchParams: Promise.resolve({ status: 'todo' }) }))</code> shows only to-do issues and the filter bar. An invalid status shows everything.</li><li><code>updateStatusAction(formData)</code> updates the db, and rejects an invalid status.</li></ul>
   <h3>Stretch</h3>
@@ -3311,6 +3345,7 @@ expect(screen.getByRole(&#x27;tab&#x27;, { name: &#x27;Closed&#x27; })).toHaveFo
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="13" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li>Export at least <strong>4</strong> checks, each <code>{ name, run(Tabs) }</code>, that render the component and assert behaviour.</li><li>Every check <strong>passes</strong> against the real <code>Tabs</code>.</li><li>Every one of the 5 mutants in <code>src/day13/mutants/</code> <strong>fails</strong> at least one check. Don't peek at the mutants until you've written your checks.</li></ul>
   <h3>Stretch</h3>
@@ -3558,6 +3593,7 @@ useEffect(() =&gt; {
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="14" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li><code>Accordion</code> (+ <code>.Item</code>, <code>.Trigger</code>, <code>.Panel</code>): one item open at a time, <code>aria-expanded</code>, closed panels <code>hidden</code>, panels labelled by their trigger, <code>defaultValue</code>. The parts throw outside <code>&lt;Accordion&gt;</code>.</li><li><code>Modal</code> portals to <code>document.body</code> (not inside the render container), with <code>role="dialog"</code>, <code>aria-modal</code>, and a label from the title.</li><li>Escape calls <code>onClose</code>. Focus moves into the dialog on open and returns to the opener on close. Clicks inside still bubble to React ancestors.</li><li><code>TextField</code> passes <code>ref</code> (a plain prop) to its <code>&lt;input&gt;</code>.</li><li><code>KeepAliveTabs</code>: a typed draft survives switching tabs away and back (<code>&lt;Activity&gt;</code>), and the hidden tab isn't visible.</li></ul>
   <h3>Stretch</h3>
@@ -3664,6 +3700,7 @@ useEffect(() =&gt; {
     </div>
   </div>
   <div class="live-tests live-only" data-live-tests="15" aria-live="polite"></div>
+  
   <h3>Done when</h3>
   <ul class="checklist"><li><code>AppRoot({ initialEntries? })</code> uses a memory router when entries are given and a browser router otherwise. The <code>QueryClient</code> and the router are each held in <code>useState</code>.</li><li>It composes earlier days through <code>@ex/…</code>: Day 10's route structure, Day 9's hooks, Day 4's <code>NewIssueForm</code>, Day 14's <code>Modal</code>, and Day 1's <code>IssueCard</code> / <code>StatusBadge</code>.</li><li>Flow: the list shows 4 issues → "Status filter" To do shows 2 → clicking an issue shows its detail → setting the detail's "Status" to Done drops it from the filtered list → "New issue" opens the modal, submitting "Write capstone" closes it, and the new issue appears under All.</li><li>Deep links (<code>/issues/3</code>) work, the modal validates and closes on Escape, and unknown routes show "Page not found" inside the layout.</li><li>Then open <a href="http://localhost:1515/app/">localhost:1515/app/</a> (served by <code>pnpm start</code>) to use <em>your</em> app at 300 ms latency. <code>pnpm dev:solutions</code> runs the reference.</li></ul>
   <h3>Stretch</h3>
@@ -3865,7 +3902,7 @@ useEffect(() =&gt; {
   <ol class="intro__steps">
     <li><span class="intro__n">1</span><div><h3>Read <small>15 min</small></h3><p>Today's ideas, with the Ember way and the React way side by side. As you scroll, the bar at the top fills up, and a coin pops in when you reach the end.</p></div></li>
     <li><span class="intro__n">2</span><div><h3>Build <small>35 min</small></h3>
-      <p class="live-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Each time you save, the tests run and this page shows what's left.</p>
+      <p class="live-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Each time you save, the tests run and this page shows what's left. Open a failing test to see what your code rendered and what it logged.</p>
       <p class="file-only">Open today's folder in <code>exercises/</code> and follow the TODO comments. Run <code>pnpm start</code> in the repo and this page shows your tests passing as you go.</p></div></li>
     <li><span class="intro__n">3</span><div><h3>Check yourself <small>10 min</small></h3><p>Press start for a quick multiple-choice quiz. Every answer comes with the reasoning. A few questions from earlier days come back too, more often the ones you missed, so they stick.</p></div></li>
     <li><span class="intro__n">4</span><div><h3>Done</h3>
@@ -4602,6 +4639,9 @@ useEffect(() =&gt; {
       status.classList.toggle('is-done', !!doneAt);
       status.textContent = doneAt ? '✓ Completed ' + fmtDate(doneAt) : 'Completes by itself when all of today\'s tests pass.';
       var box = document.querySelector('[data-live-tests="' + n + '"]');
+      // Re-runs rebuild the list, so remember which tests were expanded and reopen them
+      var open = {};
+      box.querySelectorAll('details[open]').forEach(function (det) { open[det.dataset.test] = true; });
       box.textContent = '';
       if (!d) { box.appendChild(el('p', 'muted small', 'Waiting for the first test run…')); continue; }
       var green = d.total > 0 && d.passed === d.total && !d.loadError;
@@ -4625,8 +4665,29 @@ useEffect(() =&gt; {
         // Every test in file order, so a passing one stays put (ticked, greyed) instead of vanishing
         var list = el('ul', 'live-tests__fails');
         d.tests.forEach(function (t) {
-          var item = el('li', t.passed ? 'is-passed' : null, shortName(t.name));
-          if (!t.passed && t.message) item.appendChild(el('small', null, t.message));
+          var item = el('li', t.passed ? 'is-passed' : null);
+          var logs = t.logs || [];
+          var label = el('span', null, shortName(t.name));
+          if (logs.length) label.appendChild(el('span', 'live-tests__logcount', logs.length === 1 ? '1 log' : logs.length + ' logs'));
+          if (!t.detail && !logs.length) {
+            item.appendChild(label);
+            if (!t.passed && t.message) item.appendChild(el('small', null, t.message));
+          } else {
+            var det = el('details');
+            det.dataset.test = t.name;
+            det.open = !!open[t.name];
+            var summary = el('summary');
+            summary.appendChild(label);
+            if (!t.passed && t.message) summary.appendChild(el('small', null, t.message));
+            det.appendChild(summary);
+            if (logs.length) {
+              var con = el('div', 'live-tests__console');
+              logs.forEach(function (l) { con.appendChild(el('pre', l.stream === 'stderr' ? 'is-err' : null, l.text)); });
+              det.appendChild(con);
+            }
+            if (t.detail) det.appendChild(el('pre', 'live-tests__detail', t.detail));
+            item.appendChild(det);
+          }
           list.appendChild(item);
         });
         box.appendChild(list);
@@ -4637,7 +4698,16 @@ useEffect(() =&gt; {
   function applyLive(state) {
     var first = !live;
     live = state;
-    if (first) document.body.classList.add('is-live');
+    if (first) {
+      document.body.classList.add('is-live');
+      document.querySelectorAll('[data-live-preview]').forEach(function (box) {
+        var frame = el('iframe');
+        frame.src = box.dataset.livePreview;
+        frame.title = 'Playground: your components';
+        frame.loading = 'lazy';
+        box.appendChild(frame);
+      });
+    }
     completed = new Set(Object.keys(state.completed).map(Number).filter(function (n) { return n >= 1 && n <= TOTAL; }));
     Object.keys(state.completed).forEach(function (k) { completedAt[k] = state.completed[k]; });
     saveCompleted();

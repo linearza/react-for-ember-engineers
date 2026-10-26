@@ -65,7 +65,9 @@ Your browser opens the course at **http://localhost:1515**. Leave that terminal 
 Each day takes about an hour:
 
 1. **Concepts (~15 min).** Read the day on the course page. Each concept puts Ember and React side by side and is flagged 🟢 direct translation · 🟡 same goal, different mechanics · 🔴 new mental model. A pixel bar at the top of the page fills up as you read, and a coin pops in when you reach the end.
-2. **Hands-on (~35 min).** Open the day's files in `exercises/dayNN/` and follow the TODO comments. Every time you save, the tests run and the course page shows which ones still fail.
+2. **Hands-on (~35 min).** Open the day's files in `exercises/dayNN/` and follow the TODO comments. Every time you save, the tests run and the course page ticks off the ones that pass. Open a failing test to see the full error, including what your component rendered, plus anything it logged with `console.log`.
+
+   Days 1–3 also show your components live in a playground under the tests, with a console panel underneath, and it updates as you save. Open it in its own tab (**Open with devtools ↗**) to debug with the browser devtools and React DevTools, the way you would under `ember serve`.
 3. **Check yourself (~10 min).** Press start for a short multiple-choice quiz. Each answer comes with the reasoning, and you earn coins, combos and a rank along the way. A few questions from earlier days come back too, as described in [Built to remember](#built-to-remember).
 
 Days unlock one at a time: when all of a day's tests pass, the day is marked complete, the page celebrates and the next day opens. Finish all 15 and you get [your certificate](#your-certificate).
@@ -172,7 +174,7 @@ Mentioned for context, but not used in the exercises: MSW, Zustand and Redux Too
 
 Stack: React 19.3, React Router 8 (data mode), TanStack Query 5, Vite 8, Vitest 5 + Testing Library, TypeScript 5.9. TypeScript 7, the native Go port, exists, but this repo stays on 5.9 for editor and tooling stability, and nothing here depends on the difference.
 
-`pnpm start` runs one Vite server that serves the course page at `/` and your Day 15 app at `/app/`, with Vitest in watch mode in the same process. A small reporter streams the results to the page.
+`pnpm start` runs one Vite server that serves the course page at `/`, your Day 15 app at `/app/` and each day's playground at `/app/play.html?day=N`, with Vitest in watch mode in the same process. A small reporter streams the results to the page, with each test's full failure message and its console output.
 
 ### Your work vs. the solutions
 
@@ -183,12 +185,12 @@ Tests import `@ex/dayNN/...`. One switch in `vite.config.ts` decides what `@ex` 
 | `pnpm start` | `exercises/` | the course, live progress and your app |
 | `pnpm test day05` | `exercises/` | one day's tests in watch mode |
 | `pnpm exec vitest run` | `exercises/` | check everything you've done so far |
-| `pnpm test:solutions` | `solutions/` | reference run: 109/109 pass |
+| `pnpm test:solutions` | `solutions/` | reference run: 104/104 pass |
 | `pnpm dev` | `exercises/` | run *your* Day 15 app |
 | `pnpm dev:solutions` | `solutions/` | run the reference app |
 | `pnpm typecheck` | — | `tsc --noEmit`: passes for both trees |
 
-The stubs fail on purpose: against an untouched `exercises/`, every day's tests fail except for at most one or two trivial ones. Cross-day imports, such as Day 15 importing Day 9's hooks, also go through `@ex`. So `pnpm dev` runs the app on *your* earlier days, which makes it a good integration check.
+The stubs fail on purpose: against an untouched `exercises/`, every test fails, so each tick means you changed something. Cross-day imports, such as Day 15 importing Day 9's hooks, also go through `@ex`. So `pnpm dev` runs the app on *your* earlier days, which makes it a good integration check.
 
 ### Layout
 
@@ -201,6 +203,9 @@ tests/dayNN.test.tsx  one test file per day
 scripts/start.mjs `pnpm start`: course server + test watcher
 course/index.html the course page (generated from course/source/)
 index.html, src/main.tsx, src/styles.css   the dev app (= Day 15 capstone)
+play.html, src/play/   the playground: src/play/dayNN.tsx lists what to render for a day
 ```
+
+To give another day a playground, add `src/play/dayNN.tsx` exporting `scenarios: Scenario[]` (a title, an optional hint and a `render` function). Rebuild the course page with `pnpm build:course` and it embeds the playground for that day.
 
 The fake API (`@domain/api`) has test controls: `setLatency(ms)` (300 in dev, 0 in tests), `setIssueLatency(id, ms)` for race conditions, `failNextRequest(msg)`, `resetDb()`, `getDbSnapshot()`.
