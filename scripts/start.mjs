@@ -94,7 +94,10 @@ const progressReporter = {
   onUserConsoleLog(log) {
     if (!log.taskId) return; // logged while the test file loaded, not inside a test
     const logs = logsByTest.get(log.taskId) ?? [];
-    if (logs.length < MAX_LOGS) logs.push({ stream: log.type, text: stripAnsi(log.content).replace(/\n$/, '').slice(0, 2000) });
+    // Vitest batches console calls that land close together, one line per call
+    for (const line of stripAnsi(log.content).replace(/\n$/, '').split('\n')) {
+      if (logs.length < MAX_LOGS) logs.push({ stream: log.type, text: line.slice(0, 2000) });
+    }
     logsByTest.set(log.taskId, logs);
   },
   onWatcherRerun() {

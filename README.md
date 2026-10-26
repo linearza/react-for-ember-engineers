@@ -70,6 +70,8 @@ Each day takes about an hour:
    Days 1–3 also show your components live in a playground under the tests, with a console panel underneath, and it updates as you save. Open it in its own tab (**Open with devtools ↗**) to debug with the browser devtools and React DevTools, the way you would under `ember serve`.
 3. **Check yourself (~10 min).** Press start for a short multiple-choice quiz. Each answer comes with the reasoning, and you earn coins, combos and a rank along the way. A few questions from earlier days come back too, as described in [Built to remember](#built-to-remember).
 
+<p align="center"><img src="course/icons/hands-on.png" width="520" alt="The Hands-on section partway through Day 1: six of eight tests ticked, a failing test for the &amp;&amp; trap opened to show its console output, and below it the live playground rendering the issue cards, where a stray 0 shows on the card with no labels, with the console panel underneath"></p>
+
 Days unlock one at a time: when all of a day's tests pass, the day is marked complete, the page celebrates and the next day opens. Finish all 15 and you get [your certificate](#your-certificate).
 
 The first time you open the page, a short "How this course works" guide pops up. Reopen it any time from the **?** button.

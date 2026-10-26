@@ -44,6 +44,18 @@ export function push(level: Level, text: string) {
   queueMicrotask(emit);
 }
 
+// For JSON.stringify: marks cycles and names functions instead of dropping them
+function replacer() {
+  const seen = new WeakSet();
+  return (_key: string, v: unknown) => {
+    if (typeof v === 'object' && v !== null) {
+      if (seen.has(v)) return '[Circular]';
+      seen.add(v);
+    }
+    return typeof v === 'function' ? `ƒ ${v.name || 'anonymous'}()` : v;
+  };
+}
+
 function show(value: unknown): string {
   if (typeof value === 'string') return value;
   if (value instanceof Error) return value.stack ?? `${value.name}: ${value.message}`;
@@ -51,18 +63,10 @@ function show(value: unknown): string {
   if (typeof value === 'function') return `ƒ ${value.name || 'anonymous'}()`;
   if (typeof value === 'symbol' || typeof value === 'bigint') return String(value);
   try {
-    const seen = new WeakSet();
-    return JSON.stringify(
-      value,
-      (_key, v) => {
-        if (typeof v === 'object' && v !== null) {
-          if (seen.has(v)) return '[Circular]';
-          seen.add(v);
-        }
-        return typeof v === 'function' ? `ƒ ${v.name || 'anonymous'}()` : v;
-      },
-      2,
-    ) ?? String(value);
+    // One line when it fits, indented when it doesn't
+    const flat = JSON.stringify(value, replacer());
+    if (flat === undefined) return String(value);
+    return flat.length <= 80 ? flat : JSON.stringify(value, replacer(), 2);
   } catch {
     return String(value);
   }
@@ -85,7 +89,8 @@ for (const level of ['log', 'info', 'warn', 'error'] as const) {
   console[level] = (...args: unknown[]) => {
     original(...args);
     const text = format(args);
-    if (!text.startsWith('Download the React DevTools')) push(level, text);
+    // Skip the dev tooling's own chatter, so the panel only shows what your code logged
+    if (!text.startsWith('Download the React DevTools') && !text.startsWith('[vite]')) push(level, text);
   };
 }
 console.debug = console.log;

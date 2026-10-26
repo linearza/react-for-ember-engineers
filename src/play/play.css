@@ -105,6 +105,9 @@
   max-height: 11rem;
   overflow: auto;
 }
+.play.is-embedded .play-console ol {
+  max-height: 6.5rem;
+}
 .play-console li {
   display: flex;
   gap: 0.5rem;
