@@ -1,5 +1,7 @@
-// DAY 12 — this one is already a correct Server Component. Read it: no directive, no hooks,
-// no handlers, and a <form action={serverFunction}> that works without client JS.
+/*
+DAY 12 — this one is already a correct Server Component. Read it: no directive, no hooks,
+no handlers, and a <form action={serverFunction}> that works without client JS.
+*/
 import type { Issue } from '@domain/types';
 import { STATUS_LABELS } from '@domain/types';
 import { updateStatusAction } from './actions';

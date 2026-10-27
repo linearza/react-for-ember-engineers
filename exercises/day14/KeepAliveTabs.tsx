@@ -1,13 +1,15 @@
 import { Activity, useState } from 'react';
 
-// DAY 14 — <Activity>.
-// Type a comment draft, switch to Details, switch back: the draft is gone. Conditional rendering
-// UNMOUNTS the hidden tab, and its state goes with it.
-//
-// TODO: render both tabs, each wrapped in <Activity mode={visible ? 'visible' : 'hidden'}>.
-// Hidden Activity content stays mounted (state preserved) but is display:none and its effects
-// are torn down. Ember has no direct equivalent: closest is keeping a component rendered and
-// toggling a CSS class, which keeps its effects running.
+/*
+DAY 14 — <Activity>.
+Type a comment draft, switch to Details, switch back: the draft is gone. Conditional rendering
+UNMOUNTS the hidden tab, and its state goes with it.
+
+TODO: render both tabs, each wrapped in <Activity mode={visible ? 'visible' : 'hidden'}>.
+Hidden Activity content stays mounted (state preserved) but is display:none and its effects
+are torn down. Ember has no direct equivalent: closest is keeping a component rendered and
+toggling a CSS class, which keeps its effects running.
+*/
 
 function DetailsTab() {
   return <p>Issue details go here.</p>;

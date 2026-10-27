@@ -1,15 +1,17 @@
 'use client';
 
-// DAY 12 — fix the boundaries.
-// Someone ported the Ember route as a client component: 'use client', fetch in an effect, a
-// loading flag. In the App Router this page can be a Server Component that awaits its data.
-//
-// TODO:
-//   - remove 'use client'
-//   - make it `export default async function IssuesPage({ searchParams })`
-//   - `const { status } = await searchParams` (a Promise in Next 15+); invalid/missing → 'all'
-//   - `await fetchIssues({ status })` directly; no useState, no useEffect
-//   - render <h1>Issues</h1>, <IssueFilterBar status={status} />, <IssueList issues={issues} />
+/*
+DAY 12 — fix the boundaries.
+Someone ported the Ember route as a client component: 'use client', fetch in an effect, a
+loading flag. In the App Router this page can be a Server Component that awaits its data.
+
+TODO:
+  - remove 'use client'
+  - make it `export default async function IssuesPage({ searchParams })`
+  - `const { status } = await searchParams` (a Promise in Next 15+); invalid/missing → 'all'
+  - `await fetchIssues({ status })` directly; no useState, no useEffect
+  - render <h1>Issues</h1>, <IssueFilterBar status={status} />, <IssueList issues={issues} />
+*/
 import { useEffect, useState } from 'react';
 import { fetchIssues } from '@domain/api';
 import { STATUSES, type Issue, type Status } from '@domain/types';

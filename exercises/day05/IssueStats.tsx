@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { STATUS_LABELS, STATUSES, type Issue, type Status } from '@domain/types';
 
-// DAY 5 — "You Might Not Need an Effect".
-// This shows the right numbers, but it renders twice on mount: once with zeros, then again after
-// the effect sets the counts. For one frame the UI is wrong, and the extra commit is wasted work.
-//
-// TODO: delete the state and the effect. Compute the counts during render.
-// Ember: this is a getter, not an observer.
-// Renders a <dl> with one <dt>{label}</dt><dd>{count}</dd> pair per status.
+/*
+DAY 5 — "You Might Not Need an Effect".
+This shows the right numbers, but it renders twice on mount: once with zeros, then again after
+the effect sets the counts. For one frame the UI is wrong, and the extra commit is wasted work.
+
+TODO: delete the state and the effect. Compute the counts during render.
+Ember: this is a getter, not an observer.
+Renders a <dl> with one <dt>{label}</dt><dd>{count}</dd> pair per status.
+*/
 
 interface IssueStatsProps {
   issues: Issue[];

@@ -15,28 +15,34 @@ import {
 import { ApiError, fetchIssue, fetchIssues } from '@domain/api';
 import { STATUS_LABELS, STATUSES, type Status } from '@domain/types';
 
-// DAY 10 — React Router 8, data mode. Note: everything comes from 'react-router' (no -dom package in v8).
-//
-// Ember → React Router:
-//   Router.map(...)          → the `routes` array at the bottom
-//   model() hook             → `loader`, read with useLoaderData()
-//   {{outlet}}               → <Outlet />
-//   error / loading substates → `errorElement` / useNavigation().state
-//   query params             → useSearchParams()
-//
-// TODO (the Layout, RootError, NotFound and page components are mostly done — the wiring isn't):
-//   1. issuesLoader: read `?status=` from request.url and pass it to fetchIssues. Return { issues, status }.
-//   2. IssuesPage: the "Status filter" <select> must update the URL via setSearchParams
-//      ('all' → remove the param). It must also render an <Outlet/> for the child route.
-//   3. issueLoader: fetchIssue(params.issueId). When it rejects with a 404 ApiError,
-//      throw data('Issue not found', { status: 404 }).
-//   4. IssueError: when isRouteErrorResponse(error) && status 404 → <p role="alert">Issue not found</p>
-//   5. routes:
-//        '/' → Layout (errorElement: RootError)
-//          index      → loader that returns redirect('/issues')
-//          'issues'   → IssuesPage + issuesLoader
-//            ':issueId' → IssueDetailPage + issueLoader, errorElement: IssueError (nested, so the list stays)
-//          '*'        → NotFound
+/*
+DAY 10 — React Router 8, data mode. Note: everything comes from 'react-router' (no -dom package in v8).
+
+Ember → React Router:
+  Router.map(...)          → the `routes` array at the bottom
+  model() hook             → `loader`, read with useLoaderData()
+  {{outlet}}               → <Outlet />
+  error / loading substates → `errorElement` / useNavigation().state
+  query params             → useSearchParams()
+
+TODO (the Layout, RootError, NotFound and page components are mostly done — the wiring isn't):
+  1. issuesLoader: read `?status=` from request.url and pass it to fetchIssues. Return { issues, status }.
+  2. IssuesPage: the "Status filter" <select> gets an "All" option plus one <option> per
+     STATUSES (value = the status, e.g. 'todo'; text = STATUS_LABELS[status]). Changing it
+     updates the URL via setSearchParams ('all' → remove the param).
+     Each issue <Link> must KEEP the current filter: from /issues?status=todo, clicking an issue
+     goes to /issues/4?status=todo, so the list next to the detail stays filtered.
+     It must also render an <Outlet/> for the child route, next to the list.
+  3. issueLoader: fetchIssue(params.issueId). When it rejects with a 404 ApiError,
+     throw data('Issue not found', { status: 404 }).
+  4. IssueError: when isRouteErrorResponse(error) && status 404 → <p role="alert">Issue not found</p>
+  5. routes:
+       '/' → Layout (errorElement: RootError)
+         index      → loader that returns redirect('/issues')
+         'issues'   → IssuesPage + issuesLoader
+           ':issueId' → IssueDetailPage + issueLoader, errorElement: IssueError (nested, so the list stays)
+         '*'        → NotFound
+*/
 
 export function Layout() {
   const navigation = useNavigation();

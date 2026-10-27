@@ -1,13 +1,15 @@
 import { PRIORITY_LABELS, STATUS_LABELS, type Issue } from '@domain/types';
 
-// DAY 6 — rendering performance.
-// Every IssueRow render pushes its id to `renderLog`, so you (and the tests) can SEE renders.
-//
-// TODO: wrap IssueRow in `memo` so it skips rendering when its props are unchanged.
-// On its own, memo is not enough. Read IssueTable.tsx next.
-//
-// Ember instinct to unlearn: Glimmer only re-evaluates the parts of a template whose tracked
-// inputs changed. React re-runs the WHOLE child function whenever its parent renders, unless you opt out.
+/*
+DAY 6 — rendering performance.
+Every IssueRow render pushes its id to `renderLog`, so you (and the tests) can SEE renders.
+
+TODO: wrap IssueRow in `memo` so it skips rendering when its props are unchanged.
+On its own, memo is not enough. Read IssueTable.tsx next.
+
+Ember instinct to unlearn: Glimmer only re-evaluates the parts of a template whose tracked
+inputs changed. React re-runs the WHOLE child function whenever its parent renders, unless you opt out.
+*/
 
 export const renderLog: string[] = [];
 

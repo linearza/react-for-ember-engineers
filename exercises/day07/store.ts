@@ -1,16 +1,18 @@
 import { useEffect, useReducer } from 'react';
 
-// DAY 7 — an external store (how Zustand / Redux work under the hood).
-//
-// TODO 1 — createStore: setState updates the state but never tells anyone. Notify every
-//   subscriber after a change (skip when the new state is Object.is-equal to the old one).
-//
-// TODO 2 — useStore(store, selector): this version re-renders on EVERY store change, even if the
-//   selected slice didn't change, and can "tear" under concurrent rendering. Replace it with
-//   useSyncExternalStore(store.subscribe, () => selector(store.getState())).
-//
-// Ember: a service with @tracked fields gives you fine-grained updates for free. In React you
-// get them by subscribing with a selector.
+/*
+DAY 7 — an external store (how Zustand / Redux work under the hood).
+
+TODO 1 — createStore: setState updates the state but never tells anyone. Notify every
+  subscriber after a change (skip when the new state is Object.is-equal to the old one).
+
+TODO 2 — useStore(store, selector): this version re-renders on EVERY store change, even if the
+  selected slice didn't change, and can "tear" under concurrent rendering. Replace it with
+  useSyncExternalStore(store.subscribe, () => selector(store.getState())).
+
+Ember: a service with @tracked fields gives you fine-grained updates for free. In React you
+get them by subscribing with a selector.
+*/
 
 export interface Store<T> {
   getState(): T;

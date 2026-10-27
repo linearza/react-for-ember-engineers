@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import { STATUS_LABELS, STATUSES, type Issue, type Status } from '@domain/types';
 
-// DAY 3 — state, immutability, derived state.
-// This component was "ported from Ember" by someone thinking in @tracked. It has three problems:
-//
-//   1. FILTERING ISN'T IMPLEMENTED. Show only issues matching the status filter AND whose title
-//      contains the search text (case-insensitive). Do NOT add state or an effect for the filtered
-//      list — derive it during render (Ember: a getter over tracked state).
-//      Also render "Showing X of Y".
-//
-//   2. toggleDone MUTATES the issue object. The tests freeze the data, so this throws.
-//      Rewrite it as an immutable update.
-//
-//   3. The "+2 points" button only adds 1. Why? (Hint: what is `issues` inside addPoint
-//      the second time it's called?) Fix it without changing the onClick.
+/*
+DAY 3 — state, immutability, derived state.
+This component was "ported from Ember" by someone thinking in @tracked. It has three problems:
+
+  1. FILTERING ISN'T IMPLEMENTED. Show only issues matching the status filter AND whose title
+     contains the search text (case-insensitive). Do NOT add state or an effect for the filtered
+     list — derive it during render (Ember: a getter over tracked state).
+     Also render "Showing X of Y".
+
+  2. toggleDone MUTATES the issue object. The tests freeze the data, so this throws.
+     Rewrite it as an immutable update.
+
+  3. The "+2 points" button only adds 1. Why? (Hint: what is `issues` inside addPoint
+     the second time it's called?) Fix it without changing the onClick.
+*/
 
 type Filter = Status | 'all';
 

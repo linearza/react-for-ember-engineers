@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 
-// DAY 5 — effects: subscribing to an external system (a timer) and cleaning up.
-// Renders <time dateTime={date}>5 minutes ago</time> and re-renders every 60 s.
-//
-// TODO: the interval is never cleared. Unmount the component and it keeps ticking (and calling
-// setState on an unmounted component). Return a cleanup function from the effect.
-// Ember: a modifier that calls registerDestructor — same idea, but here the cleanup is the
-// return value of the effect, and it also runs before every re-run.
+/*
+DAY 5 — effects: subscribing to an external system (a timer) and cleaning up.
+Renders <time dateTime={date}>5 minutes ago</time> and re-renders every 60 s.
+
+TODO: the interval is never cleared. Unmount the component and it keeps ticking (and calling
+setState on an unmounted component). Return a cleanup function from the effect.
+Ember: a modifier that calls registerDestructor — same idea, but here the cleanup is the
+return value of the effect, and it also runs before every re-run.
+*/
 
 interface RelativeTimeProps {
   date: string;

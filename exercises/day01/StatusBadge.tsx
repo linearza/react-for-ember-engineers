@@ -1,9 +1,11 @@
 import { STATUS_LABELS, type Status } from '@domain/types';
 
-// DAY 1 — your first component.
-// TODO: render <span className="badge badge--{status}">{label}</span>
-//   e.g. status 'in_progress' → <span class="badge badge--in_progress">In progress</span>
-// Notes: `className`, not `class`. Any JS expression goes inside { }.
+/*
+DAY 1 — your first component.
+TODO: render <span className="badge badge--{status}">{label}</span>
+  e.g. status 'in_progress' → <span class="badge badge--in_progress">In progress</span>
+Notes: `className`, not `class`. Any JS expression goes inside { }.
+*/
 
 interface StatusBadgeProps {
   status: Status;

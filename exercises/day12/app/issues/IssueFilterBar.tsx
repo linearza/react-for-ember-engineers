@@ -1,8 +1,10 @@
-// DAY 12 — the client boundary.
-// TODO: this component has an event handler (onChange), so it can't be a Server Component.
-// Mark the file with the 'use client' directive (first statement, above the imports).
-// 'use client' doesn't mean "only runs in the browser": it still SSRs. It marks the point where
-// the server tree hands over to code that is ALSO shipped to the client.
+/*
+DAY 12 — the client boundary.
+TODO: this component has an event handler (onChange), so it can't be a Server Component.
+Mark the file with the 'use client' directive (first statement, above the imports).
+'use client' doesn't mean "only runs in the browser": it still SSRs. It marks the point where
+the server tree hands over to code that is ALSO shipped to the client.
+*/
 import { STATUS_LABELS, STATUSES, type Status } from '@domain/types';
 
 interface IssueFilterBarProps {

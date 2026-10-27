@@ -1,14 +1,16 @@
 import { STATUS_LABELS, STATUSES, type Status } from '@domain/types';
 import { useIssuesQuery, useUpdateIssueStatus } from './queries';
 
-// DAY 9 — rendering query state.
-// Ember: ember-concurrency's `task.isRunning` / `task.last.error` → the query's status fields.
-//
-// TODO:
-//   - while pending: <p>Loading issues…</p>
-//   - on error: a role="alert" container with a "Retry" button that calls refetch()
-//   - otherwise the list (already here). Each <select> is labelled `Status for {title}` and calls
-//     the mutation. Once queries.ts invalidates, an issue moved out of the filter disappears.
+/*
+DAY 9 — rendering query state.
+Ember: ember-concurrency's `task.isRunning` / `task.last.error` → the query's status fields.
+
+TODO:
+  - while pending: <p>Loading issues…</p>
+  - on error: a role="alert" container with a "Retry" button that calls refetch()
+  - otherwise the list (already here). Each <select> is labelled `Status for {title}` and calls
+    the mutation. Once queries.ts invalidates, an issue moved out of the filter disappears.
+*/
 
 interface IssueListScreenProps {
   status?: Status | 'all';
